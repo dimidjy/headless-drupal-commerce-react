@@ -1,7 +1,7 @@
 name: chic_nest
 recipe: drupal10
 config:
-  php: '8.2'
+  php: '8.3'
 services:
   appserver:
     webroot: web
