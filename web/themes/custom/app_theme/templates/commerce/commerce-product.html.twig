@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Template for a commerce product.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - product_entity: The product entity.
+ * - product_id: The ID of the product entity.
+ * - product_title: The title of the product entity.
+ * - elements: Elements of the product.
+ *
+ * @see template_preprocess_commerce_product()
+ */
+#}
+<article{{ attributes.addClass('commerce-product') }}>
+  <div class="commerce-product__header">
+    <h1 class="commerce-product__title">{{ product_title }}</h1>
+  </div>
+  
+  <div class="commerce-product__content">
+    {% if elements.images %}
+      <div class="commerce-product__images">
+        {{ elements.images }}
+      </div>
+    {% endif %}
+    
+    <div class="commerce-product__details">
+      {% if elements.variations %}
+        <div class="commerce-product__variations">
+          {{ elements.variations }}
+        </div>
+      {% endif %}
+      
+      {% if elements.body %}
+        <div class="commerce-product__body">
+          {{ elements.body }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</article> 

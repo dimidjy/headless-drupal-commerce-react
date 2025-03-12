@@ -1,0 +1,17 @@
+app_core.graphql:
+  path: '/api/graphql'
+  defaults:
+    _controller: '\Drupal\app_core\Controller\GraphQLController::handleRequest'
+    _title: 'GraphQL API'
+  requirements:
+    _permission: 'access content'
+  options:
+    _auth: ['basic_auth', 'cookie']
+
+app_core.react_app:
+  path: '/app'
+  defaults:
+    _controller: '\Drupal\app_core\Controller\ReactAppController::content'
+    _title: 'React App'
+  requirements:
+    _permission: 'access content'

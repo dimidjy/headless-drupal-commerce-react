@@ -1,1 +1,17 @@
 services:
+  app_core.commerce_product_resolver:
+    class: Drupal\app_core\GraphQL\Resolver\CommerceProductResolver
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: graphql_resolver }
+  
+  app_core.commerce_cart_resolver:
+    class: Drupal\app_core\GraphQL\Resolver\CommerceCartResolver
+    arguments: ['@entity_type.manager', '@commerce_cart.cart_provider', '@commerce_cart.cart_manager']
+    tags:
+      - { name: graphql_resolver }
+      
+  app_core.graphql_schema_extension:
+    class: Drupal\app_core\GraphQL\SchemaExtension\CommerceSchemaExtension
+    tags:
+      - { name: graphql_schema_extension }

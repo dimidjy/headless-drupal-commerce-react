@@ -1,1 +1,65 @@
 <?php
+// Start Generation Here
+
+/**
+ * Implements hook_theme().
+ */
+function app_theme_theme($existing, $type, $theme, $path) {
+  return [
+    'example_template' => [
+      'variables' => [],
+      'template' => 'templates/example-template',
+    ],
+    'app_theme_page' => [
+      'base hook' => 'page',
+      'template' => 'templates/app-theme-page',
+    ],
+    'commerce_product' => [
+      'render element' => 'elements',
+      'template' => 'templates/commerce/commerce-product',
+    ],
+    'commerce_product_variation' => [
+      'render element' => 'elements',
+      'template' => 'templates/commerce/commerce-product-variation',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for page templates.
+ */
+function app_theme_preprocess_page(array &$variables) {
+  // Add a custom variable to the page template.
+  $variables['custom_variable'] = 'This is a custom variable';
+  
+  // Add commerce-specific variables if needed
+  if (\Drupal::moduleHandler()->moduleExists('commerce')) {
+    $variables['commerce_enabled'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for commerce product templates.
+ */
+function app_theme_preprocess_commerce_product(array &$variables) {
+  $product = $variables['elements']['#commerce_product'];
+  $variables['product_entity'] = $product;
+  $variables['product_id'] = $product->id();
+  $variables['product_title'] = $product->getTitle();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for a specific form.
+ */
+function app_theme_form_node_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Change the title of the submit button.
+  $form['actions']['submit']['#value'] = t('Save My Custom Title');
+}
+
+/**
+ * Implements hook_form_commerce_checkout_flow_alter().
+ */
+function app_theme_form_commerce_checkout_flow_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Add custom classes to checkout form elements
+  $form['#attributes']['class'][] = 'commerce-checkout-flow';
+}

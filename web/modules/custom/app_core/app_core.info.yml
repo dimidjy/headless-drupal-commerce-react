@@ -1,6 +1,22 @@
 name: App Core
-description: The app core module
-package: app
+description: Core functionality for the decoupled commerce application
+package: App
 type: module
 core_version_requirement: ^9 || ^10
-version : 1.0
+version: 1.0
+
+dependencies:
+  - drupal:system
+  - drupal:user
+  - commerce:commerce
+  - commerce:commerce_product
+  - commerce:commerce_cart
+  - commerce:commerce_checkout
+  - commerce:commerce_order
+  - commerce:commerce_payment
+  - commerce:commerce_price
+  - commerce:commerce_store
+  - graphql:graphql
+  - graphql_compose:graphql_compose
+  - jsonapi:jsonapi
+  - jsonapi_extras:jsonapi_extras

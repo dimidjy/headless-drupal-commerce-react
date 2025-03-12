@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * Template for a commerce product variation.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - elements: Elements of the product variation.
+ *
+ * @see template_preprocess_commerce_product_variation()
+ */
+#}
+<div{{ attributes.addClass('commerce-product-variation') }}>
+  {% if elements.title %}
+    <div class="commerce-product-variation__title">
+      {{ elements.title }}
+    </div>
+  {% endif %}
+  
+  {% if elements.sku %}
+    <div class="commerce-product-variation__sku">
+      {{ 'SKU:'|t }} {{ elements.sku }}
+    </div>
+  {% endif %}
+  
+  {% if elements.price %}
+    <div class="commerce-product-variation__price">
+      {{ elements.price }}
+    </div>
+  {% endif %}
+  
+  {% if elements.product_form %}
+    <div class="commerce-product-variation__form">
+      {{ elements.product_form }}
+    </div>
+  {% endif %}
+</div> 

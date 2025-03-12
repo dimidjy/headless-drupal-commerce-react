@@ -84,3 +84,6 @@ $RECYCLE.BIN/
 /logs/
 /Reports
 /Factures
+react-app/node_modules
+react-app/.env
+node_modules

@@ -1,0 +1,181 @@
+"""
+Commerce Product Type
+"""
+type CommerceProduct implements Entity & EntityOwnable & EntityPublishable & EntityRevisionable {
+  id: ID!
+  uuid: String!
+  title: String!
+  created: DateTime!
+  changed: DateTime!
+  status: Boolean!
+  variations: [CommerceProductVariation!]
+  defaultVariation: CommerceProductVariation
+  body: TextSummary
+  images: [Image!]
+  stores: [CommerceStore!]
+  price: CommercePrice
+}
+
+"""
+Commerce Product Variation Type
+"""
+type CommerceProductVariation implements Entity & EntityPublishable {
+  id: ID!
+  uuid: String!
+  title: String!
+  sku: String!
+  price: CommercePrice!
+  product: CommerceProduct!
+  attributes: [AttributeValue!]
+  images: [Image!]
+  stock: Int
+}
+
+"""
+Commerce Price Type
+"""
+type CommercePrice {
+  number: Float!
+  currencyCode: String!
+  formatted: String!
+}
+
+"""
+Commerce Store Type
+"""
+type CommerceStore implements Entity & EntityPublishable {
+  id: ID!
+  uuid: String!
+  name: String!
+  email: Email
+  defaultCurrencyCode: String!
+  defaultCurrency: Currency!
+  address: Address
+}
+
+"""
+Commerce Order Type
+"""
+type CommerceOrder implements Entity {
+  id: ID!
+  uuid: String!
+  orderNumber: String!
+  state: String!
+  total: CommercePrice
+  items: [CommerceOrderItem!]
+  customer: User
+  billingProfile: Profile
+  shippingProfile: Profile
+  created: DateTime!
+  changed: DateTime!
+}
+
+"""
+Commerce Order Item Type
+"""
+type CommerceOrderItem implements Entity {
+  id: ID!
+  uuid: String!
+  title: String!
+  quantity: Int!
+  unitPrice: CommercePrice!
+  totalPrice: CommercePrice!
+  purchasedEntity: CommerceProductVariation
+}
+
+"""
+Attribute Value Type
+"""
+type AttributeValue {
+  attribute: String!
+  value: String!
+}
+
+"""
+Currency Type
+"""
+type Currency {
+  currencyCode: String!
+  name: String!
+  symbol: String!
+}
+
+"""
+Query extensions for Commerce
+"""
+extend type Query {
+  product(id: ID!): CommerceProduct
+  products(
+    offset: Int = 0
+    limit: Int = 10
+    filter: EntityQueryFilterInput
+    sort: [EntityQuerySortInput!]
+  ): CommerceProductConnection!
+  
+  productVariation(id: ID!): CommerceProductVariation
+  
+  store(id: ID!): CommerceStore
+  stores: [CommerceStore!]!
+  
+  cart: CommerceOrder
+}
+
+"""
+Connection type for CommerceProduct
+"""
+type CommerceProductConnection {
+  edges: [CommerceProductEdge!]!
+  nodes: [CommerceProduct!]!
+  pageInfo: ConnectionPageInfo!
+}
+
+"""
+Edge type for CommerceProduct
+"""
+type CommerceProductEdge {
+  cursor: String!
+  node: CommerceProduct!
+}
+
+"""
+Mutation extensions for Commerce
+"""
+extend type Mutation {
+  addToCart(
+    productVariationId: ID!
+    quantity: Int = 1
+  ): AddToCartResponse!
+  
+  updateCartItem(
+    orderItemId: ID!
+    quantity: Int!
+  ): UpdateCartItemResponse!
+  
+  removeCartItem(
+    orderItemId: ID!
+  ): RemoveCartItemResponse!
+}
+
+"""
+Response type for addToCart mutation
+"""
+type AddToCartResponse {
+  cart: CommerceOrder
+  errors: [String!]
+}
+
+"""
+Response type for updateCartItem mutation
+"""
+type UpdateCartItemResponse {
+  cart: CommerceOrder
+  errors: [String!]
+}
+
+"""
+Response type for removeCartItem mutation
+"""
+type RemoveCartItemResponse {
+  cart: CommerceOrder
+  errors: [String!]
+} 

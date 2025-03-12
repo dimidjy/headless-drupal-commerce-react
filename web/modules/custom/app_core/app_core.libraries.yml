@@ -1,0 +1,24 @@
+react_app:
+  version: 1.x
+  js:
+    js/dist/app.js: { minified: true }
+  css:
+    theme:
+      css/app.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+    - core/once
+
+graphql_explorer:
+  version: 1.x
+  css:
+    theme:
+      css/graphql-explorer.css: {}
+  js:
+    js/graphql-explorer.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once

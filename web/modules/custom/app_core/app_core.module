@@ -2,4 +2,48 @@
 
 /**
  * @file
+ * Contains app_core.module.
  */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_help().
+ */
+function app_core_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.app_core':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Core functionality for the decoupled commerce application.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function app_core_entity_presave(EntityInterface $entity) {
+  // Add custom logic for commerce entities if needed
+  if ($entity->getEntityTypeId() === 'commerce_product') {
+    // Custom logic for products
+  }
+}
+
+/**
+ * Implements hook_graphql_composable_plugin_alter().
+ */
+function app_core_graphql_composable_plugin_alter(array &$definitions) {
+  // Alter GraphQL schema definitions if needed
+}
+
+/**
+ * Implements hook_cors_preflight_request_alter().
+ */
+function app_core_cors_preflight_request_alter(array &$response) {
+  // Allow CORS for the React frontend
+  $response['access-control-allow-origin'] = '*';
+  $response['access-control-allow-methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS';
+  $response['access-control-allow-headers'] = 'Authorization, Content-Type';
+}

@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * Theme override to display a single Drupal page for the React app.
+ */
+#}
+<div class="layout-container">
+  <header role="banner">
+    {{ page.header }}
+  </header>
+
+  {{ page.breadcrumb }}
+
+  <main role="main" class="main-content">
+    <div class="layout-content">
+      {{ page.content }}
+    </div>
+
+    {% if page.sidebar %}
+      <aside class="layout-sidebar" role="complementary">
+        {{ page.sidebar }}
+      </aside>
+    {% endif %}
+  </main>
+
+  {% if page.footer %}
+    <footer role="contentinfo">
+      {{ page.footer }}
+    </footer>
+  {% endif %}
+
+  {% if page.secondary_footer %}
+    <div class="secondary-footer">
+      {{ page.secondary_footer }}
+    </div>
+  {% endif %}
+</div> 
