@@ -1,0 +1,43 @@
+name: chic_nest
+recipe: drupal10
+config:
+  php: '8.2'
+services:
+  appserver:
+    webroot: web
+    xdebug: debug
+    config:
+      php: .vscode/php.ini
+    composer_version: '2.1.3'
+    overrides:
+      environment:
+        DRUSH_OPTIONS_URI: "http://chic-nest.lndo.site:8000/"
+  search:
+    type: solr:7.7.2
+    core: drupal
+    portforward: 9999
+    config:
+      dir: web/modules/contrib/search_api_solr/solr-conf-templates/7.x
+  phpmyadmin:
+    type: phpmyadmin
+    user: drupal10
+    password: drupal10
+    database: drupal10
+    hosts:
+      - database
+  redis:
+    type: redis
+proxy:
+  appserver:
+    - chic-nest.lndo.site:80
+  phpmyadmin:
+    - pma.chic-nest.lndo.site:80
+  search:
+    - admin.solr.lndo.site:8983
+tooling:
+  php:
+    service: phpcli
+  appserver:
+    cmd:
+      - "/app/vendor/bin/drupal"
+      - "--root=/app/docroot"
