@@ -1,0 +1,6 @@
+name: App Core
+description: The app core module
+package: app
+type: module
+core_version_requirement: ^9 || ^10
+version : 1.0
