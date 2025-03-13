@@ -1,129 +1,124 @@
-# Decoupled Drupal Commerce with React
+# ChicNest - Drupal with React Frontend
 
-This project is a decoupled Drupal 10 Commerce site with a React frontend, connected via GraphQL.
+This project combines a Drupal backend with a React frontend for a modern interior design website. The Drupal backend provides content management and GraphQL API, while the React frontend delivers a responsive and interactive user experience.
 
-## Backend Setup (Drupal)
+## Project Structure
 
-### Requirements
+- `web/` - Drupal installation
+- `react-app/` - React frontend application
 
-- PHP 8.1 or higher
-- Composer
-- MySQL/MariaDB
-- Drupal 10
+## Drupal Backend Setup
 
-### Installation
-
-1. Clone this repository
-2. Run `composer install` to install Drupal and dependencies
-3. Install Drupal using the standard installation profile
-4. Enable the required modules:
+1. Install the custom GraphQL module:
    ```
-   drush en -y commerce commerce_product commerce_cart commerce_checkout commerce_payment graphql graphql_compose graphql_compose_extra jsonapi jsonapi_extras cors app_core
+   drush en custom_graphql -y
    ```
-5. Configure CORS in your settings.php file to allow requests from your React frontend
-6. Create product types, variations, and other commerce entities as needed
 
-## Frontend Setup (React)
+2. Clear the cache:
+   ```
+   drush cr
+   ```
 
-### Requirements
+3. Verify the GraphQL endpoint is working by visiting:
+   ```
+   /graphql
+   ```
 
-- Node.js 16 or higher
-- npm or yarn
+4. Create content with paragraphs:
+   - Create a content type with a field_paragraphs field (Entity reference revisions to Paragraph)
+   - Create paragraph types with appropriate fields
+   - Add paragraphs to your content
 
-### Installation
+## React Frontend Setup
 
-1. Navigate to the React app directory (to be created)
-2. Run `npm install` or `yarn install` to install dependencies
-3. Configure the GraphQL endpoint in your React app
-4. Run `npm start` or `yarn start` to start the development server
+1. Navigate to the React app directory:
+   ```
+   cd react-app
+   ```
 
-## GraphQL API
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-The GraphQL API is available at `/api/graphql`. You can explore the API using GraphQL Explorer.
+   If you encounter errors about missing dependencies, install them explicitly:
+   ```
+   npm install react-router-dom @apollo/client graphql
+   ```
 
-### Example Queries
+3. Start the development server:
+   ```
+   npm start
+   ```
 
-#### Fetch Products
+4. Build for production:
+   ```
+   npm run build
+   ```
+
+## GraphQL API Usage
+
+The GraphQL API allows fetching paragraph entities by ID. Example query:
 
 ```graphql
-query {
-  products(limit: 10) {
-    edges {
-      node {
-        id
-        title
-        variations {
-          id
-          sku
-          price {
-            number
-            currencyCode
-            formatted
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-#### Fetch Cart
-
-```graphql
-query {
-  cart {
+query GetParagraph($id: ID!) {
+  paragraph(id: $id) {
     id
-    orderNumber
-    items {
-      id
-      title
-      quantity
-      totalPrice {
-        formatted
-      }
-    }
-    total {
-      formatted
+    type
+    fields {
+      name
+      value
     }
   }
 }
 ```
 
-### Example Mutations
+## Content Structure
 
-#### Add to Cart
+The website uses a simple content structure:
 
-```graphql
-mutation {
-  addToCart(productVariationId: "1", quantity: 1) {
-    cart {
-      id
-      items {
-        id
-        title
-        quantity
-      }
-    }
-    errors
-  }
+1. Create a node with field_paragraphs
+2. Add various paragraph types to this field
+3. The React frontend will display these paragraphs in order
+
+Currently, the header and footer are simple placeholders that will be implemented later.
+
+## Paragraph Types
+
+Create paragraph types in Drupal with fields like:
+
+- field_title - Title text
+- field_text - Body text
+- field_image - Image field
+- field_link - Link field
+
+The React frontend will render these fields appropriately based on their names.
+
+## Page Configuration
+
+The page configuration is provided through a REST endpoint at `/api/page-config`, which returns:
+
+```json
+{
+  "header_placeholder": "Header placeholder - will be implemented later",
+  "footer_placeholder": "Footer placeholder - will be implemented later",
+  "paragraph_ids": [1, 2, 3]
 }
 ```
 
 ## Development Workflow
 
-1. Create and configure Commerce entities in Drupal
-2. Expose them via GraphQL
-3. Consume the GraphQL API in your React frontend
-4. Style and enhance the React components
+1. Create and manage content in Drupal
+2. Expose content via GraphQL
+3. Fetch and render content in React components
+4. Style components using the provided CSS
 
-## Deployment
+## Troubleshooting
 
-For production deployment:
-
-1. Set up a CI/CD pipeline
-2. Configure proper CORS settings
-3. Enable caching for GraphQL queries
-4. Optimize React build for production
+- If GraphQL queries fail, check that the custom_graphql module is enabled and the schema is properly registered
+- If paragraph data is not displaying correctly, verify the field names in both Drupal and React components
+- For CORS issues, ensure proper configuration in Drupal's services.yml file
+- If you encounter errors about missing dependencies like 'react-router-dom', install them using npm as described in the React Frontend Setup section
 
 ## Additional Resources
 

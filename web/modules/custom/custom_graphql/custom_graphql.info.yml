@@ -1,0 +1,8 @@
+name: Custom GraphQL
+type: module
+description: 'Provides custom GraphQL schema extensions for paragraphs.'
+package: Custom
+core_version_requirement: ^9 || ^10
+dependencies:
+  - graphql:graphql
+  - paragraphs:paragraphs 
