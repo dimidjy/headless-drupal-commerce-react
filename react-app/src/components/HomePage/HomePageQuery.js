@@ -24,6 +24,16 @@ export const GET_HOME_PAGE = gql`
           id
           image {
             id
+            mediaImage {
+              width
+              url
+              title
+              height
+              alt
+              variations(styles: MEDIUM) {
+                url
+              }
+            }
           }
           description
           title
@@ -41,6 +51,9 @@ export const GET_HOME_PAGE = gql`
               title
               height
               alt
+              variations(styles: MEDIUM) {
+                url
+              }
             }
           }
         }
@@ -58,7 +71,16 @@ export const GET_HOME_PAGE = gql`
         ... on ParagraphTextAndImage {
           id
           image {
-            id
+            mediaImage {
+              width
+              url
+              title
+              height
+              alt
+              variations(styles: LARGE) {
+                url
+              }
+            }
           }
           title
           link {

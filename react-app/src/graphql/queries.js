@@ -14,6 +14,9 @@ export const PRODUCT_FRAGMENT = gql`
     images {
       url
       alt
+      variations(styles: MEDIUM) {
+        url
+      }
     }
     variations {
       id
@@ -31,6 +34,9 @@ export const PRODUCT_FRAGMENT = gql`
       images {
         url
         alt
+        variations(styles: MEDIUM) {
+          url
+        }
       }
     }
   }
@@ -71,6 +77,9 @@ export const CART_FRAGMENT = gql`
         images {
           url
           alt
+          variations(styles: THUMBNAIL) {
+            url
+          }
         }
       }
     }

@@ -35,4 +35,4 @@ app_core.page_uuids:
             label: 'Title'
           uuid:
             type: string
-            label: 'UUID' 
+            label: 'UUID'

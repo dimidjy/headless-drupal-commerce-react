@@ -32,13 +32,6 @@ function app_core_entity_presave(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_graphql_composable_plugin_alter().
- */
-function app_core_graphql_composable_plugin_alter(array &$definitions) {
-  // Alter GraphQL schema definitions if needed
-}
-
-/**
  * Implements hook_cors_preflight_request_alter().
  */
 function app_core_cors_preflight_request_alter(array &$response) {

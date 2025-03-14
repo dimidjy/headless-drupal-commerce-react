@@ -3,7 +3,7 @@ import { setContext } from '@apollo/client/link/context';
 
 // Create an HTTP link to the Drupal GraphQL endpoint
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_GRAPHQL_URL || 'http://localhost/api/graphql',
+  uri: process.env.REACT_APP_GRAPHQL_URL || 'https://chic-nest.lndo.site/graphql-default-api',
 });
 
 // Add authentication headers

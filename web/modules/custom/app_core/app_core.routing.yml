@@ -1,21 +1,5 @@
-app_core.graphql:
-  path: '/api/graphql'
-  defaults:
-    _controller: '\Drupal\app_core\Controller\GraphQLController::handleRequest'
-    _title: 'GraphQL API'
-  requirements:
-    _access: 'TRUE'
-
-app_core.react_app:
-  path: '/app'
-  defaults:
-    _controller: '\Drupal\app_core\Controller\ReactAppController::content'
-    _title: 'React App'
-  requirements:
-    _access: 'True'
-
 app_core.page_uuids:
-  path: '/api/page-uuids'
+  path: '/page-uuids'
   defaults:
     _controller: '\Drupal\app_core\Controller\PageUuidController::getPageUuids'
     _title: 'Page UUIDs'

@@ -1,27 +1,16 @@
 import { ApolloClient, InMemoryCache, createHttpLink, from } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
+import { debugGraphQLError, debugWrappedFetch, isHtmlResponse } from './debugGraphQL';
 
 // Error handling link with detailed logging
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path }) => {
-      console.error(
-        `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(locations)}, Path: ${path}`
-      );
-    });
-  }
-  
-  if (networkError) {
-    console.error(`[Network error]: ${networkError}`);
-    console.error('Network error details:', networkError.bodyText || networkError.message);
-    
-    // Log additional details if available
-    if (networkError.response) {
-      console.error('Response status:', networkError.response.status);
-      console.error('Response headers:', networkError.response.headers);
-    }
-  }
+const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
+  // Use our debug utility for errors
+  debugGraphQLError(
+    { graphQLErrors, networkError, message: networkError?.message || graphQLErrors?.[0]?.message || 'Unknown error' },
+    operation.query,
+    operation.variables
+  );
 });
 
 // Add auth headers
@@ -40,26 +29,73 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+// Debug link to log requests before they're sent
+const debugLink = setContext((operation, { headers }) => {
+  console.group('=== GraphQL Request Debug (Client Side) ===');
+  console.log('Operation Name:', operation.operationName);
+  console.log('Query:', operation.query.loc?.source.body);
+  console.log('Variables:', JSON.stringify(operation.variables, null, 2));
+  console.log('Target Endpoint:', '/graphql');
+  console.log('Headers:', JSON.stringify(headers, null, 2));
+  console.groupEnd();
+  
+  // Return the original context unchanged
+  return { headers };
+});
+
 // Create an HTTP link to the Drupal GraphQL endpoint
 const httpLink = createHttpLink({
-  uri: '/graphql', // Use the proxy configured in package.json
+  uri: '/api/graphql-default-api', // Use the proxy configured in setupProxy.js
   credentials: 'include', // Include cookies for session authentication
   fetchOptions: {
     mode: 'cors',
+    method: 'POST',
   },
+  // Force POST for all GraphQL operations
+  useGETForQueries: false,
+  // Use our custom debug fetch
+  fetch: (uri, options) => {
+    console.log('=== GraphQL Request URL ===');
+    console.log('Request URL:', uri);
+    console.log('Request Method:', options.method);
+    
+    // Log the full URL that will be used after proxy rewriting
+    const fullUrl = '/api/graphql-default-api';
+    console.log('Full URL after proxy rewrite:', fullUrl);
+    
+    // Use our debug wrapped fetch
+    return debugWrappedFetch(uri, options).then(response => {
+      // Check for HTML responses which indicate an error
+      const clonedResponse = response.clone();
+      return clonedResponse.text().then(text => {
+        if (isHtmlResponse(text)) {
+          console.error('=== GraphQL HTML Response Error ===');
+          console.error('Received HTML instead of JSON. This indicates an authentication or routing issue.');
+          console.error('Request URL:', uri);
+          console.error('HTML Response (first 500 chars):', text.substring(0, 500));
+          
+          // Throw a more descriptive error
+          throw new Error('Received HTML instead of JSON. This indicates an authentication or routing issue.');
+        }
+        
+        // Return the original response if it's not HTML
+        return response;
+      });
+    });
+  }
 });
 
 // Create the Apollo Client
 const client = new ApolloClient({
-  link: from([errorLink, authLink, httpLink]),
+  link: from([errorLink, debugLink, authLink, httpLink]),
   cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'network-only', // Don't cache, always make a network request
       errorPolicy: 'all',
     },
     query: {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'network-only', // Don't cache, always make a network request
       errorPolicy: 'all',
     },
     mutate: {

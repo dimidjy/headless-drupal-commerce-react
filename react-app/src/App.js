@@ -21,7 +21,7 @@ function App() {
     const fetchPageUuids = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/page-uuids');
+        const response = await fetch('/page-uuids');
         
         if (!response.ok) {
           throw new Error(`Failed to fetch page UUIDs: ${response.status} ${response.statusText}`);
