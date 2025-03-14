@@ -1,0 +1,19 @@
+.blog-posts {
+  margin-bottom: 2rem;
+}
+
+.blog-posts h2 {
+  margin-bottom: 1rem;
+}
+
+.posts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.post-item {
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 4px;
+} 

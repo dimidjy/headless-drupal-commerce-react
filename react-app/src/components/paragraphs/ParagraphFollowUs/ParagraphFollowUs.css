@@ -1,0 +1,12 @@
+.follow-us {
+  margin-bottom: 2rem;
+}
+
+.follow-us h2 {
+  margin-bottom: 1rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+} 

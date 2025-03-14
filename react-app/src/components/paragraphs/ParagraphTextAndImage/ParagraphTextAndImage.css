@@ -1,0 +1,20 @@
+.text-and-image {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+.text-and-image h2 {
+  margin-bottom: 1rem;
+}
+
+.text-and-image .image {
+  margin-bottom: 1rem;
+}
+
+.text-and-image .cta-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  font-weight: bold;
+} 

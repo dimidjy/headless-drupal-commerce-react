@@ -1,0 +1,10 @@
+.webform {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.webform h2 {
+  margin-bottom: 1rem;
+} 

@@ -1,0 +1,11 @@
+.logo-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.logo-bar img {
+  max-width: 100%;
+  height: auto;
+} 

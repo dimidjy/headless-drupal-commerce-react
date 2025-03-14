@@ -1,0 +1,14 @@
+.products-slider {
+  margin-bottom: 2rem;
+}
+
+.products-slider h2 {
+  margin-bottom: 1rem;
+}
+
+.slider-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem 0;
+} 

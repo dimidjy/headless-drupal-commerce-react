@@ -1,0 +1,15 @@
+.video {
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.video video {
+  max-width: 100%;
+  height: auto;
+}
+
+.video iframe {
+  max-width: 100%;
+  width: 100%;
+  aspect-ratio: 16/9;
+} 

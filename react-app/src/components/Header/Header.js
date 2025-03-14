@@ -5,9 +5,9 @@ import './Header.css';
 const Header = () => {
   return (
     <header className="header">
-      <div className="container">
+      <div className="container-fluid">
         <div className="header-content">
-          <div className="logo">
+          <div className="header-left">
             <Link to="/">ChicNest</Link>
           </div>
           <nav className="nav-menu">
@@ -18,6 +18,20 @@ const Header = () => {
               <li><Link to="/contact">Contact</Link></li>
             </ul>
           </nav>
+          <div className="header-right">
+            <div className="header-right-item">
+              <Link to="/login">Login</Link>
+            </div>
+            <div className="header-right-item">
+              <Link to="/register">Register</Link>
+            </div>
+            <div className="header-right-item">
+              <Link to="/cart">Cart</Link>
+            </div>
+            <div className="header-right-item">
+              <Link to="/search">Search</Link>
+            </div>
+          </div>
         </div>
       </div>
     </header>

@@ -1,0 +1,11 @@
+.testimonial-item {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.testimonial-item .author {
+  font-weight: bold;
+  margin-top: 0.5rem;
+} 

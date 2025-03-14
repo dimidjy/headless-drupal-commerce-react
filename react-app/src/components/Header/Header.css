@@ -1,7 +1,7 @@
 .header {
   background-color: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 20px 0;
+  padding: 16px 16px;
   position: relative;
   z-index: 100;
 }
@@ -10,19 +10,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
-.logo {
+.header-left {
   font-size: 24px;
   font-weight: 700;
 }
 
-.logo a {
+.header-left a {
   color: var(--primary-color);
   transition: color 0.3s ease;
 }
 
-.logo a:hover {
+.header-left a:hover {
   color: var(--secondary-color);
 }
 
@@ -49,6 +50,26 @@
 .nav-menu a:hover {
   color: var(--primary-color);
 }
+
+.header-right {
+  display: flex;
+  gap: 10px;
+}
+
+.header-right-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.header-right-item a {
+  color: var(--dark-color);
+  font-weight: 500;
+  padding: 10px 0;
+  transition: color 0.3s ease;
+}
+
+
 
 @media (max-width: 768px) {
   .header-content {
