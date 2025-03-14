@@ -45,6 +45,7 @@ export const renderParagraph = (paragraph) => {
       return <ParagraphTestimonialsItem author={paragraph.author} />;
     
     case 'ParagraphTextAndImage':
+      console.log('ParagraphTextAndImage', paragraph);
       return <ParagraphTextAndImage title={paragraph.title} link={paragraph.link} image={paragraph.image} />;
     
     case 'ParagraphVideo':
