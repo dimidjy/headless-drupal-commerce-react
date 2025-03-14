@@ -1,5 +1,19 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
+import {
+  ParagraphBillboard,
+  ParagraphBlogPosts,
+  ParagraphCategories,
+  ParagraphFeatures,
+  ParagraphFollowUs,
+  ParagraphLogoBar,
+  ParagraphProductsSlider,
+  ParagraphTestimonials,
+  ParagraphTestimonialsItem,
+  ParagraphTextAndImage,
+  ParagraphVideo,
+  ParagraphWebform
+} from '../components/paragraphs';
 
 // Define the GraphQL query for fetching the homepage data
 const GET_HOME_PAGE = gql`
@@ -102,10 +116,6 @@ const HomePage = ({ homepageUuid }) => {
     skip: !homepageUuid,
   });
 
-  console.log(data)
-  console.log(loading)
-  console.log(error)
-
   if (!homepageUuid) {
     return (
       <div className="home-page">
@@ -160,6 +170,50 @@ const HomePage = ({ homepageUuid }) => {
     );
   }
 
+  // Helper function to render the appropriate component based on paragraph type
+  const renderParagraph = (paragraph) => {
+    switch (paragraph.__typename) {
+      case 'ParagraphBillboard':
+        return <ParagraphBillboard title={paragraph.title} description={paragraph.description} />;
+      
+      case 'ParagraphBlogPosts':
+        return <ParagraphBlogPosts posts={paragraph.posts} />;
+      
+      case 'ParagraphCategories':
+        return <ParagraphCategories title={paragraph.title} />;
+      
+      case 'ParagraphFeatures':
+        return <ParagraphFeatures title={paragraph.title} description={paragraph.description} image={paragraph.image} />;
+      
+      case 'ParagraphFollowUs':
+        return <ParagraphFollowUs title={paragraph.title} />;
+      
+      case 'ParagraphLogoBar':
+        return <ParagraphLogoBar image={paragraph.image} />;
+      
+      case 'ParagraphProductsSlider':
+        return <ParagraphProductsSlider title={paragraph.title} />;
+      
+      case 'ParagraphTestimonials':
+        return <ParagraphTestimonials />;
+      
+      case 'ParagraphTestimonialsItem':
+        return <ParagraphTestimonialsItem author={paragraph.author} />;
+      
+      case 'ParagraphTextAndImage':
+        return <ParagraphTextAndImage title={paragraph.title} link={paragraph.link} image={paragraph.image} />;
+      
+      case 'ParagraphVideo':
+        return <ParagraphVideo video={paragraph.video} />;
+      
+      case 'ParagraphWebform':
+        return <ParagraphWebform />;
+      
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="home-page">
       <div className="container">
@@ -167,94 +221,7 @@ const HomePage = ({ homepageUuid }) => {
         <div className="paragraphs-container">
           {page.paragraphs && page.paragraphs.map((paragraph, index) => (
             <div key={paragraph.id || index} className={`paragraph paragraph-${paragraph.__typename.replace('Paragraph', '').toLowerCase()}`}>
-              {/* Render different paragraph types */}
-              {paragraph.__typename === 'ParagraphBillboard' && (
-                <div className="billboard">
-                  <h2>{paragraph.title}</h2>
-                  <div dangerouslySetInnerHTML={{ __html: paragraph.description }} />
-                </div>
-              )}
-              
-              {paragraph.__typename === 'ParagraphCategories' && (
-                <div className="categories">
-                  <h2>{paragraph.title}</h2>
-                </div>
-              )}
-              
-              {paragraph.__typename === 'ParagraphFeatures' && (
-                <div className="features">
-                  <h2>{paragraph.title}</h2>
-                  <div dangerouslySetInnerHTML={{ __html: paragraph.description }} />
-                </div>
-              )}
-              
-              {paragraph.__typename === 'ParagraphFollowUs' && (
-                <div className="follow-us">
-                  <h2>{paragraph.title}</h2>
-                </div>
-              )}
-              
-              {paragraph.__typename === 'ParagraphLogoBar' && (
-                <div className="logo-bar">
-                  {paragraph.image && paragraph.image.mediaImage && (
-                    <img 
-                      src={paragraph.image.mediaImage.url} 
-                      alt={paragraph.image.mediaImage.alt || ''} 
-                      width={paragraph.image.mediaImage.width}
-                      height={paragraph.image.mediaImage.height}
-                    />
-                  )}
-                </div>
-              )}
-              
-              {paragraph.__typename === 'ParagraphProductsSlider' && (
-                <div className="products-slider">
-                  <h2>{paragraph.title}</h2>
-                </div>
-              )}
-              
-              {paragraph.__typename === 'ParagraphTestimonials' && (
-                <div className="testimonials">
-                  <h2>Testimonials</h2>
-                </div>
-              )}
-              
-              {paragraph.__typename === 'ParagraphTestimonialsItem' && (
-                <div className="testimonial-item">
-                  <p className="author">{paragraph.author}</p>
-                </div>
-              )}
-              
-              {paragraph.__typename === 'ParagraphTextAndImage' && (
-                <div className="text-and-image">
-                  <h2>{paragraph.title}</h2>
-                  {paragraph.link && (
-                    <a href={paragraph.link.url} className="cta-link">
-                      {paragraph.link.title}
-                    </a>
-                  )}
-                </div>
-              )}
-              
-              {paragraph.__typename === 'ParagraphVideo' && (
-                <div className="video">
-                  {paragraph.video && paragraph.video.__typename === 'MediaRemoteVideo' && (
-                    <div dangerouslySetInnerHTML={{ __html: paragraph.video.mediaOembedVideo }} />
-                  )}
-                  {paragraph.video && paragraph.video.__typename === 'MediaVideo' && paragraph.video.mediaVideoFile && (
-                    <video controls>
-                      <source src={paragraph.video.mediaVideoFile.url} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  )}
-                </div>
-              )}
-              
-              {paragraph.__typename === 'ParagraphWebform' && (
-                <div className="webform">
-                  <p>Webform placeholder</p>
-                </div>
-              )}
+              {renderParagraph(paragraph)}
             </div>
           ))}
         </div>
