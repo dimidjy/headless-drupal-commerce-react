@@ -3,6 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import client from './utils/graphql';
 
+// Components
+import Header from './components/Header';
+import Footer from './components/Footer';
+
 // Pages
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -65,14 +69,7 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <div className="App">
-          {/* Header Placeholder */}
-          <header className="header">
-            <div className="container">
-              <div className="header-placeholder">
-                Header Placeholder
-              </div>
-            </div>
-          </header>
+          <Header />
           
           {/* Main Content Area with Routes */}
           <main className="main-content">
@@ -82,14 +79,7 @@ function App() {
             </Routes>
           </main>
           
-          {/* Footer Placeholder */}
-          <footer className="footer">
-            <div className="container">
-              <div className="footer-placeholder">
-                Footer Placeholder
-              </div>
-            </div>
-          </footer>
+          <Footer />
         </div>
       </Router>
     </ApolloProvider>
