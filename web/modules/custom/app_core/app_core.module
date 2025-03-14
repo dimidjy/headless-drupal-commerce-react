@@ -42,8 +42,29 @@ function app_core_graphql_composable_plugin_alter(array &$definitions) {
  * Implements hook_cors_preflight_request_alter().
  */
 function app_core_cors_preflight_request_alter(array &$response) {
-  // Allow CORS for the React frontend
-  $response['access-control-allow-origin'] = '*';
-  $response['access-control-allow-methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS';
-  $response['access-control-allow-headers'] = 'Authorization, Content-Type';
+  // Get the origin from the request headers
+  $origin = \Drupal::request()->headers->get('Origin');
+  
+  // Allow CORS for the React frontend with specific origin
+  if ($origin) {
+    $response['access-control-allow-origin'] = $origin;
+    $response['access-control-allow-credentials'] = 'true';
+    $response['access-control-allow-methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS';
+    $response['access-control-allow-headers'] = 'Authorization, Content-Type, X-Requested-With';
+    $response['access-control-max-age'] = '3600';
+  }
+}
+
+/**
+ * Implements hook_request_alter().
+ */
+function app_core_request_alter(array &$response) {
+  // Get the origin from the request headers
+  $origin = \Drupal::request()->headers->get('Origin');
+  
+  // Set CORS headers for actual requests (not just preflight)
+  if ($origin) {
+    $response['access-control-allow-origin'] = $origin;
+    $response['access-control-allow-credentials'] = 'true';
+  }
 }

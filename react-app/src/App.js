@@ -5,48 +5,39 @@ import client from './utils/graphql';
 
 // Pages
 import HomePage from './pages/HomePage';
-import ProductListPage from './pages/ProductListPage';
-import ProductDetailPage from './pages/ProductDetailPage';
-import CartPage from './pages/CartPage';
-import CheckoutPage from './pages/CheckoutPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
-  const [pageConfig, setPageConfig] = useState({
-    header_placeholder: '',
-    footer_placeholder: '',
-    paragraph_ids: []
+  const [pageUuids, setPageUuids] = useState({
+    required_pages: {},
+    other_pages: []
   });
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
   useEffect(() => {
-    // Fetch the main page configuration to get paragraph IDs
-    const fetchPageConfig = async () => {
+    // Fetch the page UUIDs from the new endpoint
+    const fetchPageUuids = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/page-config');
+        const response = await fetch('/api/page-uuids');
         
         if (!response.ok) {
-          throw new Error(`Failed to fetch page configuration: ${response.status} ${response.statusText}`);
+          throw new Error(`Failed to fetch page UUIDs: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
-        setPageConfig({
-          header_placeholder: data.header_placeholder || 'Header Placeholder',
-          footer_placeholder: data.footer_placeholder || 'Footer Placeholder',
-          paragraph_ids: data.paragraph_ids || []
-        });
+        setPageUuids(data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching page configuration:', error);
+        console.error('Error fetching page UUIDs:', error);
         setError(error.message);
         setLoading(false);
       }
     };
     
-    fetchPageConfig();
+    fetchPageUuids();
   }, []);
 
   if (loading) {
@@ -68,6 +59,8 @@ function App() {
     );
   }
 
+  console.log(pageUuids)
+
   return (
     <ApolloProvider client={client}>
       <Router>
@@ -76,7 +69,7 @@ function App() {
           <header className="header">
             <div className="container">
               <div className="header-placeholder">
-                {pageConfig.header_placeholder}
+                Header Placeholder
               </div>
             </div>
           </header>
@@ -84,11 +77,7 @@ function App() {
           {/* Main Content Area with Routes */}
           <main className="main-content">
             <Routes>
-              <Route path="/" element={<HomePage paragraphIds={pageConfig.paragraph_ids} />} />
-              <Route path="/products" element={<ProductListPage />} />
-              <Route path="/products/:productId" element={<ProductDetailPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/" element={<HomePage homepageUuid={pageUuids.required_pages.homepage} />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
@@ -97,7 +86,7 @@ function App() {
           <footer className="footer">
             <div className="container">
               <div className="footer-placeholder">
-                {pageConfig.footer_placeholder}
+                Footer Placeholder
               </div>
             </div>
           </footer>
