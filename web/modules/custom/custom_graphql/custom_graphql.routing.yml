@@ -1,7 +1,0 @@
-custom_graphql.page_config:
-  path: '/api/page-config'
-  defaults:
-    _controller: '\Drupal\custom_graphql\Controller\PageConfigController::getConfig'
-    _title: 'Page Configuration'
-  requirements:
-    _access: 'TRUE'

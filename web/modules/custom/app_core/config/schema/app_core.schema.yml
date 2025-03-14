@@ -1,0 +1,38 @@
+app_core.page_uuids:
+  type: config_object
+  label: 'Page UUIDs configuration'
+  mapping:
+    required_pages:
+      type: mapping
+      label: 'Required pages'
+      mapping:
+        homepage:
+          type: string
+          label: 'Homepage UUID'
+        catalog:
+          type: string
+          label: 'Catalog UUID'
+        about_us:
+          type: string
+          label: 'About us UUID'
+        contact_page:
+          type: string
+          label: 'Contact page UUID'
+        blog:
+          type: string
+          label: 'Blog UUID'
+    additional_pages:
+      type: sequence
+      label: 'Additional pages'
+      sequence:
+        type: mapping
+        mapping:
+          machine_name:
+            type: string
+            label: 'Machine name'
+          title:
+            type: string
+            label: 'Title'
+          uuid:
+            type: string
+            label: 'UUID' 

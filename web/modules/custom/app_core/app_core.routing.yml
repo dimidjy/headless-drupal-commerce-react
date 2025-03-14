@@ -13,3 +13,19 @@ app_core.react_app:
     _title: 'React App'
   requirements:
     _access: 'True'
+
+app_core.page_uuids:
+  path: '/api/page-uuids'
+  defaults:
+    _controller: '\Drupal\app_core\Controller\PageUuidController::getPageUuids'
+    _title: 'Page UUIDs'
+  requirements:
+    _permission: 'access content'
+
+app_core.front_pages:
+  path: '/admin/config/app-core/front-pages'
+  defaults:
+    _form: '\Drupal\app_core\Form\FrontPagesConfigForm'
+    _title: 'Front Pages Configuration'
+  requirements:
+    _permission: 'administer site configuration'

@@ -33,6 +33,7 @@ class ReactAppController extends ControllerBase {
     // Add settings for the React app.
     $build['#attached']['drupalSettings']['appCore'] = [
       'graphqlEndpoint' => Url::fromRoute('app_core.graphql')->toString(),
+      'pageUuidsEndpoint' => Url::fromRoute('app_core.page_uuids')->toString(),
       'csrfToken' => \Drupal::csrfToken()->get('app_core'),
     ];
 

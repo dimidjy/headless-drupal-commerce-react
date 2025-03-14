@@ -11,37 +11,21 @@ const Paragraph = ({ id }) => {
       try {
         setLoading(true);
         
-        // GraphQL query to fetch paragraph by ID
-        const query = `
-          query GetParagraph($id: ID!) {
-            paragraph(id: $id) {
-              id
-              type
-              uuid
-              fields {
-                name
-                value
-              }
-            }
-          }
-        `;
-        
-        // Make the GraphQL request to Drupal with absolute URL
-        const response = await axios.post('https://chic-nest.lndo.site/api/graphql', {
+        // GraphQL query to fetch paragraph by ID - exactly matching Postman format
+        const query = `query GetParagraph($id: ID!) { paragraph(id: $id) { id, type, uuid, fields {name, value} } }`;
+
+        // Use a relative URL which will be proxied through the development server
+        // This avoids CORS issues since the request appears to come from the same origin
+        const response = await axios.post('/api/graphql', {
           query,
-          variables: { "id": id },
+          variables: {
+            id: id.toString() // Ensure ID is a string as in Postman
+          }
         }, {
-          // Add headers for authentication if needed
           headers: {
             'Content-Type': 'application/json',
-            // If you have authentication tokens, add them here
-            // 'Authorization': 'Bearer YOUR_TOKEN'
-          },
-          // Ensure we're using credentials if needed for auth cookies
-          withCredentials: false
+          }
         });
-        
-        console.log('GraphQL response:', response.data);
         
         if (response.data.errors) {
           throw new Error(response.data.errors[0].message);
@@ -54,6 +38,8 @@ const Paragraph = ({ id }) => {
         // Provide more detailed error information
         const errorMessage = err.response?.data?.message || err.message;
         setError(`Failed to fetch paragraph: ${errorMessage}`);
+        console.error('Full error object:', err);
+        console.error('Response data:', err.response?.data);
         setLoading(false);
       }
     };
@@ -87,19 +73,22 @@ const Paragraph = ({ id }) => {
     return <div className="paragraph-not-found">Paragraph not found</div>;
   }
 
+  console.log('Paragraph:', paragraph);
   // Render the paragraph based on its type
   return (
     <div className={`paragraph paragraph-${paragraph.type}`} data-id={paragraph.id}>
       {paragraph.fields.map((field) => {
         const fieldValue = parseFieldValue(field);
         
+        
         // Render different field types appropriately
         switch (field.name) {
           case 'field_image':
-            if (Array.isArray(fieldValue) && fieldValue[0]?.uri) {
+            console.log('Field image:', fieldValue);
+            if (fieldValue.url) {
               return (
                 <div key={field.name} className="paragraph-field paragraph-field-image">
-                  <img src={fieldValue[0].uri.replace('public://', '/sites/default/files/')} alt={fieldValue[0].alt || ''} />
+                  <img src={fieldValue.url} alt={fieldValue.alt || ''} title={fieldValue.title || ''} />
                 </div>
               );
             }
@@ -124,15 +113,19 @@ const Paragraph = ({ id }) => {
             );
             
           case 'field_link':
-            if (Array.isArray(fieldValue) && fieldValue[0]?.uri) {
+            console.log('Field value:', fieldValue);
+            console.log(Array.isArray(fieldValue));
+            console.log(fieldValue?.uri);
+
+            if (fieldValue.url) {
               return (
                 <a 
                   key={field.name} 
                   className="paragraph-field paragraph-field-link"
-                  href={fieldValue[0].uri}
-                  target={fieldValue[0].options?.target || '_self'}
+                  href={fieldValue.url}
+                  target={fieldValue.options?.target || '_self'}
                 >
-                  {fieldValue[0].title || fieldValue[0].uri}
+                  {fieldValue.title || fieldValue[0].url}
                 </a>
               );
             }

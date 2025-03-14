@@ -1,0 +1,6 @@
+app_core.page_uuid_config:
+  title: 'Page UUIDs Configuration'
+  description: 'Configure UUIDs for pages to be used in the React app.'
+  parent: system.admin_config_system
+  route_name: app_core.page_uuid_config
+  weight: 100
