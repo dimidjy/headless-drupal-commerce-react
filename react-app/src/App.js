@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import client from './utils/graphql';
+import './App.css';
 
 // Components
 import Header from './components/Header';
@@ -73,10 +74,12 @@ function App() {
           
           {/* Main Content Area with Routes */}
           <main className="main-content">
-            <Routes>
-              <Route path="/" element={<HomePage homepageUuid={pageUuids.required_pages.homepage} />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
+            <div className="container-fluid">
+              <Routes>
+                <Route path="/" element={<HomePage homepageUuid={pageUuids.required_pages.homepage} />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </div>
           </main>
           
           <Footer />

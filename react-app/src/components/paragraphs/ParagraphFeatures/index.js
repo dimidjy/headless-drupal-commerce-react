@@ -1,21 +1,19 @@
 import React from 'react';
 import './ParagraphFeatures.css';
 
-const ParagraphFeatures = ({ title, description, image }) => {
+const ParagraphFeatures = ({ items }) => {
   return (
     <div className="features">
-      <h2>{title}</h2>
-      <div dangerouslySetInnerHTML={{ __html: description }} />
-      {image && image.mediaImage && (
-        <div className="feature-image">
+      {items && items.map((item) => (
+        <div key={item.id}>
           <img 
-            src={(image.mediaImage.variations && image.mediaImage.variations[0]?.url) || image.mediaImage.url} 
-            alt={image.mediaImage.alt || ''} 
-            width={image.mediaImage.width}
-            height={image.mediaImage.height}
+            src={(item.featureImage.mediaImage.variations && item.featureImage.mediaImage.variations[0]?.url) || item.featureImage.mediaImage.url} 
+            alt={item.featureImage.mediaImage.alt || ''} 
           />
+          <h2>{item.title}</h2>
+          <div dangerouslySetInnerHTML={{ __html: item.description }} />
         </div>
-      )}
+      ))}
     </div>
   );
 };

@@ -1,16 +1,41 @@
 .features {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 2rem;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+.features > div {
+  flex: 1;
+  padding: 0 15px;
+  min-width: 200px;
+  margin-bottom: 20px;
 }
 
 .features h2 {
   margin-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
-.features .feature-image {
-  margin-top: 1rem;
-}
-
-.features .feature-image img {
-  max-width: 100%;
+.features img {
+  max-width: 60px;
   height: auto;
+  margin-bottom: 1rem;
+}
+
+.features p {
+  color: #777;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .features {
+    flex-direction: column;
+  }
+  
+  .features > div {
+    margin-bottom: 30px;
+  }
 } 

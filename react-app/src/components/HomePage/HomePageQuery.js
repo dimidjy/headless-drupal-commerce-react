@@ -9,6 +9,28 @@ export const GET_HOME_PAGE = gql`
           id
           description
           title
+          slides {
+            ... on ParagraphBillboardSlide {
+              title
+              description
+              image {
+                mediaImage {
+                  width
+                  url
+                  title
+                  height
+                  alt
+                  variations(styles: MEDIUM) {
+                    url
+                  }
+                }
+              }
+              link {
+                title
+                url
+              }
+            }
+          }
         }
         ... on ParagraphBlogPosts {
           id
@@ -22,21 +44,25 @@ export const GET_HOME_PAGE = gql`
         }
         ... on ParagraphFeatures {
           id
-          image {
-            id
-            mediaImage {
-              width
-              url
+          items {
+            ... on ParagraphFeaturesItem {
               title
-              height
-              alt
-              variations(styles: MEDIUM) {
-                url
+              description
+              featureImage {
+                id
+                mediaImage {
+                  width
+                  url
+                  title
+                  height
+                  alt
+                  variations(styles: MEDIUM) {
+                    url
+                  }
+                }
               }
             }
           }
-          description
-          title
         }
         ... on ParagraphFollowUs {
           id
@@ -45,6 +71,7 @@ export const GET_HOME_PAGE = gql`
         ... on ParagraphLogoBar {
           id
           image {
+            id
             mediaImage {
               width
               url
@@ -83,6 +110,7 @@ export const GET_HOME_PAGE = gql`
             }
           }
           title
+          description
           link {
             title
             url

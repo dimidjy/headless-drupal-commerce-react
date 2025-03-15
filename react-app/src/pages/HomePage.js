@@ -44,10 +44,8 @@ const HomePage = ({ homepageUuid }) => {
 
   return (
     <div className="home-page">
-      <div className="container">
-        <h1 className="page-title">{page.title}</h1>
-        <ParagraphRenderer paragraphs={page.paragraphs} />
-      </div>
+      {/* <h1 className="page-title">{page.title}</h1> */}
+      <ParagraphRenderer paragraphs={page.paragraphs} />
     </div>
   );
 };

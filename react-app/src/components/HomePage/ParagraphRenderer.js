@@ -18,7 +18,7 @@ import {
 export const renderParagraph = (paragraph) => {
   switch (paragraph.__typename) {
     case 'ParagraphBillboard':
-      return <ParagraphBillboard title={paragraph.title} description={paragraph.description} />;
+      return <ParagraphBillboard title={paragraph.title} description={paragraph.description} slides={paragraph.slides} />;
     
     case 'ParagraphBlogPosts':
       return <ParagraphBlogPosts posts={paragraph.posts} />;
@@ -27,13 +27,14 @@ export const renderParagraph = (paragraph) => {
       return <ParagraphCategories title={paragraph.title} />;
     
     case 'ParagraphFeatures':
-      return <ParagraphFeatures title={paragraph.title} description={paragraph.description} image={paragraph.image} />;
+      return <ParagraphFeatures items={paragraph.items} />;
     
     case 'ParagraphFollowUs':
       return <ParagraphFollowUs title={paragraph.title} />;
     
     case 'ParagraphLogoBar':
-      return <ParagraphLogoBar image={paragraph.image} />;
+      console.log('ParagraphLogoBar', paragraph);
+      return <ParagraphLogoBar images={paragraph.image} />;
     
     case 'ParagraphProductsSlider':
       return <ParagraphProductsSlider title={paragraph.title} />;
@@ -46,7 +47,7 @@ export const renderParagraph = (paragraph) => {
     
     case 'ParagraphTextAndImage':
       console.log('ParagraphTextAndImage', paragraph);
-      return <ParagraphTextAndImage title={paragraph.title} link={paragraph.link} image={paragraph.image} />;
+      return <ParagraphTextAndImage title={paragraph.title} description={paragraph.description} link={paragraph.link} image={paragraph.image} />;
     
     case 'ParagraphVideo':
       return <ParagraphVideo video={paragraph.video} />;
