@@ -40,7 +40,23 @@ export const GET_HOME_PAGE = gql`
         }
         ... on ParagraphCategories {
           id
-          title
+          categories {
+            ... on TermShop {
+              name
+              shopImage {
+                mediaImage {
+                  width
+                  url
+                  title
+                  height
+                  alt
+                  variations(styles: LARGE) {
+                    url
+                  }
+                }
+              }
+            }
+          }
         }
         ... on ParagraphFeatures {
           id

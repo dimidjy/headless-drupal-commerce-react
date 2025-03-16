@@ -29,6 +29,7 @@
         "drupal/jsonapi_extras": "^3.23",
         "drupal/paragraphs": "^1.19",
         "drupal/pathauto": "^1.11",
+        "drupal/taxonomy_machine_name": "^2.0",
         "drupal/token": "^1.11",
         "drupal/webform": "^6.2",
         "drupal/webp": "^1.0@RC",

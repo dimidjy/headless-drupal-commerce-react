@@ -24,7 +24,7 @@ export const renderParagraph = (paragraph) => {
       return <ParagraphBlogPosts posts={paragraph.posts} />;
     
     case 'ParagraphCategories':
-      return <ParagraphCategories title={paragraph.title} />;
+      return <ParagraphCategories categories={paragraph.categories} />;
     
     case 'ParagraphFeatures':
       return <ParagraphFeatures items={paragraph.items} />;

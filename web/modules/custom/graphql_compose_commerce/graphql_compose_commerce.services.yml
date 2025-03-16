@@ -1,0 +1,5 @@
+services:
+  graphql_compose_commerce.schema_extension:
+    class: Drupal\graphql_compose_commerce\GraphQL\CommerceSchemaExtension
+    tags:
+      - { name: graphql_compose_schema_extension } 

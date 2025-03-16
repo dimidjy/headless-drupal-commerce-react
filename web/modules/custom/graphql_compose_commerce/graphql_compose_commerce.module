@@ -1,0 +1,110 @@
+<?php
+
+/**
+ * @file
+ * GraphQL Compose Commerce module file.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\graphql_compose\Plugin\GraphQLComposeSchemaTypeManager;
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function graphql_compose_commerce_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  if (isset($entity_types['commerce_product'])) {
+    $entity_types['commerce_product']->set('graphql_compose_enabled', TRUE);
+  }
+  
+  if (isset($entity_types['commerce_product_variation'])) {
+    $entity_types['commerce_product_variation']->set('graphql_compose_enabled', TRUE);
+  }
+}
+
+/**
+ * Implements hook_graphql_compose_print_types().
+ */
+function graphql_compose_commerce_graphql_compose_print_types(GraphQLComposeSchemaTypeManager $manager): void {
+  // Use our schema extension service to register types.
+  \Drupal::service('graphql_compose_commerce.schema_extension')->registerTypes($manager);
+}
+
+/**
+ * Implements hook_graphql_compose_print_extensions().
+ */
+function graphql_compose_commerce_graphql_compose_print_extensions(GraphQLComposeSchemaTypeManager $manager): void {
+  // Add query fields for products.
+  $product_extension = new \GraphQL\Type\Definition\ObjectType([
+    'name' => 'Query',
+    'fields' => fn() => [
+      'product' => [
+        'type' => $manager->get('CommerceProduct'),
+        'description' => (string) t('Load a product by ID.'),
+        'args' => [
+          'id' => [
+            'type' => \GraphQL\Type\Definition\Type::nonNull(\GraphQL\Type\Definition\Type::id()),
+            'description' => (string) t('The product ID.'),
+          ],
+        ],
+        'resolve' => function ($value, $args, $context, $info) {
+          $storage = \Drupal::entityTypeManager()->getStorage('commerce_product');
+          return $storage->load($args['id']);
+        },
+      ],
+      'products' => [
+        'type' => \GraphQL\Type\Definition\Type::listOf($manager->get('CommerceProduct')),
+        'description' => (string) t('Load multiple products.'),
+        'args' => [
+          'limit' => [
+            'type' => \GraphQL\Type\Definition\Type::int(),
+            'description' => (string) t('The number of products to load.'),
+            'defaultValue' => 10,
+          ],
+          'offset' => [
+            'type' => \GraphQL\Type\Definition\Type::int(),
+            'description' => (string) t('The number of products to skip.'),
+            'defaultValue' => 0,
+          ],
+        ],
+        'resolve' => function ($value, $args, $context, $info) {
+          $storage = \Drupal::entityTypeManager()->getStorage('commerce_product');
+          $query = $storage->getQuery()
+            ->accessCheck(TRUE)
+            ->range($args['offset'], $args['limit']);
+          
+          $ids = $query->execute();
+          if (empty($ids)) {
+            return [];
+          }
+          
+          return $storage->loadMultiple($ids);
+        },
+      ],
+    ],
+  ]);
+  
+  // Add query fields for product variations.
+  $variation_extension = new \GraphQL\Type\Definition\ObjectType([
+    'name' => 'Query',
+    'fields' => fn() => [
+      'productVariation' => [
+        'type' => $manager->get('CommerceProductVariation'),
+        'description' => (string) t('Load a product variation by ID.'),
+        'args' => [
+          'id' => [
+            'type' => \GraphQL\Type\Definition\Type::nonNull(\GraphQL\Type\Definition\Type::id()),
+            'description' => (string) t('The product variation ID.'),
+          ],
+        ],
+        'resolve' => function ($value, $args, $context, $info) {
+          $storage = \Drupal::entityTypeManager()->getStorage('commerce_product_variation');
+          return $storage->load($args['id']);
+        },
+      ],
+    ],
+  ]);
+  
+  $manager->extend($product_extension);
+  $manager->extend($variation_extension);
+} 
