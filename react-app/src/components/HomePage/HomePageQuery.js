@@ -1,4 +1,17 @@
 import { gql } from '@apollo/client';
+import {
+  PARAGRAPH_BILLBOARD_FRAGMENT,
+  PARAGRAPH_BLOG_POSTS_FRAGMENT,
+  PARAGRAPH_CATEGORIES_FRAGMENT,
+  PARAGRAPH_FEATURES_FRAGMENT,
+  PARAGRAPH_FOLLOW_US_FRAGMENT,
+  PARAGRAPH_LOGO_BAR_FRAGMENT,
+  PARAGRAPH_PRODUCTS_SLIDER_FRAGMENT,
+  PARAGRAPH_TESTIMONIALS_FRAGMENT,
+  PARAGRAPH_TEXT_AND_IMAGE_FRAGMENT,
+  PARAGRAPH_VIDEO_FRAGMENT,
+  PARAGRAPH_WEBFORM_FRAGMENT
+} from '../paragraphs/fragments';
 
 // Define the GraphQL query for fetching the homepage data
 export const GET_HOME_PAGE = gql`
@@ -6,200 +19,52 @@ export const GET_HOME_PAGE = gql`
     nodePage(id: $id) {
       paragraphs {
         ... on ParagraphBillboard {
-          id
-          description
-          title
-          slides {
-            ... on ParagraphBillboardSlide {
-              title
-              description
-              image {
-                mediaImage {
-                  width
-                  url
-                  title
-                  height
-                  alt
-                  variations(styles: MEDIUM) {
-                    url
-                  }
-                }
-              }
-              link {
-                title
-                url
-              }
-            }
-          }
+          ...ParagraphBillboardFragment
         }
         ... on ParagraphBlogPosts {
-          id
-          posts {
-            ... on NodeArticle {
-              id
-              title
-              image {
-                  id
-                  mediaImage {
-                    width
-                    url
-                    title
-                    height
-                    alt
-                    variations(styles: LARGE) {
-                      url
-                    }
-                  }
-              }
-            }
-          }
+          ...ParagraphBlogPostsFragment
         }
         ... on ParagraphCategories {
-          id
-          categories {
-            ... on TermShop {
-              name
-              shopImage {
-                mediaImage {
-                  width
-                  url
-                  title
-                  height
-                  alt
-                  variations(styles: LARGE) {
-                    url
-                  }
-                }
-              }
-            }
-          }
+          ...ParagraphCategoriesFragment
         }
         ... on ParagraphFeatures {
-          id
-          items {
-            ... on ParagraphFeaturesItem {
-              title
-              description
-              featureImage {
-                id
-                mediaImage {
-                  width
-                  url
-                  title
-                  height
-                  alt
-                  variations(styles: MEDIUM) {
-                    url
-                  }
-                }
-              }
-            }
-          }
+          ...ParagraphFeaturesFragment
         }
         ... on ParagraphFollowUs {
-          id
-          title
+          ...ParagraphFollowUsFragment
         }
         ... on ParagraphLogoBar {
-          id
-          image {
-            id
-            mediaImage {
-              width
-              url
-              title
-              height
-              alt
-              variations(styles: MEDIUM) {
-                url
-              }
-            }
-          }
+          ...ParagraphLogoBarFragment
         }
         ... on ParagraphProductsSlider {
-          id
-          title
-          productsList {
-            ... on CommerceProductDefault {
-              id
-              variations {
-                ... on CommerceProductVariationDefault {
-                  id
-                  productImage {
-                    id
-                    mediaImage {
-                      width
-                      url
-                      title
-                      height
-                      alt
-                      variations(styles: LARGE) {
-                        url
-                      }
-                    }
-                  }
-                  price
-                }
-              }
-            }
-          }
+          ...ParagraphProductsSliderFragment
         }
         ... on ParagraphTestimonials {
-          id
-          title
-          testimonials {
-            ... on ParagraphTestimonialsItem {
-              id
-              author
-              response
-            }
-          }
+          ...ParagraphTestimonialsFragment
         }
         ... on ParagraphTextAndImage {
-          id
-          image {
-            mediaImage {
-              width
-              url
-              title
-              height
-              alt
-              variations(styles: LARGE) {
-                url
-              }
-            }
-          }
-          title
-          description
-          link {
-            title
-            url
-          }
+          ...ParagraphTextAndImageFragment
         }
         ... on ParagraphVideo {
-          id
-          video {
-            ... on MediaRemoteVideo {
-              id
-              name
-              mediaOembedVideo
-            }
-            ... on MediaVideo {
-              id
-              name
-              mediaVideoFile {
-                url
-                name
-              }
-            }
-          }
+          ...ParagraphVideoFragment
         }
         ... on ParagraphWebform {
-          id
+          ...ParagraphWebformFragment
         }
       }
       path
       title
     }
   }
+  ${PARAGRAPH_BILLBOARD_FRAGMENT}
+  ${PARAGRAPH_BLOG_POSTS_FRAGMENT}
+  ${PARAGRAPH_CATEGORIES_FRAGMENT}
+  ${PARAGRAPH_FEATURES_FRAGMENT}
+  ${PARAGRAPH_FOLLOW_US_FRAGMENT}
+  ${PARAGRAPH_LOGO_BAR_FRAGMENT}
+  ${PARAGRAPH_PRODUCTS_SLIDER_FRAGMENT}
+  ${PARAGRAPH_TESTIMONIALS_FRAGMENT}
+  ${PARAGRAPH_TEXT_AND_IMAGE_FRAGMENT}
+  ${PARAGRAPH_VIDEO_FRAGMENT}
+  ${PARAGRAPH_WEBFORM_FRAGMENT}
 `; 
