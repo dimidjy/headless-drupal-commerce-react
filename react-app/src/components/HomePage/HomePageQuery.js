@@ -103,6 +103,30 @@ export const GET_HOME_PAGE = gql`
         ... on ParagraphProductsSlider {
           id
           title
+          productsList {
+            ... on CommerceProductDefault {
+              id
+              variations {
+                ... on CommerceProductVariationDefault {
+                  id
+                  productImage {
+                    id
+                    mediaImage {
+                      width
+                      url
+                      title
+                      height
+                      alt
+                      variations(styles: LARGE) {
+                        url
+                      }
+                    }
+                  }
+                  price
+                }
+              }
+            }
+          }
         }
         ... on ParagraphTestimonials {
           id

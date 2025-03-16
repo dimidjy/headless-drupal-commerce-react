@@ -33,11 +33,11 @@ export const renderParagraph = (paragraph) => {
       return <ParagraphFollowUs title={paragraph.title} />;
     
     case 'ParagraphLogoBar':
-      console.log('ParagraphLogoBar', paragraph);
       return <ParagraphLogoBar images={paragraph.image} />;
     
     case 'ParagraphProductsSlider':
-      return <ParagraphProductsSlider title={paragraph.title} />;
+      console.log('ParagraphProductsSlider', paragraph);
+      return <ParagraphProductsSlider title={paragraph.title} products_list={paragraph.productsList} />;
     
     case 'ParagraphTestimonials':
       return <ParagraphTestimonials />;
@@ -46,7 +46,6 @@ export const renderParagraph = (paragraph) => {
       return <ParagraphTestimonialsItem author={paragraph.author} />;
     
     case 'ParagraphTextAndImage':
-      console.log('ParagraphTextAndImage', paragraph);
       return <ParagraphTextAndImage title={paragraph.title} description={paragraph.description} link={paragraph.link} image={paragraph.image} />;
     
     case 'ParagraphVideo':

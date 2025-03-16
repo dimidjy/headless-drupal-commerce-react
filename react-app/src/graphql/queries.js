@@ -18,6 +18,19 @@ export const PRODUCT_FRAGMENT = gql`
         url
       }
     }
+    price {
+      number
+      currencyCode
+      formatted
+    }
+    product_image {
+      url
+      alt
+      variations(styles: MEDIUM) {
+        url
+      }
+    }
+    url
     variations {
       id
       sku

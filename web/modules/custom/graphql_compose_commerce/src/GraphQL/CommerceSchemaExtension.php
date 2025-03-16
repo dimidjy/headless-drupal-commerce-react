@@ -21,22 +21,28 @@ class CommerceSchemaExtension {
    *   The schema type manager.
    */
   public function registerTypes(GraphQLComposeSchemaTypeManager $registry): void {
-    // Define the CommercePriceItem type.
+    // Note: CommercePriceItem is now handled as a String type directly in the CommercePrice field type class
+    
+    // Define the VariationPriceItem type for accessing variation prices
     $registry->add(new ObjectType([
-      'name' => 'CommercePriceItem',
-      'description' => (string) $this->t('A price value with currency information.'),
+      'name' => 'VariationPriceItem',
+      'description' => (string) $this->t('A product variation with its price information.'),
       'fields' => [
-        'number' => [
-          'type' => Type::string(),
-          'description' => (string) $this->t('The price number.'),
+        'variation_id' => [
+          'type' => Type::id(),
+          'description' => (string) $this->t('The variation ID.'),
         ],
-        'currency_code' => [
+        'sku' => [
           'type' => Type::string(),
-          'description' => (string) $this->t('The currency code.'),
+          'description' => (string) $this->t('The variation SKU.'),
         ],
-        'formatted' => [
+        'title' => [
           'type' => Type::string(),
-          'description' => (string) $this->t('The formatted price with currency.'),
+          'description' => (string) $this->t('The variation title.'),
+        ],
+        'price' => [
+          'type' => Type::string(),
+          'description' => (string) $this->t('The formatted variation price.'),
         ],
       ],
     ]));
