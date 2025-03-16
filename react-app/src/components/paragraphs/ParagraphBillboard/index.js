@@ -23,14 +23,14 @@ const ParagraphBillboard = ({ title, description, slides }) => {
   }, [currentSlide, totalSlides]);
 
   // Image processing functions
-  const getImageUrl = (image) => {
-    if (!image || !image.mediaImage) return '';
-    return image.mediaImage.variations?.[0]?.url || image.mediaImage.url || '';
+  const getImageUrl = (imageArray) => {
+    if (!imageArray || !imageArray.length || !imageArray[0].mediaImage) return '';
+    return imageArray[0].mediaImage.variations?.[0]?.url || imageArray[0].mediaImage.url || '';
   };
 
-  const getImageAlt = (image, fallbackTitle) => {
-    if (!image || !image.mediaImage) return fallbackTitle || '';
-    return image.mediaImage.alt || fallbackTitle || '';
+  const getImageAlt = (imageArray, fallbackTitle) => {
+    if (!imageArray || !imageArray.length || !imageArray[0].mediaImage) return fallbackTitle || '';
+    return imageArray[0].mediaImage.alt || fallbackTitle || '';
   };
 
   const handleImageLoad = (index) => {
@@ -85,7 +85,7 @@ const ParagraphBillboard = ({ title, description, slides }) => {
                 className="slide"
                 style={{ width: `${100 / totalSlides}%` }}
               >
-                {slide.image && slide.image.mediaImage && (
+                {slide.image && slide.image.length > 0 && (
                   <div className={`slide-image ${isImageLoaded(index) ? 'loaded' : 'loading'}`}>
                     <img 
                       src={getImageUrl(slide.image)} 
