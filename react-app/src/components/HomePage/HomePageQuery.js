@@ -35,7 +35,23 @@ export const GET_HOME_PAGE = gql`
         ... on ParagraphBlogPosts {
           id
           posts {
-            id
+            ... on NodeArticle {
+              id
+              title
+              image {
+                  id
+                  mediaImage {
+                    width
+                    url
+                    title
+                    height
+                    alt
+                    variations(styles: LARGE) {
+                      url
+                    }
+                  }
+              }
+            }
           }
         }
         ... on ParagraphCategories {
@@ -130,10 +146,14 @@ export const GET_HOME_PAGE = gql`
         }
         ... on ParagraphTestimonials {
           id
-        }
-        ... on ParagraphTestimonialsItem {
-          id
-          author
+          title
+          testimonials {
+            ... on ParagraphTestimonialsItem {
+              id
+              author
+              response
+            }
+          }
         }
         ... on ParagraphTextAndImage {
           id

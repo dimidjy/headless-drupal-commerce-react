@@ -8,7 +8,6 @@ import {
   ParagraphLogoBar,
   ParagraphProductsSlider,
   ParagraphTestimonials,
-  ParagraphTestimonialsItem,
   ParagraphTextAndImage,
   ParagraphVideo,
   ParagraphWebform
@@ -40,10 +39,7 @@ export const renderParagraph = (paragraph) => {
       return <ParagraphProductsSlider title={paragraph.title} products_list={paragraph.productsList} />;
     
     case 'ParagraphTestimonials':
-      return <ParagraphTestimonials />;
-    
-    case 'ParagraphTestimonialsItem':
-      return <ParagraphTestimonialsItem author={paragraph.author} />;
+      return <ParagraphTestimonials title={paragraph.title} testimonials={paragraph.testimonials} />;
     
     case 'ParagraphTextAndImage':
       return <ParagraphTextAndImage title={paragraph.title} description={paragraph.description} link={paragraph.link} image={paragraph.image} />;
