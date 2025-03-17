@@ -40,9 +40,6 @@ const ParagraphVideo = ({ video }) => {
         videoRef.current.play();
       }
       setIsPlaying(!isPlaying);
-    } else if (videoId && wrapperRef.current) {
-      // For YouTube videos, we'll just hide the overlay
-      setIsPlaying(true);
     }
   };
 
@@ -74,16 +71,8 @@ const ParagraphVideo = ({ video }) => {
           {videoId ? (
             <div 
               ref={wrapperRef}
-              className={`video-wrapper ${isPlaying ? 'playing' : ''}`}
-              onClick={handlePlayClick}
+              className="video-wrapper"
             >
-              <div className="video-overlay">
-                <div className="play-button">
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9.5 7.5V16.5L16.5 12L9.5 7.5Z" fill="white" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </div>
               <iframe 
                 src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0&modestbranding=1`}
                 title="YouTube video player"
@@ -106,6 +95,11 @@ const ParagraphVideo = ({ video }) => {
             <div className="play-button">
               <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.5 7.5V16.5L16.5 12L9.5 7.5Z" fill="white" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div className="stop-button">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="7" y="7" width="10" height="10" rx="1" fill="white" stroke="white" strokeWidth="1.5"/>
               </svg>
             </div>
           </div>

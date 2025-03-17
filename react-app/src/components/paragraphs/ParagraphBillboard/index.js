@@ -6,18 +6,27 @@ const ParagraphBillboard = ({ title, description, slides }) => {
   const slidesContainerRef = useRef(null);
   const totalSlides = slides?.length || 0;
   const [loadedImages, setLoadedImages] = useState([]);
+  const [maxSlideIndex, setMaxSlideIndex] = useState(0);
   
   const handlePrevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
+    if (currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1);
+    }
   };
 
   const handleNextSlide = () => {
-    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+    if (currentSlide < maxSlideIndex) {
+      setCurrentSlide(currentSlide + 1);
+    }
   };
   
   useEffect(() => {
     if (slidesContainerRef.current && totalSlides > 0) {
-      const slideWidth = slidesContainerRef.current.offsetWidth / Math.min(3, totalSlides);
+      const visibleSlides = Math.min(3, totalSlides);
+      const maxIndex = Math.max(0, totalSlides - visibleSlides);
+      setMaxSlideIndex(maxIndex);
+      
+      const slideWidth = slidesContainerRef.current.offsetWidth / visibleSlides;
       slidesContainerRef.current.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
     }
   }, [currentSlide, totalSlides]);
@@ -59,7 +68,7 @@ const ParagraphBillboard = ({ title, description, slides }) => {
       </div>
       
       <div className="billboard-slides">
-        {totalSlides > visibleSlides && (
+        {totalSlides > visibleSlides && currentSlide > 0 && (
           <button 
             className="slide-nav prev-slide" 
             aria-label="Previous slide"
@@ -111,7 +120,7 @@ const ParagraphBillboard = ({ title, description, slides }) => {
           </div>
         </div>
         
-        {totalSlides > visibleSlides && (
+        {totalSlides > visibleSlides && currentSlide < maxSlideIndex && (
           <button 
             className="slide-nav next-slide" 
             aria-label="Next slide"

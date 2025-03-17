@@ -35,9 +35,16 @@
   z-index: 1;
   pointer-events: none;
   transition: opacity 0.3s ease;
+  opacity: 0; /* Hide overlay by default */
 }
 
-.play-button {
+/* Show overlay only on hover */
+.video-wrapper:hover .video-overlay {
+  opacity: 1;
+}
+
+.play-button,
+.stop-button {
   width: 80px;
   height: 80px;
   background-color: rgba(255, 255, 255, 0.15);
@@ -52,7 +59,20 @@
   position: relative;
 }
 
-.play-button::before {
+.stop-button {
+  display: none; /* Hide stop button by default */
+}
+
+.video-wrapper.playing .play-button {
+  display: none; /* Hide play button when playing */
+}
+
+.video-wrapper.playing .stop-button {
+  display: flex; /* Show stop button when playing */
+}
+
+.play-button::before,
+.stop-button::before {
   content: '';
   position: absolute;
   top: -5px;
@@ -79,14 +99,19 @@
   }
 }
 
-.play-button svg {
+.play-button svg,
+.stop-button svg {
   width: 30px;
   height: 30px;
-  margin-left: 5px; /* Adjust for play icon centering */
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
 }
 
-.video-wrapper:hover .play-button {
+.play-button svg {
+  margin-left: 5px; /* Adjust for play icon centering */
+}
+
+.video-wrapper:hover .play-button,
+.video-wrapper:hover .stop-button {
   transform: scale(1.05);
   background-color: rgba(255, 255, 255, 0.25);
   border-color: rgba(255, 255, 255, 0.8);
@@ -102,19 +127,16 @@
   opacity: 1;
 }
 
-/* Hide overlay when video is playing */
-.video-wrapper.playing .video-overlay {
-  opacity: 0;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .play-button {
+  .play-button,
+  .stop-button {
     width: 60px;
     height: 60px;
   }
   
-  .play-button svg {
+  .play-button svg,
+  .stop-button svg {
     width: 24px;
     height: 24px;
   }
