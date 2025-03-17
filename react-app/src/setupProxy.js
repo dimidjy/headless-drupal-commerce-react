@@ -5,6 +5,47 @@ module.exports = function(app) {
   console.log('=== Setting up Proxy Middleware ===');
   console.log('Target URL: https://chic-nest.lndo.site');
   
+  // Add proxy for webform_rest endpoint
+  app.use(
+    '/webform_rest',
+    createProxyMiddleware({
+      target: 'https://chic-nest.lndo.site',
+      changeOrigin: true,
+      secure: false,
+      logLevel: 'debug',
+      onProxyReq: (proxyReq, req) => {
+        console.log('\n=== Webform Request Debug ===');
+        console.log('Webform Request URL:', req.url);
+        console.log('Webform Request Method:', req.method);
+        console.log('Webform Target URL:', 'https://chic-nest.lndo.site' + proxyReq.path);
+        
+        // If the request has a body, ensure it's properly forwarded
+        if (req.body) {
+          const bodyData = JSON.stringify(req.body);
+          console.log('Webform Request Body:', JSON.stringify(req.body, null, 2));
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+      },
+      onProxyRes: (proxyRes, req, res) => {
+        console.log('\n=== Webform Response Debug ===');
+        console.log('Webform Response Status:', proxyRes.statusCode);
+        console.log('Webform Response Headers:', proxyRes.headers);
+      },
+      onError: (err, req, res) => {
+        console.error('\n=== Webform Proxy Error ===');
+        console.error('Error Message:', err.message);
+        console.error('Request URL that caused error:', req.url);
+        res.writeHead(500, {
+          'Content-Type': 'application/json',
+        });
+        res.end(JSON.stringify({ 
+          errors: [{ message: 'Proxy Error: ' + err.message }] 
+        }));
+      }
+    })
+  );
+  
   app.use(
     '/graphql-default-api',
     createProxyMiddleware({

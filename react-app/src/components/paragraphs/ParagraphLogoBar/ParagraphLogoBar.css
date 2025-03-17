@@ -1,11 +1,57 @@
+.logo-bar-container {
+  width: 100%;
+  padding: 60px 0;
+  background-color: #ffffff;
+}
+
 .logo-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.logo-item {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem 0;
+  padding: 15px;
+  flex: 0 0 auto;
 }
 
-.logo-bar img {
+.logo-item img {
   max-width: 100%;
   height: auto;
+  max-height: 60px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  filter: grayscale(100%);
+}
+
+.logo-item img:hover {
+  opacity: 1;
+  filter: grayscale(0);
+}
+
+@media (max-width: 768px) {
+  .logo-bar {
+    justify-content: center;
+  }
+  
+  .logo-item {
+    flex: 0 0 33.33%;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-bar-container {
+    padding: 30px 0;
+  }
+  
+  .logo-item {
+    flex: 0 0 50%;
+  }
 } 

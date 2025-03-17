@@ -20,7 +20,7 @@ export const renderParagraph = (paragraph) => {
       return <ParagraphBillboard title={paragraph.title} description={paragraph.description} slides={paragraph.slides} />;
     
     case 'ParagraphBlogPosts':
-      return <ParagraphBlogPosts posts={paragraph.posts} />;
+      return <ParagraphBlogPosts title={paragraph.title} posts={paragraph.posts} />;
     
     case 'ParagraphCategories':
       return <ParagraphCategories categories={paragraph.categories} />;
@@ -29,7 +29,7 @@ export const renderParagraph = (paragraph) => {
       return <ParagraphFeatures items={paragraph.items} />;
     
     case 'ParagraphFollowUs':
-      return <ParagraphFollowUs title={paragraph.title} />;
+      return <ParagraphFollowUs title={paragraph.title} image={paragraph.image} />;
     
     case 'ParagraphLogoBar':
       return <ParagraphLogoBar images={paragraph.image} />;
