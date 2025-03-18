@@ -1,41 +1,31 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_CART, UPDATE_CART_ITEM, REMOVE_CART_ITEM } from '../../../graphql/queries';
 import './CartPage.css';
 
 const CartPage = () => {
   const [quantities, setQuantities] = useState({});
   const navigate = useNavigate();
   
-  // Fetch cart data using GraphQL
-  const { loading, error, data, refetch } = useQuery(GET_CART, {
-    fetchPolicy: 'network-only', // Don't use cache for cart data
-    onCompleted: (data) => {
-      // Initialize quantities state from fetched data
-      if (data?.cart?.items) {
-        const initialQuantities = {};
-        data.cart.items.forEach(item => {
-          initialQuantities[item.id] = item.quantity;
-        });
-        setQuantities(initialQuantities);
+  // Placeholder cart data
+  const placeholderCart = {
+    items: [
+      {
+        id: '1',
+        title: 'Sample Product',
+        quantity: 1,
+        unitPrice: { formatted: '$99.99' },
+        totalPrice: { formatted: '$99.99' },
+        purchasedEntity: {
+          id: '1',
+          sku: 'SAMPLE-001',
+          images: [{ variations: [{ url: 'https://via.placeholder.com/150' }] }]
+        }
       }
-    }
-  });
+    ],
+    total: { formatted: '$99.99' }
+  };
 
-  // Update cart item mutation
-  const [updateCartItem, { loading: updateLoading }] = useMutation(UPDATE_CART_ITEM, {
-    onCompleted: () => {
-      refetch(); // Refresh cart data after update
-    }
-  });
-
-  // Remove cart item mutation
-  const [removeCartItem, { loading: removeLoading }] = useMutation(REMOVE_CART_ITEM, {
-    onCompleted: () => {
-      refetch(); // Refresh cart data after removal
-    }
-  });
+  const [cartData, setCartData] = useState(placeholderCart);
   
   const handleQuantityChange = (itemId, newQuantity) => {
     setQuantities({
@@ -45,68 +35,24 @@ const CartPage = () => {
   };
   
   const handleUpdateCart = () => {
-    // Process each item that needs updating
-    const promises = Object.entries(quantities).map(([itemId, quantity]) => {
-      const cartItem = data.cart.items.find(item => item.id === itemId);
-      if (cartItem && cartItem.quantity !== quantity) {
-        return updateCartItem({
-          variables: {
-            orderItemId: itemId,
-            quantity: parseInt(quantity, 10)
-          }
-        });
-      }
-      return Promise.resolve();
-    });
-    
-    Promise.all(promises)
-      .then(() => {
-        // Show success notification if needed
-      })
-      .catch(err => {
-        console.error('Error updating cart:', err);
-      });
+    // Placeholder for cart update functionality
+    console.log('Cart update will be implemented');
   };
   
   const handleRemoveItem = (itemId) => {
-    removeCartItem({
-      variables: {
-        orderItemId: itemId
-      }
-    }).catch(err => {
-      console.error('Error removing item:', err);
-    });
+    // Placeholder for remove item functionality
+    console.log('Remove item will be implemented');
   };
   
   const handleCheckout = () => {
     navigate('/checkout');
   };
   
-  // Calculate subtotal from cart items
   const calculateSubtotal = () => {
-    if (!data?.cart?.items?.length) return { formatted: '$0.00' };
-    return data.cart.total;
+    return cartData.total;
   };
-  
-  if (loading) {
-    return (
-      <div className="cart-container">
-        <h1 className="cart-title">Shopping cart</h1>
-        <div className="cart-loading">Loading cart data...</div>
-      </div>
-    );
-  }
-  
-  if (error) {
-    return (
-      <div className="cart-container">
-        <h1 className="cart-title">Shopping cart</h1>
-        <div className="cart-error">Error loading cart: {error.message}</div>
-      </div>
-    );
-  }
 
-  const cartItems = data?.cart?.items || [];
+  const cartItems = cartData.items || [];
   
   return (
     <div className="cart-container">
@@ -162,9 +108,8 @@ const CartPage = () => {
                   <button 
                     className="remove-button"
                     onClick={() => handleRemoveItem(item.id)}
-                    disabled={removeLoading}
                   >
-                    {removeLoading ? 'Removing...' : 'Remove'}
+                    Remove
                   </button>
                 </div>
                 <div className="cart-cell cart-item-total">
@@ -189,9 +134,8 @@ const CartPage = () => {
             <button 
               className="btn update-cart" 
               onClick={handleUpdateCart}
-              disabled={updateLoading}
             >
-              {updateLoading ? 'Updating...' : 'Update cart'}
+              Update cart
             </button>
             <button 
               className="btn checkout" 

@@ -128,7 +128,33 @@ class PathController extends ControllerBase {
       }
     }
     
-    // If we get here, no node was found
+    // Check if this is a commerce product path
+    if (preg_match('/^\/product\/(\d+)$/', $internal_path, $matches)) {
+      $product_id = $matches[1];
+      
+      try {
+        // Load the product
+        $product = $this->entityTypeManager->getStorage('commerce_product')->load($product_id);
+        
+        if ($product) {
+          // Return the UUID and additional product info
+          return new JsonResponse([
+            'uuid' => $product->uuid(),
+            'product_id' => $product_id,
+            'title' => $product->getTitle(),
+            'type' => 'commerce_product',
+            'bundle' => $product->bundle(),
+          ]);
+        }
+      }
+      catch (\Exception $e) {
+        \Drupal::logger('app_core')->error('Error loading product: @error', [
+          '@error' => $e->getMessage(),
+        ]);
+      }
+    }
+    
+    // If we get here, no node or product was found
     return new JsonResponse(['error' => 'Page not found'], 404);
   }
 } 

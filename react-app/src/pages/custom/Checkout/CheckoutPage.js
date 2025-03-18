@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_CART } from '../../../graphql/queries';
+import React, { useState } from 'react';
 import ShippingForm from './ShippingForm';
 import BillingForm from './BillingForm';
 import PaymentForm from './PaymentForm';
@@ -21,11 +19,19 @@ const CheckoutPage = () => {
     payment: {},
     sameAsShipping: true
   });
-  
-  // Fetch cart data to display during checkout
-  const { loading, error, data, refetch } = useQuery(GET_CART, {
-    fetchPolicy: 'network-only' // Always fetch fresh cart data
-  });
+
+  // Placeholder cart data
+  const placeholderCart = {
+    items: [
+      {
+        id: '1',
+        title: 'Sample Product',
+        quantity: 1,
+        totalPrice: { formatted: '$99.99' }
+      }
+    ],
+    total: { formatted: '$99.99' }
+  };
   
   // Navigation between checkout steps
   const goToNextStep = () => {
@@ -123,7 +129,7 @@ const CheckoutPage = () => {
         return (
           <ReviewOrder
             checkoutData={checkoutData}
-            cart={data?.cart}
+            cart={placeholderCart}
             onBack={goToPreviousStep}
             onEditStep={(step) => setCurrentStep(step)}
             onPlaceOrder={() => handlePlaceOrder()}
@@ -136,22 +142,9 @@ const CheckoutPage = () => {
   
   // Place order function (to be implemented)
   const handlePlaceOrder = () => {
-    // Call place order mutation
-    alert('Order will be placed with the checkout data: ' + JSON.stringify(checkoutData));
-    // Navigate to confirmation page after order is placed
+    // Placeholder for order placement
+    console.log('Order will be placed with the checkout data:', checkoutData);
   };
-  
-  if (loading) {
-    return <div className="checkout-loading">Loading checkout...</div>;
-  }
-  
-  if (error) {
-    return <div className="checkout-error">Error: {error.message}</div>;
-  }
-  
-  if (!data?.cart?.items?.length) {
-    return <div className="checkout-empty">Your cart is empty. Please add items before proceeding to checkout.</div>;
-  }
   
   return (
     <div className="checkout-container">
@@ -189,7 +182,7 @@ const CheckoutPage = () => {
           <div className="order-summary">
             <h3>Order Summary</h3>
             <div className="order-items">
-              {data?.cart?.items?.map(item => (
+              {placeholderCart.items.map(item => (
                 <div key={item.id} className="order-item">
                   <div className="item-details">
                     <div className="item-name">{item.title}</div>
@@ -202,11 +195,11 @@ const CheckoutPage = () => {
             <div className="order-totals">
               <div className="order-subtotal">
                 <span>Subtotal</span>
-                <span>{data?.cart?.total?.formatted}</span>
+                <span>{placeholderCart.total.formatted}</span>
               </div>
               <div className="order-total">
                 <span>Total</span>
-                <span>{data?.cart?.total?.formatted}</span>
+                <span>{placeholderCart.total.formatted}</span>
               </div>
             </div>
           </div>

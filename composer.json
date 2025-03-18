@@ -27,6 +27,7 @@
         "drupal/devel": "^5.3",
         "drupal/elasticsearch_search_api": "^2.0",
         "drupal/graphql": "^4.5",
+        "drupal/graphql_commerce": "^2.0@dev",
         "drupal/graphql_compose": "^2.3",
         "drupal/graphql_compose_fragments": "^1.0",
         "drupal/jsonapi_extras": "^3.23",

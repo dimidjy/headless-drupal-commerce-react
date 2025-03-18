@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Navigate } from 'react-router-dom';
 import { GET_PAGE } from '../components/Page/PageQuery';
 import { NoUuid, Loading, ErrorMessage, NoContent } from '../components/Page/StatusMessages';
 import ParagraphRenderer from '../components/Page/ParagraphRenderer';
@@ -11,16 +11,30 @@ const Page = ({ pageUuid: propPageUuid }) => {
   const [pageUuid, setPageUuid] = useState(propPageUuid);
   const [fetchingUuid, setFetchingUuid] = useState(!propPageUuid);
   const [fetchError, setFetchError] = useState(null);
+  const [pageType, setPageType] = useState(null);
+  const [redirectData, setRedirectData] = useState(null);
 
   useEffect(() => {
     // Reset state when path changes
     setFetchError(null);
     setFetchingUuid(true);
+    setPageType(null);
+    setRedirectData(null);
     
     if (!propPageUuid) {
       fetchPageUuidByPath(location.pathname)
         .then(data => {
           setPageUuid(data.uuid);
+          setPageType(data.type);
+          
+          // Handle commerce product redirects
+          if (data.type === 'commerce_product') {
+            setRedirectData({
+              pathname: `/product/${data.product_id}`,
+              state: { productUuid: data.uuid }
+            });
+          }
+          
           setFetchingUuid(false);
         })
         .catch(error => {
@@ -35,13 +49,19 @@ const Page = ({ pageUuid: propPageUuid }) => {
 
   const { loading, error, data } = useQuery(GET_PAGE, {
     variables: { id: pageUuid },
-    skip: !pageUuid
+    skip: !pageUuid || pageType === 'commerce_product'
   });
 
   // Handle different states
   if (fetchingUuid) return <Loading message="Locating page..." />;
   if (fetchError) return <ErrorMessage message={fetchError} />;
   if (!pageUuid) return <NoUuid />;
+  
+  // Handle commerce product redirects
+  if (redirectData) {
+    return <Navigate to={redirectData.pathname} state={redirectData.state} replace />;
+  }
+  
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error.message} />;
   
