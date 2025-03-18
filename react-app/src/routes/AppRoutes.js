@@ -5,6 +5,9 @@ import { Routes, Route } from 'react-router-dom';
 import Page from '../pages/Page';
 import NotFoundPage from '../pages/NotFoundPage';
 
+// Custom Pages
+import { CartPage } from '../pages/custom';
+
 /**
  * AppRoutes component handles all the application routing
  * 
@@ -18,6 +21,9 @@ const AppRoutes = () => {
         path="/" 
         element={<Page />} 
       />
+      
+      {/* Custom Pages */}
+      <Route path="/cart" element={<CartPage />} />
       
       {/* Dynamic routes - any path */}
       <Route 
