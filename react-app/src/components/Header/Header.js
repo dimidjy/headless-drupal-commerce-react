@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
+import MainMenu from './MainMenu/MainMenu';
 
 const Header = () => {
   return (
@@ -10,16 +11,7 @@ const Header = () => {
           <div className="header-left">
             <Link to="/" className="logo">ChicNest</Link>
           </div>
-          <nav className="nav-menu">
-            <ul>
-              <li><Link to="/">HOME</Link></li>
-              <li><Link to="/shop">SHOP</Link></li>
-              <li><Link to="/blog">BLOG</Link></li>
-              <li><Link to="/pages">PAGES</Link></li>
-              <li><Link to="/blog">BLOG</Link></li>
-              <li><Link to="/contact">CONTACT</Link></li>
-            </ul>
-          </nav>
+          <MainMenu />
           <div className="header-right">
             <div className="header-right-item">
               <Link to="/wishlist" className="wishlist-link">WISHLIST (0)</Link>
