@@ -3,6 +3,7 @@
   color: #666;
   padding: 60px 0 20px;
   border-top: 1px solid #eee;
+  font-family: 'Jost', sans-serif;
 }
 
 .footer-content {
@@ -29,6 +30,7 @@
   margin-bottom: 20px;
   color: #333;
   letter-spacing: 1px;
+  font-family: 'Marcellus', serif;
 }
 
 .footer-column p {

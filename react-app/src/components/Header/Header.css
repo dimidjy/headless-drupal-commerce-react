@@ -19,6 +19,7 @@
 }
 
 .header-left .logo {
+  font-family: 'Marcellus', serif;
   color: #000;
   letter-spacing: 2px;
   text-decoration: none;
@@ -46,6 +47,7 @@
 }
 
 .nav-menu a {
+  font-family: 'Jost', sans-serif;
   color: #333;
   font-size: 14px;
   font-weight: 500;
@@ -70,6 +72,7 @@
 }
 
 .header-right-item a {
+  font-family: 'Jost', sans-serif;
   color: #333;
   font-size: 14px;
   font-weight: 500;
