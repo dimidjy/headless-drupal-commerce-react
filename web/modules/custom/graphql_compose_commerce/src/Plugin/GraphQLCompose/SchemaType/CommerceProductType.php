@@ -59,27 +59,27 @@ class CommerceProductType extends GraphQLComposeSchemaTypeBase {
           'description' => (string) $this->t('The stores the product is available in.'),
         ],
         'variations' => [
-          'type' => Type::nonNull(Type::listOf(Type::string())),
+          'type' => Type::nonNull(Type::listOf(static::type('CommerceProductVariation'))),
           'description' => (string) $this->t('The product variations.'),
         ],
         'defaultVariation' => [
-          'type' => Type::string(),
+          'type' => static::type('CommerceProductVariation'),
           'description' => (string) $this->t('The default product variation.'),
         ],
         'price' => [
-          'type' => Type::string(),
+          'type' => static::type('CommercePrice'),
           'description' => (string) $this->t('The price of the default product variation.'),
         ],
         'variationPrices' => [
-          'type' => Type::listOf(Type::string()),
+          'type' => Type::listOf(static::type('CommercePrice')),
           'description' => (string) $this->t('All prices from product variations.'),
         ],
         'enhancedVariations' => [
-          'type' => Type::listOf(Type::string()),
+          'type' => Type::listOf(static::type('CommerceProductVariation')),
           'description' => (string) $this->t('All product variations with complete data.'),
         ],
         'product_image' => [
-          'type' => Type::string(),
+          'type' => static::type('Image'),
           'description' => (string) $this->t('The image of the default product variation.'),
         ],
         'url' => [

@@ -1,62 +1,94 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_CART, UPDATE_CART_ITEM, REMOVE_CART_ITEM } from '../../../graphql/queries';
 import './CartPage.css';
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [quantities, setQuantities] = useState({});
+  const navigate = useNavigate();
   
-  useEffect(() => {
-    const fetchCartData = async () => {
-      try {
-        // Using the specified API endpoint with static ID of 1
-        const response = await fetch('https://chic-nest.lndo.site/api/cart/1');
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch cart data: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        setCartItems(data);
-        setIsLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setIsLoading(false);
+  // Fetch cart data using GraphQL
+  const { loading, error, data, refetch } = useQuery(GET_CART, {
+    fetchPolicy: 'network-only', // Don't use cache for cart data
+    onCompleted: (data) => {
+      // Initialize quantities state from fetched data
+      if (data?.cart?.items) {
+        const initialQuantities = {};
+        data.cart.items.forEach(item => {
+          initialQuantities[item.id] = item.quantity;
+        });
+        setQuantities(initialQuantities);
       }
-    };
-    
-    fetchCartData();
-  }, []);
+    }
+  });
+
+  // Update cart item mutation
+  const [updateCartItem, { loading: updateLoading }] = useMutation(UPDATE_CART_ITEM, {
+    onCompleted: () => {
+      refetch(); // Refresh cart data after update
+    }
+  });
+
+  // Remove cart item mutation
+  const [removeCartItem, { loading: removeLoading }] = useMutation(REMOVE_CART_ITEM, {
+    onCompleted: () => {
+      refetch(); // Refresh cart data after removal
+    }
+  });
+  
+  const handleQuantityChange = (itemId, newQuantity) => {
+    setQuantities({
+      ...quantities,
+      [itemId]: newQuantity
+    });
+  };
   
   const handleUpdateCart = () => {
-    // This would be implemented to update cart quantities
-    alert('Cart update functionality would be implemented here');
+    // Process each item that needs updating
+    const promises = Object.entries(quantities).map(([itemId, quantity]) => {
+      const cartItem = data.cart.items.find(item => item.id === itemId);
+      if (cartItem && cartItem.quantity !== quantity) {
+        return updateCartItem({
+          variables: {
+            orderItemId: itemId,
+            quantity: parseInt(quantity, 10)
+          }
+        });
+      }
+      return Promise.resolve();
+    });
+    
+    Promise.all(promises)
+      .then(() => {
+        // Show success notification if needed
+      })
+      .catch(err => {
+        console.error('Error updating cart:', err);
+      });
   };
   
   const handleRemoveItem = (itemId) => {
-    // This would be implemented to remove items from the cart
-    alert(`Remove item ${itemId} functionality would be implemented here`);
+    removeCartItem({
+      variables: {
+        orderItemId: itemId
+      }
+    }).catch(err => {
+      console.error('Error removing item:', err);
+    });
   };
   
   const handleCheckout = () => {
-    // This would redirect to checkout page
-    alert('Checkout functionality would be implemented here');
+    navigate('/checkout');
   };
   
-  // Calculate subtotal and total based on cart items
+  // Calculate subtotal from cart items
   const calculateSubtotal = () => {
-    if (!cartItems.length) return '$0.00';
-    
-    // Sum up the total prices
-    return cartItems.reduce((total, item) => {
-      // Remove $ sign and convert to number
-      const price = parseFloat(item.total_price.replace('$', ''));
-      return total + price;
-    }, 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    if (!data?.cart?.items?.length) return { formatted: '$0.00' };
+    return data.cart.total;
   };
   
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="cart-container">
         <h1 className="cart-title">Shopping cart</h1>
@@ -69,10 +101,12 @@ const CartPage = () => {
     return (
       <div className="cart-container">
         <h1 className="cart-title">Shopping cart</h1>
-        <div className="cart-error">Error loading cart: {error}</div>
+        <div className="cart-error">Error loading cart: {error.message}</div>
       </div>
     );
   }
+
+  const cartItems = data?.cart?.items || [];
   
   return (
     <div className="cart-container">
@@ -81,7 +115,7 @@ const CartPage = () => {
       {cartItems.length === 0 ? (
         <div className="cart-empty">
           <p>Your cart is empty.</p>
-          <Link to="/" className="btn">Continue Shopping</Link>
+          <Link to="/products" className="btn">Continue Shopping</Link>
         </div>
       ) : (
         <>
@@ -97,18 +131,30 @@ const CartPage = () => {
             {cartItems.map((item) => (
               <div key={item.id} className="cart-row">
                 <div className="cart-cell cart-item-name">
-                  <Link to={`/product/${item.id}`}>
-                    Closes
-                  </Link>
+                  <div className="cart-item-image">
+                    {item.purchasedEntity?.images?.[0]?.variations?.[0]?.url && (
+                      <img 
+                        src={item.purchasedEntity.images[0].variations[0].url} 
+                        alt={item.purchasedEntity.images[0].alt || item.title} 
+                      />
+                    )}
+                  </div>
+                  <div className="cart-item-details">
+                    <Link to={`/product/${item.purchasedEntity.id}`}>
+                      {item.title}
+                    </Link>
+                    <div className="cart-item-sku">SKU: {item.purchasedEntity.sku}</div>
+                  </div>
                 </div>
                 <div className="cart-cell cart-item-price">
-                  {item.price}
+                  {item.unitPrice.formatted}
                 </div>
                 <div className="cart-cell cart-item-quantity">
                   <input 
                     type="number" 
                     className="quantity-input"
-                    defaultValue={parseFloat(item.quantity)} 
+                    value={quantities[item.id] || item.quantity} 
+                    onChange={(e) => handleQuantityChange(item.id, e.target.value)}
                     min="1"
                   />
                 </div>
@@ -116,12 +162,13 @@ const CartPage = () => {
                   <button 
                     className="remove-button"
                     onClick={() => handleRemoveItem(item.id)}
+                    disabled={removeLoading}
                   >
-                    Remove
+                    {removeLoading ? 'Removing...' : 'Remove'}
                   </button>
                 </div>
                 <div className="cart-cell cart-item-total">
-                  {item.total_price}
+                  {item.totalPrice.formatted}
                 </div>
               </div>
             ))}
@@ -130,17 +177,28 @@ const CartPage = () => {
           <div className="cart-summary">
             <div className="cart-subtotal">
               <span>Subtotal</span>
-              <span>{calculateSubtotal()}</span>
+              <span>{calculateSubtotal().formatted}</span>
             </div>
             <div className="cart-total">
               <span>Total</span>
-              <span>{calculateSubtotal()}</span>
+              <span>{calculateSubtotal().formatted}</span>
             </div>
           </div>
           
           <div className="cart-actions">
-            <button className="btn update-cart" onClick={handleUpdateCart}>Update cart</button>
-            <button className="btn checkout" onClick={handleCheckout}>Checkout</button>
+            <button 
+              className="btn update-cart" 
+              onClick={handleUpdateCart}
+              disabled={updateLoading}
+            >
+              {updateLoading ? 'Updating...' : 'Update cart'}
+            </button>
+            <button 
+              className="btn checkout" 
+              onClick={handleCheckout}
+            >
+              Proceed to checkout
+            </button>
           </div>
         </>
       )}

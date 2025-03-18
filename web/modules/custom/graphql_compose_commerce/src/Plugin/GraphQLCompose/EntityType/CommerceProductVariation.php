@@ -117,6 +117,41 @@ class CommerceProductVariation extends GraphQLComposeEntityTypeBase {
         return NULL;
       },
     ];
+    
+    // Add images field
+    $fields['images'] = [
+      'type' => '[String]',
+      'description' => (string) $this->t('The product variation images.'),
+      'resolve' => function ($entity) {
+        $image_urls = [];
+        
+        // Check if the variation has an image field
+        if ($entity->hasField('field_image') && !$entity->get('field_image')->isEmpty()) {
+          foreach ($entity->get('field_image') as $image) {
+            if ($image->entity) {
+              // Return the URL instead of the entity
+              $file_uri = $image->entity->getFileUri();
+              $image_urls[] = \Drupal::service('file_url_generator')->generateAbsoluteString($file_uri);
+            }
+          }
+        }
+        // If no images on variation, try to get images from the parent product
+        elseif (empty($image_urls) && $entity->getProduct() && $entity->getProduct()->hasField('field_images')) {
+          $product = $entity->getProduct();
+          if (!$product->get('field_images')->isEmpty()) {
+            foreach ($product->get('field_images') as $image) {
+              if ($image->entity) {
+                // Return the URL instead of the entity
+                $file_uri = $image->entity->getFileUri();
+                $image_urls[] = \Drupal::service('file_url_generator')->generateAbsoluteString($file_uri);
+              }
+            }
+          }
+        }
+        
+        return $image_urls;
+      },
+    ];
 
     return $fields;
   }

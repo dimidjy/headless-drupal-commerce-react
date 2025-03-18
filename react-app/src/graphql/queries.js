@@ -99,6 +99,73 @@ export const CART_FRAGMENT = gql`
   }
 `;
 
+// Checkout Fragments
+export const CHECKOUT_FRAGMENT = gql`
+  fragment CheckoutFields on CommerceOrder {
+    id
+    orderNumber
+    state
+    total {
+      number
+      currencyCode
+      formatted
+    }
+    items {
+      id
+      title
+      quantity
+      unitPrice {
+        number
+        currencyCode
+        formatted
+      }
+      totalPrice {
+        number
+        currencyCode
+        formatted
+      }
+      purchasedEntity {
+        id
+        sku
+      }
+    }
+    billingProfile {
+      id
+      address {
+        addressLine1
+        addressLine2
+        locality
+        administrativeArea
+        postalCode
+        countryCode
+        givenName
+        familyName
+      }
+    }
+    shippingInformation {
+      address {
+        addressLine1
+        addressLine2
+        locality
+        administrativeArea
+        postalCode
+        countryCode
+        givenName
+        familyName
+      }
+      shippingMethod {
+        id
+        label
+        amount {
+          number
+          currencyCode
+          formatted
+        }
+      }
+    }
+  }
+`;
+
 // Queries
 export const GET_PRODUCTS = gql`
   query GetProducts($limit: Int, $offset: Int, $filter: EntityQueryFilterInput, $sort: [EntityQuerySortInput!]) {
@@ -135,7 +202,7 @@ export const GET_CART = gql`
   ${CART_FRAGMENT}
 `;
 
-// Mutations
+// Cart Mutations
 export const ADD_TO_CART = gql`
   mutation AddToCart($productVariationId: ID!, $quantity: Int) {
     addToCart(productVariationId: $productVariationId, quantity: $quantity) {
@@ -170,4 +237,107 @@ export const REMOVE_CART_ITEM = gql`
     }
   }
   ${CART_FRAGMENT}
+`;
+
+// Checkout Mutations
+export const UPDATE_SHIPPING_INFO = gql`
+  mutation UpdateShippingInfo(
+    $orderId: ID!,
+    $firstName: String!,
+    $lastName: String!,
+    $address1: String!,
+    $address2: String,
+    $city: String!,
+    $state: String!,
+    $postalCode: String!,
+    $country: String!,
+    $email: String!,
+    $phone: String!
+  ) {
+    updateShippingInfo(
+      orderId: $orderId,
+      shippingAddress: {
+        givenName: $firstName
+        familyName: $lastName
+        addressLine1: $address1
+        addressLine2: $address2
+        locality: $city
+        administrativeArea: $state
+        postalCode: $postalCode
+        countryCode: $country
+      },
+      email: $email,
+      phone: $phone
+    ) {
+      order {
+        ...CheckoutFields
+      }
+      errors
+    }
+  }
+  ${CHECKOUT_FRAGMENT}
+`;
+
+export const UPDATE_BILLING_INFO = gql`
+  mutation UpdateBillingInfo(
+    $orderId: ID!,
+    $firstName: String!,
+    $lastName: String!,
+    $address1: String!,
+    $address2: String,
+    $city: String!,
+    $state: String!,
+    $postalCode: String!,
+    $country: String!
+  ) {
+    updateBillingInfo(
+      orderId: $orderId,
+      billingAddress: {
+        givenName: $firstName
+        familyName: $lastName
+        addressLine1: $address1
+        addressLine2: $address2
+        locality: $city
+        administrativeArea: $state
+        postalCode: $postalCode
+        countryCode: $country
+      }
+    ) {
+      order {
+        ...CheckoutFields
+      }
+      errors
+    }
+  }
+  ${CHECKOUT_FRAGMENT}
+`;
+
+export const UPDATE_SHIPPING_METHOD = gql`
+  mutation UpdateShippingMethod($orderId: ID!, $shippingMethodId: ID!) {
+    updateShippingMethod(
+      orderId: $orderId,
+      shippingMethodId: $shippingMethodId
+    ) {
+      order {
+        ...CheckoutFields
+      }
+      errors
+    }
+  }
+  ${CHECKOUT_FRAGMENT}
+`;
+
+export const PLACE_ORDER = gql`
+  mutation PlaceOrder($orderId: ID!, $paymentMethod: String!, $paymentDetails: PaymentDetailsInput) {
+    placeOrder(
+      orderId: $orderId,
+      paymentMethod: $paymentMethod,
+      paymentDetails: $paymentDetails
+    ) {
+      orderId
+      orderNumber
+      complete
+      errors
+    }
+  }
 `; 

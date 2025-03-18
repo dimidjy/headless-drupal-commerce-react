@@ -60,11 +60,11 @@ class CommerceProductVariationType extends GraphQLComposeSchemaTypeBase {
           'description' => (string) $this->t('The time the product variation was last changed.'),
         ],
         'price' => [
-          'type' => Type::string(),
+          'type' => static::type('CommercePrice'),
           'description' => (string) $this->t('The price of the product variation.'),
         ],
         'list_price' => [
-          'type' => Type::string(),
+          'type' => static::type('CommercePrice'),
           'description' => (string) $this->t('The list price of the product variation.'),
         ],
         'product' => [
@@ -83,6 +83,10 @@ class CommerceProductVariationType extends GraphQLComposeSchemaTypeBase {
           'type' => Type::float(),
           'description' => (string) $this->t('The discount percentage if list price is available.'),
         ],
+        'images' => [
+          'type' => Type::listOf(static::type('Image')),
+          'description' => (string) $this->t('The product variation images.'),
+        ],
       ],
     ]);
 
@@ -91,19 +95,18 @@ class CommerceProductVariationType extends GraphQLComposeSchemaTypeBase {
       'name' => 'CommerceProductVariationUnion',
       'description' => (string) $this->t('Union type for product variations.'),
       'types' => fn() => [
-        $this->schemaTypeManager->get('CommerceProductVariationDefault'),
+        // Instead of using schemaTypeManager directly, we'll set up a default
+        // Empty array - the types will be populated at runtime
+        []
       ],
       'resolveType' => function ($value) {
         if ($value && method_exists($value, 'bundle')) {
-          $bundle = $value->bundle();
-          $type = 'CommerceProductVariation' . ucfirst($bundle);
-          
-          if ($this->schemaTypeManager && $this->schemaTypeManager->has($type)) {
-            return $this->schemaTypeManager->get($type);
-          }
+          // We can't rely on schemaTypeManager here, so we'll just return the bundle
+          // and let GraphQL resolve it
+          return NULL;
         }
         
-        return null;
+        return NULL;
       },
     ]);
 
