@@ -11,7 +11,7 @@ import {
   ParagraphTextAndImage,
   ParagraphVideo,
   ParagraphWebform
-} from '../../components/paragraphs';
+} from '../paragraphs';
 
 // Helper function to render the appropriate component based on paragraph type
 export const renderParagraph = (paragraph) => {

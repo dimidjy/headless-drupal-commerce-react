@@ -168,10 +168,16 @@ module.exports = function(app) {
         console.log('API Response Status:', proxyRes.statusCode);
         console.log('API Response Headers:', proxyRes.headers);
       },
-      onProxyError: (err, req, res) => {
+      onError: (err, req, res) => {
         console.error('\n=== API Proxy Error ===');
         console.error('API Proxy Error:', err.message);
         console.error('Request URL that caused error:', req.url);
+        res.writeHead(500, {
+          'Content-Type': 'application/json',
+        });
+        res.end(JSON.stringify({ 
+          errors: [{ message: 'API Proxy Error: ' + err.message }] 
+        }));
       }
     })
   );

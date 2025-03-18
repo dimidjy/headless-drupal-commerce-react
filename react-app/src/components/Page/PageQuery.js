@@ -13,9 +13,9 @@ import {
   PARAGRAPH_WEBFORM_FRAGMENT
 } from '../paragraphs/fragments';
 
-// Define the GraphQL query for fetching the homepage data
-export const GET_HOME_PAGE = gql`
-  query GetHomePage($id: ID!) {
+// Define the GraphQL query for fetching the page data
+export const GET_PAGE = gql`
+  query GetPage($id: ID!) {
     nodePage(id: $id) {
       paragraphs {
         ... on ParagraphBillboard {

@@ -13,3 +13,14 @@ app_core.front_pages:
     _title: 'Front Pages Configuration'
   requirements:
     _permission: 'administer site configuration'
+
+app_core.path_to_uuid:
+  path: '/path-to-uuid'
+  defaults:
+    _controller: '\Drupal\app_core\Controller\PathController::resolvePathToUuid'
+    _title: 'Resolve Path to UUID'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+  options:
+    no_cache: TRUE

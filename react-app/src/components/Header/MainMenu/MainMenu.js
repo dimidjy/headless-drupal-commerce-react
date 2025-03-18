@@ -1,14 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './MainMenu.css';
 import { MAIN_MENU_QUERY } from './MainMenuQuery.js';
 import { useQuery } from '@apollo/client';
 
 export default function MainMenu() {
     const { loading, error, data } = useQuery(MAIN_MENU_QUERY, {});
-    console.log('data', data);
-    console.log('error', error);
-    console.log('loading', loading);
     
     // Only set menuItems if data and data.menu exist
     const menuItems = data?.menu?.items || [];
@@ -29,7 +26,13 @@ export default function MainMenu() {
         <ul>
           {menuItems.map((item) => (
             <li key={item.id}>
-              <Link to={item.url}>{item.title}</Link>
+              <NavLink 
+                to={item.url}
+                className={({ isActive }) => isActive ? 'active' : ''}
+                end
+              >
+                {item.title}
+              </NavLink>
             </li>
           ))}
         </ul>
