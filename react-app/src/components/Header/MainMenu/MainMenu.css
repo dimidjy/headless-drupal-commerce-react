@@ -1,0 +1,47 @@
+.nav-menu {
+  display: flex;
+  justify-content: center;
+}
+
+.nav-menu ul {
+  display: flex;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-menu li {
+  position: relative;
+}
+
+.nav-menu a {
+  font-family: 'Jost', sans-serif;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  letter-spacing: 0.5px;
+  padding: 8px 0;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+  color: #666;
+}
+
+@media (max-width: 992px) {
+  .nav-menu ul {
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-menu ul {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

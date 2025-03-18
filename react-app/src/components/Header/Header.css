@@ -30,35 +30,7 @@
   color: #666;
 }
 
-.nav-menu {
-  display: flex;
-}
-
-.nav-menu ul {
-  display: flex;
-  gap: 30px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.nav-menu li {
-  position: relative;
-}
-
-.nav-menu a {
-  font-family: 'Jost', sans-serif;
-  color: #333;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.nav-menu a:hover {
-  color: #666;
-}
+/* Nav menu styles moved to MainMenu.css */
 
 .header-right {
   display: flex;
@@ -78,6 +50,7 @@
   font-weight: 500;
   letter-spacing: 1px;
   text-decoration: none;
+  text-transform: uppercase;
   transition: color 0.3s ease;
 }
 
@@ -91,10 +64,6 @@
 }
 
 @media (max-width: 992px) {
-  .nav-menu ul {
-    gap: 20px;
-  }
-  
   .header-right {
     gap: 15px;
   }
@@ -104,12 +73,6 @@
   .header-content {
     flex-direction: column;
     gap: 15px;
-  }
-  
-  .nav-menu ul {
-    gap: 15px;
-    flex-wrap: wrap;
-    justify-content: center;
   }
   
   .header-right {
