@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: rest_settings
+link_domain: null
+resource_response_subscriber_id: resource_response_subscriber 

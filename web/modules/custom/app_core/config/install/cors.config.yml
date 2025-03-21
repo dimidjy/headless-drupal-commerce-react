@@ -1,0 +1,7 @@
+enabled: true
+allowedHeaders: ['*']
+allowedMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+allowedOrigins: ['*']
+exposedHeaders: []
+maxAge: false
+supportsCredentials: true 

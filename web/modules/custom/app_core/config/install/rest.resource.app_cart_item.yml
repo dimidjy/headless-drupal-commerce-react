@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - app_core
+    - serialization
+    - user
+id: app_cart_item
+plugin_id: 'app_cart_item'
+granularity: resource
+configuration:
+  methods:
+    - GET
+    - PATCH
+    - DELETE
+  formats:
+    - json
+  authentication:
+    - cookie 

@@ -1,1 +1,6 @@
 services:
+  app_core.event_subscriber:
+    class: Drupal\app_core\EventSubscriber\AppCoreEventSubscriber
+    arguments: ['@current_user', '@logger.factory']
+    tags:
+      - { name: event_subscriber }
