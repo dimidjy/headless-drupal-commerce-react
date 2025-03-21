@@ -1,0 +1,236 @@
+<?php
+
+use Drupal\paragraph_inline_form\Plugin\Field\FieldWidget\ParagraphInlineEntityFormComplex;
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_theme().
+ */
+function paragraph_inline_form_theme() {
+  return [
+    'paragraph_inline_entity_form_entity_table' => [
+      'render element' => 'form',
+    ],
+  ];
+}
+
+/**
+ * Provides the form for adding existing entities through an autocomplete field.
+ *
+ * @param array $reference_form
+ *   The form array that will receive the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state of the parent form.
+ *
+ * @return array
+ *   The form array containing the embedded form.
+ */
+function paragraph_inline_entity_form_reference_form(array $reference_form, FormStateInterface &$form_state) {
+  $labels = $reference_form['#ief_labels'];
+
+  $reference_form['#title'] = t('Add existing @type_singular', ['@type_singular' => $labels['singular']]);
+
+  $reference_form['entity_id'] = [
+    '#title' => t('Enter paragraph title or label'),
+    '#type' => 'textfield',
+    '#maxlength' => 512,
+    '#attributes' => [
+      'placeholder' => t('Search by paragraph'),
+      'autocomplete' => "OFF",
+    ],
+    '#autocomplete_route_name' => 'paragraph_inline_form.paragraphs_autocomplete',
+    '#autocomplete_route_parameters' => [
+      'paragraphs' => implode('|', $reference_form['#bundles']),
+    ],
+  ];
+
+  // Add the actions.
+  $reference_form['actions'] = [
+    '#type' => 'container',
+    '#weight' => 100,
+  ];
+  $reference_form['actions']['ief_reference_save'] = [
+    '#type' => 'submit',
+    '#value' => t('Add @type_singular', ['@type_singular' => $labels['singular']]),
+    '#name' => 'ief-reference-submit-' . $reference_form['#ief_id'],
+    '#limit_validation_errors' => [$reference_form['#parents']],
+    '#attributes' => ['class' => ['ief-entity-submit']],
+    '#ajax' => [
+      'callback' => 'inline_entity_form_get_element',
+      'wrapper' => 'inline-entity-form-' . $reference_form['#ief_id'],
+    ],
+  ];
+
+  ParagraphInlineEntityFormComplex::addSubmitCallbacks($reference_form['actions']['ief_reference_save']);
+  $reference_form['actions']['ief_reference_cancel'] = [
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#name' => 'ief-reference-cancel-' . $reference_form['#ief_id'],
+    '#limit_validation_errors' => [],
+    '#ajax' => [
+      'callback' => 'inline_entity_form_get_element',
+      'wrapper' => 'inline-entity-form-' . $reference_form['#ief_id'],
+    ],
+    '#submit' => [
+      [
+        '\Drupal\paragraph_inline_form\Plugin\Field\FieldWidget\ParagraphInlineEntityFormComplex',
+        'closeForm',
+      ],
+    ],
+  ];
+
+  $reference_form['#element_validate'][] = 'paragraph_inline_entity_form_reference_form_validate';
+  $reference_form['#ief_element_submit'][] = 'paragraph_inline_entity_form_reference_form_submit';
+
+  // Allow other modules and themes to alter the form.
+  \Drupal::moduleHandler()->alter('paragraph_inline_entity_form_reference_form', $reference_form, $form_state);
+  \Drupal::theme()->alter('paragraph_inline_entity_form_reference_form', $reference_form, $form_state);
+
+  return $reference_form;
+}
+
+/**
+ * Validates the form for adding existing entities.
+ *
+ * @param array $reference_form
+ *   The reference entity form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state of the parent form.
+ */
+function paragraph_inline_entity_form_reference_form_validate(array &$reference_form, FormStateInterface $form_state) {
+  $form_values = NestedArray::getValue($form_state->getValues(), $reference_form['#parents']);
+  $form_values['entity_id'] = get_reference_id_from_label($form_values['entity_id']);
+
+  if (empty($form_values['entity_id'])) {
+    // The entity_id element is required, the value is empty only if
+    // the form was cancelled.
+    return;
+  }
+  $ief_id = $reference_form['#ief_id'];
+  $labels = $reference_form['#ief_labels'];
+  $storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  $entity = $storage->load($form_values['entity_id']);
+
+  // Check if the entity is already referenced by the field.
+  if (!empty($entity)) {
+    foreach ($form_state->get(['inline_entity_form', $ief_id, 'entities']) as $value) {
+      if ($value['entity'] && $value['entity']->id() == $entity->id()) {
+        $form_state->setError($reference_form['entity_id'], t('The selected @label has already been added.', ['@label' => $labels['singular']]));
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Submits the form for adding existing entities.
+ *
+ * Adds the specified entity to the IEF form state.
+ *
+ * @param array $reference_form
+ *   The reference entity form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state of the parent form.
+ */
+function paragraph_inline_entity_form_reference_form_submit(array $reference_form, FormStateInterface &$form_state) {
+  $ief_id = $reference_form['#ief_id'];
+  $form_values = NestedArray::getValue($form_state->getValues(), $reference_form['#parents']);
+  $storage = \Drupal::entityTypeManager()->getStorage($reference_form['#entity_type']);
+  $form_values['entity_id'] = get_reference_id_from_label($form_values['entity_id']);
+  $entity = $storage->load($form_values['entity_id']);
+  $entities = &$form_state->get(['inline_entity_form', $ief_id, 'entities']);
+  // Determine the correct weight of the new element.
+  $weight = 0;
+  if ($entities) {
+    $weight = max(array_keys($entities)) + 1;
+  }
+
+  $entity = $entity->createDuplicate();
+  $entities[] = [
+    'entity' => $entity,
+    'weight' => $weight,
+    'form' => NULL,
+    'needs_save' => FALSE,
+  ];
+  $form_state->set(['inline_entity_form', $ief_id, 'entities'], $entities);
+}
+
+/**
+ * Helper function to extract paragraph ID from label.
+ *
+ * @param string $label
+ *   The label to parse.
+ *
+ * @return string
+ *   The paragraph ID or empty string if not found.
+ */
+function get_reference_id_from_label($label) {
+  preg_match('/\((\d+)\)/', $label, $matches);
+  if (isset($matches[1])) {
+    return $matches[1];
+  }
+  else {
+    return '';
+  }
+}
+
+/**
+ * Prepares variables for inline_entity_form_entity_table form templates.
+ *
+ * Default template: inline-entity-form-entity-table.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ */
+function template_preprocess_paragraph_inline_entity_form_entity_table(array &$variables) {
+  template_preprocess_inline_entity_form_entity_table($variables);
+
+  if (isset($variables['table'])) {
+    foreach ($variables['table'] as $key => $row) {
+      if (is_numeric($key)) {
+        $pid = '';
+        if (isset($variables['form'][$key]['#entity'])) {
+          $pid = $variables['form'][$key]['#entity']->id();
+        }
+
+        if (isset($row['actions'])) {
+          $links = [];
+          foreach ($row['actions'] as $item_key => $item_value) {
+            if (str_starts_with($item_key, 'ief_entity_')) {
+              $links[$item_key] = [
+                'title' => $row['actions'][$item_key]['#value'],
+                'url' => Url::fromUserInput('/'),
+                'attributes' => [
+                  'class' => 'ief-button-dropdown',
+                  'data-button-id' => $item_value['#id'],
+                  'data-type' => 'regular',
+                ],
+              ];
+            }
+          }
+
+          $links['copy_paragraph_id'] = [
+            'title' => t('Copy id'),
+            'url' => Url::fromUserInput('/'),
+            'attributes' => [
+              'class' => 'ief-button-dropdown ief-button-duplicate',
+              'data-pid' => $pid,
+              'data-type' => 'duplicate',
+            ],
+          ];
+
+          $variables['table'][$key]['actions_dropdown_wrapper'] = [
+            '#type' => 'dropbutton',
+            '#dropbutton_type' => 'small',
+            '#links' => $links,
+          ];
+        }
+      }
+    }
+  }
+  
+  $variables["table"]['#attached']['library'][] = 'paragraph_inline_form/paragraph_table';
+} 

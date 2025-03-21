@@ -1,0 +1,6 @@
+paragraph_table:
+  css:
+    base:
+      css/paragraph-table.css: {}
+  js:
+    js/paragraph-table.js: {} 

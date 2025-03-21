@@ -1,0 +1,11 @@
+paragraph_inline_form.paragraphs_autocomplete:
+  path: '/paragraphs-autocomplete/{paragraphs}'
+  defaults:
+    _controller: '\Drupal\paragraph_inline_form\Controller\ParagraphsAutoComplete::paragraphsAutoComplete'
+  requirements:
+      _role: 'authenticated'
+  options:
+      no_cache: TRUE
+      parameters:
+        paragraphs:
+          type: 'string' 
