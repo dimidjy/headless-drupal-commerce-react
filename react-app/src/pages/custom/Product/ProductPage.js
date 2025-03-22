@@ -101,6 +101,7 @@ const ProductPage = () => {
   const mediumImageUrl = product.image?.mediaImage?.variations?.[0]?.url;
   
   // Get available variations (status = true)
+  console.log('Product:', product);
   const availableVariations = product.variations?.filter(variation => variation.status) || [];
   const hasVariations = availableVariations.length > 0;
 
@@ -127,8 +128,7 @@ const ProductPage = () => {
           
           {selectedVariation && selectedVariation.price && (
             <div className="product-detail-price">
-              {selectedVariation.price.formatted || 
-                `${selectedVariation.price.number} ${selectedVariation.price.currency_code}`}
+              {selectedVariation.price}
             </div>
           )}
           

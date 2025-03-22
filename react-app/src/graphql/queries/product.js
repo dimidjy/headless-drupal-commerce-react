@@ -27,6 +27,14 @@ export const GET_PRODUCT = gql`
           }
         }
       }
+      variations {
+        ... on CommerceProductVariationDefault {
+          id
+          title
+          status
+          price
+        }
+      }
     }
   }
 `; 

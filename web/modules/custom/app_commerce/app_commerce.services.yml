@@ -1,0 +1,39 @@
+parameters:
+  app_commerce:
+    use_cart_token_session: false
+    normalized_entity_references:
+      - order_items
+      - purchased_entity
+services:
+  app_commerce.normalizer.field_item:
+    class: Drupal\app_commerce\Normalizer\FieldItemNormalizer
+    arguments: ['@current_route_match']
+    tags:
+      - { name: normalizer, priority: 8 }
+
+  app_commerce.normalizer.field:
+    class: Drupal\app_commerce\Normalizer\FieldNormalizer
+    arguments: ['@current_route_match']
+    tags:
+      - { name: normalizer, priority: 9 }
+
+  app_commerce.normalizer.entity_references:
+    class: Drupal\app_commerce\Normalizer\EntityReferenceNormalizer
+    arguments: ['@entity.repository', '@current_route_match', '%app_commerce%']
+    tags:
+      - { name: normalizer, priority: 9 }
+
+  access_check.cart_api:
+    class: Drupal\app_commerce\Access\CartApiAccessCheck
+    arguments: ['@commerce_cart.cart_provider']
+    tags:
+      - { name: access_check, applies_to: _cart_api }
+
+  app_commerce.routing_alter_subscriber:
+    class: Drupal\app_commerce\EventSubscriber\RoutingAlterSubscriber
+    tags:
+      - { name: 'event_subscriber' }
+
+  app_commerce.field_access:
+    class: Drupal\app_commerce\FieldAccess
+    arguments: ['@current_route_match']

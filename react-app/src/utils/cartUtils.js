@@ -86,6 +86,7 @@ export const addToCart = async (productId, quantity = 1, attributes = {}) => {
       quantity: quantity,
       ...attributes
     };
+    console.log('Payload:', payload);
 
     // Using CartAddResource REST endpoint
     const response = await fetchWithCredentials('https://chic-nest.lndo.site/cart/add', {
