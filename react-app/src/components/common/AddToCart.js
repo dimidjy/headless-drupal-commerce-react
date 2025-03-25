@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addToCart } from '../../utils/cartUtils';
+import { useCart } from '../../context/CartContext';
 import './AddToCart.css';
 
 /**
@@ -14,6 +14,7 @@ const AddToCart = ({ productId, inStock = true, onSuccess, onError }) => {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const { addToCart } = useCart();
 
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value, 10);
@@ -39,6 +40,7 @@ const AddToCart = ({ productId, inStock = true, onSuccess, onError }) => {
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to add item to cart. Please try again.' });
+      console.error('Add to cart error:', error);
       
       if (onError) {
         onError(error);

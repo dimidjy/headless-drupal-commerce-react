@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCT } from '../../../graphql/queries/product';
+import { useCart } from '../../../context/CartContext';
 import './ProductPage.css';
 
 const ProductPage = () => {
@@ -12,6 +13,7 @@ const ProductPage = () => {
   const [selectedVariation, setSelectedVariation] = useState(null);
   const [addingToCart, setAddingToCart] = useState(false);
   const [cartMessage, setCartMessage] = useState(null);
+  const { addToCart } = useCart();
   
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: { id: productUuid },
@@ -30,40 +32,18 @@ const ProductPage = () => {
     }
   }, [data]);
 
-  const addToCart = async () => {
+  const handleAddToCart = async () => {
     if (!selectedVariation) return;
     
     setAddingToCart(true);
     setCartMessage(null);
     
     try {
-      // Prepare the payload as expected by commerce_cart_api
-      const cartItemData = [{
-        purchased_entity_type: 'commerce_product_variation',
-        purchased_entity_id: selectedVariation.id,
-        quantity: quantity,
-        combine: true
-      }];
-      
-      const response = await fetch('/cart/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(cartItemData),
-        credentials: 'same-origin'
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new Error(errorData?.message || `Error adding to cart: ${response.statusText}`);
-      }
-      
-      const result = await response.json();
+      await addToCart(selectedVariation.id, quantity);
       setCartMessage({ type: 'success', text: 'Product added to cart successfully!' });
     } catch (error) {
       console.error('Add to cart error:', error);
-      setCartMessage({ type: 'error', text: error.message });
+      setCartMessage({ type: 'error', text: error.message || 'Error adding to cart' });
     } finally {
       setAddingToCart(false);
     }
@@ -174,7 +154,7 @@ const ProductPage = () => {
             
             <button 
               className="btn product-detail-add-to-cart"
-              onClick={addToCart}
+              onClick={handleAddToCart}
               disabled={addingToCart || !hasVariations || !selectedVariation}
             >
               {addingToCart ? 'Adding...' : 'Add to Cart'}

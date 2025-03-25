@@ -160,6 +160,7 @@ class CartAddResource extends CartResourceBase {
    */
   public function post(array $data, Request $request) {
     $order_items = [];
+    $cart = NULL;
     
     // Do an initial validation of the payload before any processing.
     foreach ($data as $key => $order_item_data) {
@@ -198,7 +199,24 @@ class CartAddResource extends CartResourceBase {
       $order_items[] = $this->cartManager->addOrderItem($cart, $order_item, $order_item_data['combine']);
     }
 
-    $response = new ModifiedResourceResponse(array_values($order_items), 200);
+    // Create response data with both order items and cart information
+    $response_data = [
+      'order_items' => array_values($order_items),
+      'cart' => NULL,
+    ];
+    
+    // Include cart information if available
+    if ($cart) {
+      $response_data['cart'] = [
+        'order_id' => $cart->id(),
+        'uuid' => $cart->uuid(),
+        'type' => $cart->bundle(),
+        'status' => $cart->getState()->getId(),
+        'total_price' => $cart->getTotalPrice() ? $cart->getTotalPrice()->toArray() : NULL,
+      ];
+    }
+
+    $response = new ModifiedResourceResponse($response_data, 200);
     return $response;
   }
 

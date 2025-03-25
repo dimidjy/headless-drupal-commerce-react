@@ -144,7 +144,35 @@ final class CartTokenSession implements CartSessionInterface {
   private function setTokenCartData(array $data) {
     $token = $this->getCurrentRequestCartToken();
     if (!empty($token)) {
-      $this->tempStore->set($token, $data);
+      $maxRetries = 3;
+      $retryCount = 0;
+      $success = FALSE;
+      
+      while (!$success && $retryCount < $maxRetries) {
+        try {
+          $this->tempStore->set($token, $data);
+          $success = TRUE;
+        }
+        catch (\Exception $e) {
+          // Log the error
+          \Drupal::logger('app_commerce')->warning('Failed to set cart token data (attempt @count): @message', [
+            '@count' => $retryCount + 1,
+            '@message' => $e->getMessage(),
+          ]);
+          $retryCount++;
+          if ($retryCount < $maxRetries) {
+            // Wait a bit before retrying (increasing backoff)
+            usleep(100000 * $retryCount); // 100ms, 200ms, 300ms
+          }
+        }
+      }
+      
+      if (!$success) {
+        // Log the final failure but don't throw an exception to allow the operation to continue
+        \Drupal::logger('app_commerce')->error('Failed to set cart token data after @max_retries retries', [
+          '@max_retries' => $maxRetries,
+        ]);
+      }
     }
   }
 

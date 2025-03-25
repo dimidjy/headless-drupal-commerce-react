@@ -20,6 +20,7 @@ export const CartProvider = ({ children }) => {
     setError(null);
     try {
       const response = await cartService.getCart();
+      
       console.log('response', response);
       
       if (response.data && Array.isArray(response.data) && response.data.length > 0) {
@@ -29,7 +30,7 @@ export const CartProvider = ({ children }) => {
         const transformedData = {
           order_id: order.order_id,
           uuid: order.uuid,
-          items: order.order_items.map(item => ({
+          items: order.order_items ? order.order_items.map(item => ({
             id: item.order_item_id,
             uuid: item.uuid,
             title: item.title,
@@ -42,10 +43,10 @@ export const CartProvider = ({ children }) => {
             // Use the new image_url property, fallback to old implementation or placeholder
             image: item.purchased_entity?.image_url || item.purchased_entity?.field_product_image || 'placeholder-image',
             purchased_entity: item.purchased_entity || {}
-          })),
-          total: parseFloat(order.total_price.number),
-          total_formatted: order.total_price.formatted,
-          currency_code: order.total_price.currency_code,
+          })) : [],
+          total: parseFloat(order.total_price?.number || '0'),
+          total_formatted: order.total_price?.formatted || '$0.00',
+          currency_code: order.total_price?.currency_code || 'USD',
           order_total: order.order_total || {}
         };
         setCart(transformedData);
@@ -54,8 +55,11 @@ export const CartProvider = ({ children }) => {
         setCart(response.data);
       } else {
         // Empty or invalid response, set empty cart
+        // Try to use stored cart ID if available
+        const storedCartId = localStorage.getItem('commerceCartId');
+        
         setCart({ 
-          order_id: null,
+          order_id: storedCartId || null,
           uuid: null,
           items: [], 
           total: 0,
@@ -71,8 +75,11 @@ export const CartProvider = ({ children }) => {
       setError(err.response?.data?.message || 'Failed to fetch cart');
       // If we get a 404, it means no cart exists yet, which is fine
       if (err.response?.status === 404) {
+        // Try to use stored cart ID if available
+        const storedCartId = localStorage.getItem('commerceCartId');
+        
         setCart({ 
-          order_id: null,
+          order_id: storedCartId || null,
           uuid: null,
           items: [], 
           total: 0,
@@ -96,9 +103,22 @@ export const CartProvider = ({ children }) => {
     setError(null);
     try {
       const response = await cartService.addToCart(productId, quantity, attributes);
+      
+      // Check if we have the response in the new format
+      const responseData = response.data;
+      if (responseData && responseData.cart && responseData.cart.order_id) {
+        // Use the order ID from the response if available
+        const updatedCart = { ...cart };
+        if (!updatedCart.order_id) {
+          updatedCart.order_id = responseData.cart.order_id;
+          updatedCart.uuid = responseData.cart.uuid;
+          setCart(updatedCart);
+        }
+      }
+      
       // After adding item, refresh the cart
       await fetchCart();
-      return response.data;
+      return responseData;
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add item to cart');
       throw err;
