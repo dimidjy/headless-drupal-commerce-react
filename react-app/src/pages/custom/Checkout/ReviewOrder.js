@@ -120,7 +120,12 @@ const ReviewOrder = ({ checkoutData, cart, onBack, onEditStep, onPlaceOrder }) =
               {cart?.items?.map(item => (
                 <div key={item.id} className="review-order-item">
                   <div className="item-image">
-                    {item.purchasedEntity?.images?.[0]?.variations?.[0]?.url && (
+                    {item.purchased_entity?.image_url ? (
+                      <img
+                        src={item.purchased_entity.image_url}
+                        alt={item.title}
+                      />
+                    ) : item.purchasedEntity?.images?.[0]?.variations?.[0]?.url && (
                       <img
                         src={item.purchasedEntity.images[0].variations[0].url}
                         alt={item.purchasedEntity.images[0].alt || item.title}
@@ -129,10 +134,10 @@ const ReviewOrder = ({ checkoutData, cart, onBack, onEditStep, onPlaceOrder }) =
                   </div>
                   <div className="item-details">
                     <div className="item-name">{item.title}</div>
-                    <div className="item-sku">SKU: {item.purchasedEntity.sku}</div>
+                    <div className="item-sku">SKU: {item.purchased_entity?.sku || item.purchasedEntity?.sku}</div>
                     <div className="item-qty">Qty: {item.quantity}</div>
                   </div>
-                  <div className="item-price">{item.totalPrice.formatted}</div>
+                  <div className="item-price">{item.total_formatted || item.totalPrice?.formatted}</div>
                 </div>
               ))}
             </div>

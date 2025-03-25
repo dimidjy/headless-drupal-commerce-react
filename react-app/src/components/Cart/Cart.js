@@ -10,8 +10,7 @@ const Cart = () => {
     removeCartItem, 
     updateCartItem, 
     clearCart, 
-    checkout,
-    getCartToken
+    checkout
   } = useCart();
 
   if (loading) {
@@ -46,19 +45,9 @@ const Cart = () => {
     }
   };
 
-  // Get current cart token - useful for debugging or sharing carts
-  const cartToken = getCartToken();
-
   return (
     <div className="cart-container">
       <h2>Your Cart</h2>
-      
-      {cartToken && (
-        <div className="cart-token-info">
-          <p>Cart Token: {cartToken}</p>
-          <small>This token is used to maintain your cart across devices</small>
-        </div>
-      )}
       
       <ul className="cart-items">
         {cart.items.map((item) => (

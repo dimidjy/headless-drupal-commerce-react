@@ -39,8 +39,8 @@ export const CartProvider = ({ children }) => {
             total: parseFloat(item.total_price.number),
             total_formatted: item.total_price.formatted,
             currency_code: item.unit_price.currency_code,
-            // Extract image from purchased_entity if available
-            image: item.purchased_entity?.field_product_image || 'placeholder-image',
+            // Use the new image_url property, fallback to old implementation or placeholder
+            image: item.purchased_entity?.image_url || item.purchased_entity?.field_product_image || 'placeholder-image',
             purchased_entity: item.purchased_entity || {}
           })),
           total: parseFloat(order.total_price.number),
