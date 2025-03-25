@@ -289,19 +289,6 @@ button {
   border-top: 1px solid #eee;
 }
 
-.checkout-btn, .continue-shopping-btn {
-  display: block;
-  text-align: center;
-  margin-top: 20px;
-  padding: 12px;
-  width: 100%;
-}
-
-.checkout-btn {
-  background-color: #4a90e2;
-  color: white;
-}
-
 .continue-shopping-btn {
   background-color: transparent;
   border: 1px solid #4a90e2;

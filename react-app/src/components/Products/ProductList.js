@@ -7,6 +7,8 @@ const ProductList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { addToCart, loading: cartLoading } = useCart();
+  const [successMessages, setSuccessMessages] = useState({});
+  const [errorMessages, setErrorMessages] = useState({});
 
   // Fetch products from the API
   useEffect(() => {
@@ -44,13 +46,48 @@ const ProductList = () => {
 
   const handleAddToCart = async (product, e) => {
     e.preventDefault();
+    
+    // Clear any previous messages for this product
+    setSuccessMessages(prev => ({
+      ...prev,
+      [product.id]: false
+    }));
+    setErrorMessages(prev => ({
+      ...prev,
+      [product.id]: null
+    }));
+    
     try {
       await addToCart(product.id, 1);
-      // Show success message
-      alert('Item added to cart!');
+      
+      // Show success message in the UI instead of an alert
+      setSuccessMessages(prev => ({
+        ...prev,
+        [product.id]: true
+      }));
+      
+      // Clear the success message after 3 seconds
+      setTimeout(() => {
+        setSuccessMessages(prev => ({
+          ...prev,
+          [product.id]: false
+        }));
+      }, 3000);
     } catch (err) {
       console.error('Failed to add to cart:', err);
-      alert('Failed to add item to cart. Please try again.');
+      // Show error message for this specific product
+      setErrorMessages(prev => ({
+        ...prev,
+        [product.id]: 'Failed to add item to cart. Please try again.'
+      }));
+      
+      // Clear the error message after 4 seconds
+      setTimeout(() => {
+        setErrorMessages(prev => ({
+          ...prev,
+          [product.id]: null
+        }));
+      }, 4000);
     }
   };
 
@@ -82,6 +119,18 @@ const ProductList = () => {
             <div className="product-details">
               <h3 className="product-title">{product.title}</h3>
               <p className="product-price">${parseFloat(product.price).toFixed(2)}</p>
+              
+              {successMessages[product.id] && (
+                <div className="product-message success">
+                  Item added to cart successfully!
+                </div>
+              )}
+              
+              {errorMessages[product.id] && (
+                <div className="product-message error">
+                  {errorMessages[product.id]}
+                </div>
+              )}
               
               <button 
                 onClick={(e) => handleAddToCart(product, e)} 
