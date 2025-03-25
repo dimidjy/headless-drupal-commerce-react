@@ -12,7 +12,7 @@ const ParagraphBlogPosts = ({ title, posts }) => {
       {posts && posts.length > 0 ? (
         <div className="posts-container">
           {posts.map((post, index) => (
-            <div key={post.id || index} className="post-item">
+            <div key={`post-${post.id}-${index}`} className="post-item">
               {post.image && post.image.mediaImage && (
                 <div className="post-image">
                   <img 
