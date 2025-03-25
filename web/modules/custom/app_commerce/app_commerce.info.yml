@@ -11,5 +11,5 @@ dependencies:
 
 # Information added by Drupal.org packaging script on 2025-03-12
 version: '8.x-1.9'
-project: 'commerce_cart_api'
+project: 'app_commerce'
 datestamp: 1741769544

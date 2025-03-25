@@ -3,6 +3,12 @@ parameters:
   # with the Administrator role, it is advised to set this to false. This allows
   # you to make user 1 a regular user, strengthening the security of your site.
   security.enable_super_user: true
+  # Temporarily commented out to fix container issue
+  # app_commerce:
+  #   use_cart_token_session: true
+  #   normalized_entity_references:
+  #     - order_items
+  #     - purchased_entity
   session.storage.options:
     # Default ini options for sessions.
     #
@@ -46,7 +52,7 @@ parameters:
     # https://www.php.net/manual/en/session.security.ini.php for more
     # information.
     # @default no value
-    cookie_samesite: Lax
+    cookie_samesite: None
     #
     # Set the session ID string length. The length can be between 22 to 256. The
     # PHP recommended value is 48. See

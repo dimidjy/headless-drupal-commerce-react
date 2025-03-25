@@ -45,8 +45,6 @@ const ProductPage = () => {
         combine: true
       }];
       
-      console.log('Adding to cart:', cartItemData);
-      
       const response = await fetch('/cart/add', {
         method: 'POST',
         headers: {
@@ -62,7 +60,6 @@ const ProductPage = () => {
       }
       
       const result = await response.json();
-      console.log('Cart response:', result);
       setCartMessage({ type: 'success', text: 'Product added to cart successfully!' });
     } catch (error) {
       console.error('Add to cart error:', error);
@@ -101,7 +98,6 @@ const ProductPage = () => {
   const mediumImageUrl = product.image?.mediaImage?.variations?.[0]?.url;
   
   // Get available variations (status = true)
-  console.log('Product:', product);
   const availableVariations = product.variations?.filter(variation => variation.status) || [];
   const hasVariations = availableVariations.length > 0;
 

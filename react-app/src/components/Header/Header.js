@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Header.css';
 import MainMenu from './MainMenu/MainMenu';
+import MiniCart from '../Cart/MiniCart';
 
 const Header = () => {
   return (
@@ -19,9 +20,7 @@ const Header = () => {
               </NavLink>
             </div>
             <div className="header-right-item">
-              <NavLink to="/cart" className={({ isActive }) => isActive ? 'cart-link active' : 'cart-link'}>
-                CART (0)
-              </NavLink>
+              <MiniCart />
             </div>
             <div className="header-right-item">
               <NavLink to="/search" className={({ isActive }) => isActive ? 'search-link active' : 'search-link'}>

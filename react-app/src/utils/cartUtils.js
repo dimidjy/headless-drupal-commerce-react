@@ -6,6 +6,9 @@
  * Helper function for API requests with credentials
  */
 export const fetchWithCredentials = async (url, options = {}) => {
+  // Get cart token from localStorage
+  const cartToken = localStorage.getItem('commerceCartToken') || '';
+
   const defaultOptions = {
     credentials: 'include',
     headers: {
@@ -13,6 +16,11 @@ export const fetchWithCredentials = async (url, options = {}) => {
       ...options.headers
     }
   };
+  
+  // Add cart token as query parameter instead of header
+  const urlWithToken = url.includes('?') 
+    ? `${url}&cartToken=${cartToken}` 
+    : `${url}?cartToken=${cartToken}`;
   
   // Special handling for DELETE requests which may not be directly supported
   if (options.method === 'DELETE') {
@@ -29,12 +37,12 @@ export const fetchWithCredentials = async (url, options = {}) => {
           'X-HTTP-Method-Override': 'DELETE'
         }
       };
-      const response = await fetch(url, deleteOptions);
+      const response = await fetch(urlWithToken, deleteOptions);
       if (response.ok) {
         return response;
       }
     } catch (error) {
-      console.log('DELETE with X-HTTP-Method-Override failed, trying alternative approach');
+      // Silent failure, moving to next approach
     }
     
     // 2. Second attempt with POST method and X-HTTP-Method-Override header
@@ -49,18 +57,18 @@ export const fetchWithCredentials = async (url, options = {}) => {
           'X-HTTP-Method-Override': 'DELETE'
         }
       };
-      const response = await fetch(url, postOverrideOptions);
+      const response = await fetch(urlWithToken, postOverrideOptions);
       if (response.ok) {
         return response;
       }
     } catch (error) {
-      console.log('POST with X-HTTP-Method-Override failed, trying URL parameter');
+      // Silent failure, moving to next approach
     }
     
     // 3. Third attempt with DELETE method and _method URL parameter
-    const urlWithMethod = url.includes('?') 
-      ? `${url}&_method=DELETE` 
-      : `${url}?_method=DELETE`;
+    const urlWithMethod = urlWithToken.includes('?') 
+      ? `${urlWithToken}&_method=DELETE` 
+      : `${urlWithToken}?_method=DELETE`;
     return fetch(urlWithMethod, {
       ...defaultOptions,
       ...options
@@ -68,7 +76,7 @@ export const fetchWithCredentials = async (url, options = {}) => {
   }
   
   // Normal handling for non-DELETE requests
-  return fetch(url, { ...defaultOptions, ...options });
+  return fetch(urlWithToken, { ...defaultOptions, ...options });
 };
 
 /**
@@ -80,20 +88,21 @@ export const fetchWithCredentials = async (url, options = {}) => {
  */
 export const addToCart = async (productId, quantity = 1, attributes = {}) => {
   try {
-    const payload = {
-      purchased_entity_type: 'commerce_product_variation',
-      purchased_entity_id: productId,
-      quantity: quantity,
-      ...attributes
-    };
-    console.log('Payload:', payload);
+    const payload = [
+      {
+        purchased_entity_type: 'commerce_product_variation',
+        purchased_entity_id: productId,
+        quantity: quantity,
+        ...attributes
+      }
+    ];
 
     // Using CartAddResource REST endpoint
-    const response = await fetchWithCredentials('https://chic-nest.lndo.site/cart/add', {
+    const response = await fetchWithCredentials('/cart/add', {
       method: 'POST',
       body: JSON.stringify(payload)
     });
-
+    
     if (!response.ok) {
       throw new Error('Failed to add item to cart');
     }
@@ -112,8 +121,7 @@ export const addToCart = async (productId, quantity = 1, attributes = {}) => {
 export const getCartData = async () => {
   try {
     // Use the specified endpoint for cart data
-    const response = await fetchWithCredentials('https://chic-nest.lndo.site/api/cart/1');
-    
+    const response = await fetchWithCredentials('/cart?_format=json');
     if (!response.ok) {
       throw new Error('Failed to fetch cart data');
     }
@@ -150,7 +158,7 @@ export const updateCartItems = async (cartId, items) => {
       };
     });
     
-    const response = await fetchWithCredentials(`https://chic-nest.lndo.site/cart/${cartId}/items`, {
+    const response = await fetchWithCredentials(`/cart/${cartId}/items`, {
       method: 'PATCH',
       body: JSON.stringify(payload)
     });
@@ -174,18 +182,14 @@ export const updateCartItems = async (cartId, items) => {
  */
 export const removeCartItem = async (cartId, itemId) => {
   try {
-    console.log('Removing from cart:', cartId);
-    console.log('Removing item:', itemId);
-
     // Using CartRemoveItemResource REST endpoint with DELETE method
     // Add the X-HTTP-Method-Override header to ensure the request is treated as DELETE
-    const response = await fetchWithCredentials(`https://chic-nest.lndo.site/cart/${cartId}/items/${itemId}`, {
+    const response = await fetchWithCredentials(`/cart/${cartId}/items/${itemId}`, {
       method: 'DELETE',
       headers: {
         'X-HTTP-Method-Override': 'DELETE'
       }
     });
-    console.log('Response:', response);
     
     if (!response.ok) {
       throw new Error('Failed to remove item from cart');
@@ -212,7 +216,7 @@ export const clearCart = async (cartId) => {
   try {
     // Using CartClearResource REST endpoint with DELETE method
     // Add the X-HTTP-Method-Override header to ensure the request is treated as DELETE
-    const response = await fetchWithCredentials(`https://chic-nest.lndo.site/cart/${cartId}/items`, {
+    const response = await fetchWithCredentials(`/cart/${cartId}/items`, {
       method: 'DELETE',
       headers: {
         'X-HTTP-Method-Override': 'DELETE'

@@ -143,7 +143,6 @@ const CheckoutPage = () => {
   // Place order function (to be implemented)
   const handlePlaceOrder = () => {
     // Placeholder for order placement
-    console.log('Order will be placed with the checkout data:', checkoutData);
   };
   
   return (

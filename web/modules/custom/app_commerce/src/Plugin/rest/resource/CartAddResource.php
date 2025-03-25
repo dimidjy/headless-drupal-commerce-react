@@ -160,7 +160,7 @@ class CartAddResource extends CartResourceBase {
    */
   public function post(array $data, Request $request) {
     $order_items = [];
-
+    
     // Do an initial validation of the payload before any processing.
     foreach ($data as $key => $order_item_data) {
       if (!isset($order_item_data['purchased_entity_type'])) {

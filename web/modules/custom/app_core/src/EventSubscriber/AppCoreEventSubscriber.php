@@ -52,62 +52,62 @@ class AppCoreEventSubscriber implements EventSubscriberInterface {
   public function onKernelRequest(RequestEvent $event) {
     $request = $event->getRequest();
     
-    // Log the request method and URI for troubleshooting
-    if ($this->loggerFactory) {
-      $logger = $this->loggerFactory->get('app_core');
-      $logger->notice('Request method: @method, URI: @uri', [
-        '@method' => $request->getMethod(),
-        '@uri' => $request->getRequestUri(),
-      ]);
+    // // Log the request method and URI for troubleshooting
+    // if ($this->loggerFactory) {
+    //   $logger = $this->loggerFactory->get('app_core');
+    //   $logger->notice('Request method: @method, URI: @uri', [
+    //     '@method' => $request->getMethod(),
+    //     '@uri' => $request->getRequestUri(),
+    //   ]);
       
-      // Log headers for debugging
-      $headers = [];
-      foreach ($request->headers->all() as $key => $value) {
-        $headers[$key] = is_array($value) ? implode(', ', $value) : $value;
-      }
-      $logger->notice('Request headers: @headers', [
-        '@headers' => print_r($headers, TRUE),
-      ]);
-    }
+    //   // Log headers for debugging
+    //   $headers = [];
+    //   foreach ($request->headers->all() as $key => $value) {
+    //     $headers[$key] = is_array($value) ? implode(', ', $value) : $value;
+    //   }
+    //   $logger->notice('Request headers: @headers', [
+    //     '@headers' => print_r($headers, TRUE),
+    //   ]);
+    // }
     
-    // Check for X-HTTP-Method-Override header.
-    if ($request->headers->has('X-HTTP-Method-Override')) {
-      $method = $request->headers->get('X-HTTP-Method-Override');
-      $request->setMethod($method);
+    // // Check for X-HTTP-Method-Override header.
+    // if ($request->headers->has('X-HTTP-Method-Override')) {
+    //   $method = $request->headers->get('X-HTTP-Method-Override');
+    //   $request->setMethod($method);
       
-      if ($this->loggerFactory) {
-        $logger = $this->loggerFactory->get('app_core');
-        $logger->notice('Method overridden by header to: @method', [
-          '@method' => $method,
-        ]);
-      }
-    }
+    //   if ($this->loggerFactory) {
+    //     $logger = $this->loggerFactory->get('app_core');
+    //     $logger->notice('Method overridden by header to: @method', [
+    //       '@method' => $method,
+    //     ]);
+    //   }
+    // }
     
-    // Check for _method query parameter.
-    if ($request->query->has('_method')) {
-      $method = strtoupper($request->query->get('_method'));
-      $request->setMethod($method);
+    // // Check for _method query parameter.
+    // if ($request->query->has('_method')) {
+    //   $method = strtoupper($request->query->get('_method'));
+    //   $request->setMethod($method);
       
-      if ($this->loggerFactory) {
-        $logger = $this->loggerFactory->get('app_core');
-        $logger->notice('Method overridden by query parameter to: @method', [
-          '@method' => $method,
-        ]);
-      }
-    }
+    //   if ($this->loggerFactory) {
+    //     $logger = $this->loggerFactory->get('app_core');
+    //     $logger->notice('Method overridden by query parameter to: @method', [
+    //       '@method' => $method,
+    //     ]);
+    //   }
+    // }
     
-    // Check for POST requests with _method form parameter.
-    if ($request->isMethod('POST') && $request->request->has('_method')) {
-      $method = strtoupper($request->request->get('_method'));
-      $request->setMethod($method);
+    // // Check for POST requests with _method form parameter.
+    // if ($request->isMethod('POST') && $request->request->has('_method')) {
+    //   $method = strtoupper($request->request->get('_method'));
+    //   $request->setMethod($method);
       
-      if ($this->loggerFactory) {
-        $logger = $this->loggerFactory->get('app_core');
-        $logger->notice('Method overridden by form parameter to: @method', [
-          '@method' => $method,
-        ]);
-      }
-    }
+    //   if ($this->loggerFactory) {
+    //     $logger = $this->loggerFactory->get('app_core');
+    //     $logger->notice('Method overridden by form parameter to: @method', [
+    //       '@method' => $method,
+    //     ]);
+    //   }
+    // }
   }
 
   /**

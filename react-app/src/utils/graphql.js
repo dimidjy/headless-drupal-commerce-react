@@ -31,14 +31,6 @@ const authLink = setContext((_, { headers }) => {
 
 // Debug link to log requests before they're sent
 const debugLink = setContext((operation, { headers }) => {
-  console.group('=== GraphQL Request Debug (Client Side) ===');
-  console.log('Operation Name:', operation.operationName);
-  console.log('Query:', operation.query.loc?.source.body);
-  console.log('Variables:', JSON.stringify(operation.variables, null, 2));
-  console.log('Target Endpoint:', '/graphql');
-  console.log('Headers:', JSON.stringify(headers, null, 2));
-  console.groupEnd();
-  
   // Return the original context unchanged
   return { headers };
 });
@@ -55,14 +47,6 @@ const httpLink = createHttpLink({
   useGETForQueries: false,
   // Use our custom debug fetch
   fetch: (uri, options) => {
-    console.log('=== GraphQL Request URL ===');
-    console.log('Request URL:', uri);
-    console.log('Request Method:', options.method);
-    
-    // Log the full URL that will be used after proxy rewriting
-    const fullUrl = '/api/graphql-default-api';
-    console.log('Full URL after proxy rewrite:', fullUrl);
-    
     // Use our debug wrapped fetch
     return debugWrappedFetch(uri, options).then(response => {
       // Check for HTML responses which indicate an error

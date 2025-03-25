@@ -35,7 +35,6 @@ export const renderParagraph = (paragraph) => {
       return <ParagraphLogoBar images={paragraph.image} />;
     
     case 'ParagraphProductsSlider':
-      console.log('ParagraphProductsSlider', paragraph);
       return <ParagraphProductsSlider title={paragraph.title} products_list={paragraph.productsList} />;
     
     case 'ParagraphTestimonials':

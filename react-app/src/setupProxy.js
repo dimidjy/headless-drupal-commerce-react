@@ -5,6 +5,46 @@ module.exports = function(app) {
   console.log('=== Setting up Proxy Middleware ===');
   console.log('Target URL: https://chic-nest.lndo.site');
   
+  // Add proxy for cart endpoints
+  app.use(
+    '/cart',
+    createProxyMiddleware({
+      target: 'https://chic-nest.lndo.site',
+      changeOrigin: true,
+      secure: false,
+      logLevel: 'debug',
+      onProxyReq: (proxyReq, req) => {
+        console.log('\n=== Cart Request Debug ===');
+        console.log('Cart Request URL:', req.url);
+        console.log('Cart Request Method:', req.method);
+        console.log('Cart Target URL:', 'https://chic-nest.lndo.site' + proxyReq.path);
+        
+        // If the request has a body, ensure it's properly forwarded
+        if (req.body) {
+          const bodyData = JSON.stringify(req.body);
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+      },
+      onProxyRes: (proxyRes, req, res) => {
+        console.log('\n=== Cart Response Debug ===');
+        console.log('Cart Response Status:', proxyRes.statusCode);
+        console.log('Cart Response Headers:', proxyRes.headers);
+      },
+      onError: (err, req, res) => {
+        console.error('\n=== Cart Proxy Error ===');
+        console.error('Error Message:', err.message);
+        console.error('Request URL that caused error:', req.url);
+        res.writeHead(500, {
+          'Content-Type': 'application/json',
+        });
+        res.end(JSON.stringify({ 
+          errors: [{ message: 'Cart Proxy Error: ' + err.message }] 
+        }));
+      }
+    })
+  );
+  
   // Add proxy for webform_rest endpoint
   app.use(
     '/webform_rest',

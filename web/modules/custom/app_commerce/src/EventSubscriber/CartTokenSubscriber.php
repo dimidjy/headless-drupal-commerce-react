@@ -49,7 +49,7 @@ final class CartTokenSubscriber implements EventSubscriberInterface {
    */
   public function __construct(CartSessionInterface $cart_session, SharedTempStoreFactory $temp_store_factory) {
     $this->cartSession = $cart_session;
-    $this->tempStore = $temp_store_factory->get('commerce_cart_api_tokens');
+    $this->tempStore = $temp_store_factory->get('app_commerce_tokens');
   }
 
   /**
@@ -74,11 +74,16 @@ final class CartTokenSubscriber implements EventSubscriberInterface {
    */
   public function onRequest(RequestEvent $event) {
     $cart_token = $event->getRequest()->query->get(CartTokenSession::QUERY_NAME);
+    \Drupal::logger('app_commerce')->notice('Cart token: @cart_token', ['@cart_token' => $cart_token]);
     if ($cart_token) {
       $token_cart_data = $this->tempStore->get($cart_token);
       foreach ([CartSessionInterface::ACTIVE, CartSessionInterface::COMPLETED] as $cart_type) {
+        \Drupal::logger('app_commerce')->notice('Cart type: @cart_type', ['@cart_type' => $cart_type]);
+        \Drupal::logger('app_commerce')->notice('Token cart data: @token_cart_data', ['@token_cart_data' => $token_cart_data]);
         if (isset($token_cart_data[$cart_type]) && is_array($token_cart_data[$cart_type])) {
+          \Drupal::logger('app_commerce')->notice('Cart type data: @token_cart_data', ['@token_cart_data' => $token_cart_data[$cart_type]]);
           foreach ($token_cart_data[$cart_type] as $token_cart_datum) {
+            \Drupal::logger('app_commerce')->notice('Cart datum: @token_cart_datum', ['@token_cart_datum' => $token_cart_datum]);
             $this->cartSession->addCartId($token_cart_datum, $cart_type);
           }
         }

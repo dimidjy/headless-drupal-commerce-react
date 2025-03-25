@@ -5,20 +5,12 @@
 
 // Debug a GraphQL operation before it's sent
 export const debugGraphQLOperation = (operation, variables) => {
-  console.group('=== GraphQL Operation Debug ===');
-  console.log('Operation Name:', operation?.definitions?.[0]?.name?.value || 'Unnamed Operation');
-  console.log('Operation Type:', operation?.definitions?.[0]?.operation || 'Unknown');
-  console.log('Query:', operation?.loc?.source?.body || 'No query available');
-  console.log('Variables:', JSON.stringify(variables, null, 2));
-  console.groupEnd();
+  // Debug operation removed
 };
 
 // Debug a GraphQL response
 export const debugGraphQLResponse = (data, operation) => {
-  console.group('=== GraphQL Response Debug ===');
-  console.log('Operation Name:', operation?.definitions?.[0]?.name?.value || 'Unnamed Operation');
-  console.log('Data:', data);
-  console.groupEnd();
+  // Debug response removed
 };
 
 // Debug a GraphQL error
@@ -51,29 +43,11 @@ export const debugGraphQLError = (error, operation, variables) => {
 
 // Debug the fetch request
 export const debugFetch = (url, options) => {
-  console.group('=== Fetch Debug ===');
-  console.log('URL:', url);
-  console.log('Method:', options.method);
-  console.log('Headers:', options.headers);
-  
-  if (options.body) {
-    try {
-      const body = JSON.parse(options.body);
-      console.log('Body:', body);
-    } catch (e) {
-      console.log('Body (raw):', options.body);
-    }
-  }
-  console.groupEnd();
+  // Debug fetch request removed
   
   // Return a function to debug the response
   return (response) => {
-    console.group('=== Fetch Response Debug ===');
-    console.log('Status:', response.status);
-    console.log('Status Text:', response.statusText);
-    console.log('Headers:', response.headers);
-    console.groupEnd();
-    
+    // Debug response removed
     return response;
   };
 };
@@ -87,16 +61,9 @@ export const isHtmlResponse = (text) => {
 };
 
 // Export a wrapped fetch function for debugging
-export const debugWrappedFetch = (url, options) => {
-  debugFetch(url, options);
-  
+export const debugWrappedFetch = (url, options) => {  
   return fetch(url, options)
     .then(response => {
-      console.group('=== Fetch Response Debug ===');
-      console.log('Status:', response.status);
-      console.log('Status Text:', response.statusText);
-      console.log('Headers:', Object.fromEntries([...response.headers.entries()]));
-      
       // Clone the response to read the body
       const clonedResponse = response.clone();
       
@@ -104,24 +71,13 @@ export const debugWrappedFetch = (url, options) => {
         if (isHtmlResponse(text)) {
           console.error('ERROR: Received HTML instead of JSON');
           console.error('HTML Response (first 500 chars):', text.substring(0, 500));
-        } else {
-          try {
-            const json = JSON.parse(text);
-            console.log('Response Body:', json);
-          } catch (e) {
-            console.log('Response is not valid JSON');
-            console.log('Response Text (first 500 chars):', text.substring(0, 500));
-          }
         }
       });
       
-      console.groupEnd();
       return response;
     })
     .catch(error => {
-      console.group('=== Fetch Error Debug ===');
-      console.error('Error:', error);
-      console.groupEnd();
+      console.error('Fetch Error:', error);
       throw error;
     });
 }; 

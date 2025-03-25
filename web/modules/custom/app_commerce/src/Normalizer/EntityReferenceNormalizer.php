@@ -33,13 +33,13 @@ class EntityReferenceNormalizer extends EntityReferenceFieldItemNormalizer {
    *   The entity repository.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
-   * @param array $commerce_cart_api
+   * @param array $app_commerce
    *   The Cart API's service parameters.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, RouteMatchInterface $route_match, array $commerce_cart_api) {
+  public function __construct(EntityRepositoryInterface $entity_repository, RouteMatchInterface $route_match, array $app_commerce) {
     parent::__construct($entity_repository);
     $this->routeMatch = $route_match;
-    $this->allowedFields = $commerce_cart_api['normalized_entity_references'];
+    $this->allowedFields = $app_commerce['normalized_entity_references'];
   }
 
   /**

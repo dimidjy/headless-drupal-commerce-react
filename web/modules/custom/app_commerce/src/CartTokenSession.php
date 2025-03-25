@@ -49,7 +49,7 @@ final class CartTokenSession implements CartSessionInterface {
   public function __construct(CartSessionInterface $inner, RequestStack $request_stack, SharedTempStoreFactory $temp_store_factory) {
     $this->inner = $inner;
     $this->requestStack = $request_stack;
-    $this->tempStore = $temp_store_factory->get('commerce_cart_api_tokens');
+    $this->tempStore = $temp_store_factory->get('app_commerce_tokens');
   }
 
   /**

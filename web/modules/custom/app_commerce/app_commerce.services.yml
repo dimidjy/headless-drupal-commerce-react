@@ -1,6 +1,6 @@
 parameters:
   app_commerce:
-    use_cart_token_session: false
+    use_cart_token_session: true
     normalized_entity_references:
       - order_items
       - purchased_entity
