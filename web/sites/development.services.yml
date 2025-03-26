@@ -19,6 +19,15 @@ parameters:
     normalized_entity_references:
       - order_items
       - purchased_entity
+  cors.config:
+    allowedHeaders: ['content-type', 'accept', 'origin', 'authorization', 'x-csrf-token', 'x-requested-with', 'commerce-cart-token']
+    allowedMethods: ['GET', 'DELETE', 'POST', 'OPTIONS']
+    enabled: true
+    allowedOrigins: ['http://localhost:3000']
+    allowedOriginsPatterns: []
+    exposedHeaders: false
+    maxAge: false
+    supportsCredentials: true
 services:
   cache.backend.null:
     class: Drupal\Core\Cache\NullBackendFactory

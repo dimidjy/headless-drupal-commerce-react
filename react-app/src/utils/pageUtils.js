@@ -1,6 +1,7 @@
 /**
  * Utility functions for page handling
  */
+import { API_ENDPOINTS } from './config';
 
 /**
  * Fetches the UUID for a page based on its path
@@ -16,8 +17,8 @@ export const fetchPageUuidByPath = async (path) => {
     // For the home page (empty path), use root
     const pathParam = cleanPath || 'home';
     
-    // Use the proxy instead of direct URL to avoid CORS issues
-    const response = await fetch(`/api/path-to-uuid?path=/${pathParam}`);
+    // Use the absolute URL from config
+    const response = await fetch(`${API_ENDPOINTS.API}/path-to-uuid?path=/${pathParam}`);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch page UUID for path ${path}`);

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { API_BASE_URL, API_ENDPOINTS } from './config';
 
 /**
  * CartService to handle all cart-related API requests
@@ -6,7 +7,7 @@ import axios from 'axios';
  */
 class CartService {
   constructor() {
-    this.baseUrl = process.env.REACT_APP_API_BASE_URL || 'https://chic-nest.lndo.site';
+    this.baseUrl = API_BASE_URL;
     this.api = axios.create({
       baseURL: this.baseUrl,
       headers: {
@@ -67,6 +68,9 @@ class CartService {
       }
     };
     
+    // Make sure the URL is absolute
+    const absoluteUrl = url.startsWith('http') ? url : `${this.baseUrl}${url}`;
+    
     // Special handling for DELETE requests which may not be directly supported
     if (options.method === 'DELETE') {
       // Try three different approaches for DELETE requests:
@@ -82,7 +86,7 @@ class CartService {
             'X-HTTP-Method-Override': 'DELETE'
           }
         };
-        const response = await fetch(url, deleteOptions);
+        const response = await fetch(absoluteUrl, deleteOptions);
         if (response.ok) {
           return response;
         }
@@ -102,7 +106,7 @@ class CartService {
             'X-HTTP-Method-Override': 'DELETE'
           }
         };
-        const response = await fetch(url, postOverrideOptions);
+        const response = await fetch(absoluteUrl, postOverrideOptions);
         if (response.ok) {
           return response;
         }
@@ -111,9 +115,9 @@ class CartService {
       }
       
       // 3. Third attempt with DELETE method and _method URL parameter
-      const urlWithMethod = url.includes('?') 
-        ? `${url}&_method=DELETE` 
-        : `${url}?_method=DELETE`;
+      const urlWithMethod = absoluteUrl.includes('?') 
+        ? `${absoluteUrl}&_method=DELETE` 
+        : `${absoluteUrl}?_method=DELETE`;
       return fetch(urlWithMethod, {
         ...defaultOptions,
         ...options
@@ -121,7 +125,7 @@ class CartService {
     }
     
     // Normal handling for non-DELETE requests
-    return fetch(url, { ...defaultOptions, ...options });
+    return fetch(absoluteUrl, { ...defaultOptions, ...options });
   }
 
   /**
@@ -151,7 +155,7 @@ class CartService {
       console.log('Getting cart with token:', this.cartToken);
       
       // Use the specified endpoint for cart data
-      const response = await this.fetchWithCredentials('/cart?_format=json');
+      const response = await this.fetchWithCredentials(`${API_ENDPOINTS.CART.BASE}?_format=json`);
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Failed to fetch cart data, server response:', {
@@ -210,7 +214,7 @@ class CartService {
       ];
 
       // Using CartAddResource REST endpoint
-      const response = await this.fetchWithCredentials('/cart/add', {
+      const response = await this.fetchWithCredentials(API_ENDPOINTS.CART.ADD, {
         method: 'POST',
         body: JSON.stringify(payload)
       });
@@ -385,6 +389,4 @@ class CartService {
   }
 }
 
-// Create singleton instance
-const cartService = new CartService();
-export default cartService; 
+export default new CartService(); 

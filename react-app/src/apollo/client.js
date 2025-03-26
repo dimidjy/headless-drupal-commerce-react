@@ -1,9 +1,11 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { API_ENDPOINTS } from '../utils/config';
 
 // Create an HTTP link to the Drupal GraphQL endpoint
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_GRAPHQL_URL || 'https://chic-nest.lndo.site/graphql-default-api',
+  uri: API_ENDPOINTS.GRAPHQL,
+  credentials: 'include', // Include cookies for session authentication
 });
 
 // Add authentication headers

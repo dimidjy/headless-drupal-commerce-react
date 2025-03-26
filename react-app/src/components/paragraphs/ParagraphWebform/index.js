@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../../utils/config';
 import './ParagraphWebform.css';
 
 const ParagraphWebform = ({ title, description }) => {
@@ -34,8 +35,8 @@ const ParagraphWebform = ({ title, description }) => {
     setIsSubmitting(true);
     
     try {
-      // Send request to the webform_rest/submit endpoint
-      await axios.post('/webform_rest/submit', {
+      // Send request to the webform_rest/submit endpoint using the absolute URL
+      await axios.post(`${API_ENDPOINTS.WEBFORM}/submit`, {
         webform_id: 'contact',
         email: email
       });

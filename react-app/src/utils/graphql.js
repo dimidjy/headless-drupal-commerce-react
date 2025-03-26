@@ -2,6 +2,7 @@ import { ApolloClient, InMemoryCache, createHttpLink, from } from '@apollo/clien
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 import { debugGraphQLError, debugWrappedFetch, isHtmlResponse } from './debugGraphQL';
+import { API_ENDPOINTS } from './config';
 
 // Error handling link with detailed logging
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
@@ -37,7 +38,7 @@ const debugLink = setContext((operation, { headers }) => {
 
 // Create an HTTP link to the Drupal GraphQL endpoint
 const httpLink = createHttpLink({
-  uri: '/api/graphql-default-api', // Use the proxy configured in setupProxy.js
+  uri: API_ENDPOINTS.GRAPHQL, // Use absolute URL from config
   credentials: 'include', // Include cookies for session authentication
   fetchOptions: {
     mode: 'cors',
