@@ -145,7 +145,7 @@ const ReviewOrder = ({ checkoutData, cart, onBack, onEditStep, onPlaceOrder }) =
             <div className="review-order-totals">
               <div className="subtotal">
                 <span>Subtotal</span>
-                <span>{cart?.total?.formatted}</span>
+                <span>{cart?.total_formatted || (cart?.total && `$${parseFloat(cart.total).toFixed(2)}`) || '$0.00'}</span>
               </div>
               
               <div className="shipping-cost">
@@ -158,7 +158,7 @@ const ReviewOrder = ({ checkoutData, cart, onBack, onEditStep, onPlaceOrder }) =
               <div className="total">
                 <span>Total</span>
                 <span>
-                  ${(parseFloat(cart?.total?.number || 0) + 
+                  ${(parseFloat((cart?.total_formatted?.replace(/[^0-9.]/g, '')) || cart?.total || 0) + 
                      (shipping.shippingMethod === 'standard' ? 5.99 : 15.99)).toFixed(2)}
                 </span>
               </div>

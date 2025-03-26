@@ -35,11 +35,11 @@ const Cart = () => {
 
   const handleCheckout = async () => {
     try {
+      // Call the checkout function from the context
       const checkoutData = await checkout();
-      // Redirect to checkout page or handle as needed
-      if (checkoutData.redirect_url) {
-        window.location.href = checkoutData.redirect_url;
-      }
+      
+      // Instead of using the redirect_url from the API, navigate to our React checkout page
+      window.location.href = '/checkout';
     } catch (err) {
       console.error('Checkout error:', err);
     }

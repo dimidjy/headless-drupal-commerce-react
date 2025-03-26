@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
 import './CheckoutForms.css';
 
 const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingChange }) => {
@@ -92,6 +91,13 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
       }
     }
   };
+
+  const handleShippingMethodChange = (method) => {
+    setFormData(prevData => ({
+      ...prevData,
+      shippingMethod: method
+    }));
+  };
   
   return (
     <div className="checkout-form shipping-form">
@@ -154,7 +160,7 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
           </div>
         </div>
         
-        <div className="form-group full-width">
+        <div className="form-group">
           <label htmlFor="address1">Address Line 1*</label>
           <input
             type="text"
@@ -167,7 +173,7 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
           {errors.address1 && <div className="field-error">{errors.address1}</div>}
         </div>
         
-        <div className="form-group full-width">
+        <div className="form-group">
           <label htmlFor="address2">Address Line 2</label>
           <input
             type="text"
@@ -240,44 +246,50 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
           </div>
         </div>
         
-        <div className="form-group full-width">
-          <label htmlFor="shippingMethod">Shipping Method*</label>
-          <div className="shipping-options">
-            <div className="shipping-option">
+        <div className="form-section">
+          <h3>Shipping Method</h3>
+          <div className="shipping-methods">
+            <div 
+              className={`shipping-method ${formData.shippingMethod === 'standard' ? 'selected' : ''}`}
+              onClick={() => handleShippingMethodChange('standard')}
+            >
               <input
                 type="radio"
                 id="shipping-standard"
                 name="shippingMethod"
                 value="standard"
                 checked={formData.shippingMethod === 'standard'}
-                onChange={handleChange}
+                onChange={() => handleShippingMethodChange('standard')}
               />
-              <label htmlFor="shipping-standard">
-                <div className="option-name">Standard Shipping</div>
-                <div className="option-details">3-5 business days</div>
-                <div className="option-price">$5.99</div>
-              </label>
+              <div className="shipping-method-label">
+                <div className="method-name">Standard Shipping</div>
+                <div className="method-description">3-5 business days</div>
+              </div>
+              <div className="shipping-method-price">$5.99</div>
             </div>
             
-            <div className="shipping-option">
+            <div 
+              className={`shipping-method ${formData.shippingMethod === 'express' ? 'selected' : ''}`}
+              onClick={() => handleShippingMethodChange('express')}
+            >
               <input
                 type="radio"
                 id="shipping-express"
                 name="shippingMethod"
                 value="express"
                 checked={formData.shippingMethod === 'express'}
-                onChange={handleChange}
+                onChange={() => handleShippingMethodChange('express')}
               />
-              <label htmlFor="shipping-express">
-                <div className="option-name">Express Shipping</div>
-                <div className="option-details">1-2 business days</div>
-                <div className="option-price">$15.99</div>
-              </label>
+              <div className="shipping-method-label">
+                <div className="method-name">Express Shipping</div>
+                <div className="method-description">1-2 business days</div>
+              </div>
+              <div className="shipping-method-price">$15.99</div>
             </div>
           </div>
         </div>
         
-        <div className="form-group checkbox-group">
+        <div className="checkbox-group">
           <input
             type="checkbox"
             id="sameAsBilling"
@@ -288,7 +300,8 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
         </div>
         
         <div className="form-actions">
-          <button type="submit" className="btn primary">Continue to {sameAsShipping ? 'Payment' : 'Billing'}</button>
+          <div></div> {/* Empty div for spacing */}
+          <button type="submit" className="btn primary">Continue to Payment</button>
         </div>
       </form>
     </div>

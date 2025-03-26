@@ -363,15 +363,18 @@ class CartService {
 
   /**
    * Proceed to checkout
-   * @returns {Promise} Promise object with checkout URL and information
+   * @returns {Promise} Promise object representing the checkout data
    */
   async checkout() {
     try {
-      // Redirect to the Drupal checkout page
-      // In a real implementation, you might need to make an API call to get the checkout URL
+      // Get current cart data to use in the checkout page
+      const cartResponse = await this.getCart();
+      
       return { 
         data: { 
-          redirect_url: `${this.baseUrl}/checkout/1` 
+          cart: cartResponse.data,
+          // Still including redirect_url for backward compatibility
+          redirect_url: '/checkout'
         } 
       };
     } catch (error) {

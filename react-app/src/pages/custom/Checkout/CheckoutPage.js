@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../../../context/CartContext';
 import ShippingForm from './ShippingForm';
 import BillingForm from './BillingForm';
 import PaymentForm from './PaymentForm';
@@ -12,6 +14,7 @@ const PAYMENT = 'payment';
 const REVIEW = 'review';
 
 const CheckoutPage = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(SHIPPING);
   const [checkoutData, setCheckoutData] = useState({
     shipping: {},
@@ -20,18 +23,30 @@ const CheckoutPage = () => {
     sameAsShipping: true
   });
 
-  // Placeholder cart data
-  const placeholderCart = {
-    items: [
-      {
-        id: '1',
-        title: 'Sample Product',
-        quantity: 1,
-        totalPrice: { formatted: '$99.99' }
-      }
-    ],
-    total: { formatted: '$99.99' }
-  };
+  // Get real cart data from context
+  const { cart, loading, error } = useCart();
+
+  // Show loading state
+  if (loading) {
+    return <div className="checkout-loading">Loading checkout information...</div>;
+  }
+
+  // Show error state
+  if (error) {
+    return <div className="checkout-error">Error: {error}</div>;
+  }
+
+  // Redirect to cart if cart is empty
+  if (!cart || !cart.items || cart.items.length === 0) {
+    return (
+      <div className="checkout-empty">
+        <p>Your cart is empty. Please add items to your cart before proceeding to checkout.</p>
+        <button onClick={() => navigate('/products')} className="continue-shopping-btn">
+          Continue Shopping
+        </button>
+      </div>
+    );
+  }
   
   // Navigation between checkout steps
   const goToNextStep = () => {
@@ -129,7 +144,7 @@ const CheckoutPage = () => {
         return (
           <ReviewOrder
             checkoutData={checkoutData}
-            cart={placeholderCart}
+            cart={cart}
             onBack={goToPreviousStep}
             onEditStep={(step) => setCurrentStep(step)}
             onPlaceOrder={() => handlePlaceOrder()}
@@ -140,9 +155,24 @@ const CheckoutPage = () => {
     }
   };
   
-  // Place order function (to be implemented)
+  // Place order function
   const handlePlaceOrder = () => {
-    // Placeholder for order placement
+    // Show a loading state or modal if needed
+    
+    // Simulate order processing delay
+    setTimeout(() => {
+      // Here you would normally make an API call to submit the order
+      
+      // Clear the cart (optional)
+      // For now, just redirect to a success page
+      navigate('/order-success', { 
+        state: { 
+          orderId: `ORD-${Math.floor(Math.random() * 10000)}`,
+          orderDate: new Date().toISOString(),
+          checkoutData 
+        } 
+      });
+    }, 1500);
   };
   
   return (
@@ -181,24 +211,24 @@ const CheckoutPage = () => {
           <div className="order-summary">
             <h3>Order Summary</h3>
             <div className="order-items">
-              {placeholderCart.items.map(item => (
+              {cart.items.map(item => (
                 <div key={item.id} className="order-item">
                   <div className="item-details">
                     <div className="item-name">{item.title}</div>
                     <div className="item-qty">Qty: {item.quantity}</div>
                   </div>
-                  <div className="item-price">{item.totalPrice.formatted}</div>
+                  <div className="item-price">{item.total_formatted || `$${parseFloat(item.total).toFixed(2)}`}</div>
                 </div>
               ))}
             </div>
             <div className="order-totals">
               <div className="order-subtotal">
                 <span>Subtotal</span>
-                <span>{placeholderCart.total.formatted}</span>
+                <span>{cart.total_formatted || `$${parseFloat(cart.total).toFixed(2)}`}</span>
               </div>
               <div className="order-total">
                 <span>Total</span>
-                <span>{placeholderCart.total.formatted}</span>
+                <span>{cart.total_formatted || `$${parseFloat(cart.total).toFixed(2)}`}</span>
               </div>
             </div>
           </div>

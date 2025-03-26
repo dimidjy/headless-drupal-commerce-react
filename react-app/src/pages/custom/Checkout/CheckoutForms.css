@@ -1,9 +1,8 @@
 /* Common Form Styles */
 .checkout-form {
   background: #fff;
-  border-radius: 5px;
+  border-radius: 4px;
   padding: 25px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .checkout-form h2 {
@@ -13,6 +12,13 @@
   border-bottom: 1px solid #eee;
   color: #333;
   font-size: 1.5rem;
+}
+
+.checkout-form h3 {
+  font-size: 1.2rem;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  color: #333;
 }
 
 .checkout-form .form-row {
@@ -26,15 +32,17 @@
   margin-bottom: 20px;
 }
 
-.checkout-form .form-group.full-width {
-  width: 100%;
+.checkout-form .form-section {
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .checkout-form .form-group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #333;
+  color: #555;
+  font-size: 0.9rem;
 }
 
 .checkout-form .form-group input[type="text"],
@@ -44,16 +52,17 @@
 .checkout-form .form-group select {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 16px;
-  transition: border-color 0.3s;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .checkout-form .form-group input:focus,
 .checkout-form .form-group select:focus {
   border-color: #4caf50;
   outline: none;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
 .checkout-form .form-group input.error,
@@ -101,6 +110,7 @@
 .checkout-form .btn.secondary {
   background-color: #f5f5f5;
   color: #333;
+  border: 1px solid #ddd;
 }
 
 .checkout-form .btn.secondary:hover {
@@ -116,57 +126,63 @@
 .checkout-form .checkbox-group {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin: 25px 0;
 }
 
 .checkout-form .checkbox-group input[type="checkbox"] {
   margin-right: 10px;
 }
 
-/* Shipping Method Options */
-.checkout-form .shipping-options {
+.checkout-form .checkbox-group label {
+  color: #333;
+  font-weight: 400;
+}
+
+/* Shipping Method Styles */
+.checkout-form .shipping-methods {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-top: 10px;
 }
 
-.checkout-form .shipping-option {
+.checkout-form .shipping-method {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   padding: 15px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  transition: border-color 0.3s;
-}
-
-.checkout-form .shipping-option:hover {
-  border-color: #bdbdbd;
-}
-
-.checkout-form .shipping-option input[type="radio"] {
-  margin-right: 15px;
-  margin-top: 3px;
-}
-
-.checkout-form .shipping-option label {
-  flex: 1;
   cursor: pointer;
-  margin-bottom: 0;
+  transition: border-color 0.3s, background-color 0.3s;
 }
 
-.checkout-form .option-name {
+.checkout-form .shipping-method:hover {
+  border-color: #4caf50;
+}
+
+.checkout-form .shipping-method.selected {
+  border-color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.05);
+}
+
+.checkout-form .shipping-method input[type="radio"] {
+  margin-right: 15px;
+}
+
+.checkout-form .shipping-method-label {
+  flex: 1;
+}
+
+.checkout-form .method-name {
   font-weight: 500;
   margin-bottom: 3px;
 }
 
-.checkout-form .option-details {
+.checkout-form .method-description {
   font-size: 0.875rem;
   color: #757575;
-  margin-bottom: 3px;
 }
 
-.checkout-form .option-price {
+.checkout-form .shipping-method-price {
   font-weight: 500;
   color: #333;
 }
@@ -174,33 +190,36 @@
 /* Payment Methods */
 .checkout-form .payment-methods {
   display: flex;
+  flex-direction: column;
   gap: 15px;
-  margin-top: 10px;
 }
 
 .checkout-form .payment-method {
-  flex: 1;
   display: flex;
   align-items: center;
   padding: 15px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ddd;
   border-radius: 4px;
+  cursor: pointer;
   transition: border-color 0.3s;
 }
 
 .checkout-form .payment-method:hover {
-  border-color: #bdbdbd;
+  border-color: #4caf50;
+}
+
+.checkout-form .payment-method.selected {
+  border-color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.05);
 }
 
 .checkout-form .payment-method input[type="radio"] {
   margin-right: 15px;
 }
 
-.checkout-form .payment-method label {
+.checkout-form .payment-method-label {
   display: flex;
   align-items: center;
-  cursor: pointer;
-  margin-bottom: 0;
   flex: 1;
 }
 
@@ -213,15 +232,11 @@
   background-position: center;
 }
 
-.checkout-form .payment-logo.credit-card {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23757575"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>');
-}
-
-.checkout-form .payment-logo.paypal {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23003087"><path d="M9.83,16.94c-0.23,0-0.41-0.17-0.44-0.4L9.07,15.2H7.45l-0.32,1.34c-0.03,0.23-0.21,0.4-0.44,0.4H6.1c-0.28,0-0.49-0.26-0.43-0.53L7.31,8.3C7.36,8.12,7.52,8,7.71,8H9.24c0.19,0,0.35,0.12,0.4,0.3l1.64,8.11c0.06,0.27-0.15,0.53-0.43,0.53H9.83z M8.24,11.78l-0.31,1.85h0.93l-0.31-1.85c-0.02-0.11-0.05-0.22-0.08-0.33c-0.03-0.11-0.06-0.22-0.08-0.33H8.32C8.3,11.23,8.27,11.34,8.24,11.45C8.21,11.56,8.18,11.67,8.24,11.78z M16.77,12.63h-0.84c-0.18,0-0.35,0.13-0.39,0.31l-0.23,1.08c-0.02,0.08-0.09,0.13-0.17,0.13h-0.82c-0.11,0-0.19-0.11-0.17-0.22l0.22-1.03c0.02-0.08,0.09-0.14,0.17-0.14h0.84c0.18,0,0.35-0.13,0.39-0.31l0.23-1.08c0.02-0.08,0.09-0.13,0.17-0.13h0.82c0.11,0,0.19,0.11,0.17,0.22l-0.22,1.03C16.92,12.57,16.85,12.63,16.77,12.63z M15.93,16.94h-1.47c-0.23,0-0.42-0.16-0.46-0.38l-0.06-0.3c-0.09,0.14-0.23,0.27-0.41,0.39c-0.34,0.23-0.78,0.34-1.31,0.34c-0.36,0-0.68-0.09-0.94-0.26c-0.27-0.17-0.45-0.42-0.54-0.73c-0.11-0.39-0.05-0.75,0.15-1.07C11.04,14.6,11.35,14.36,11.78,14.2c0.43-0.16,0.96-0.24,1.57-0.24h0.41c0.06,0,0.11-0.05,0.12-0.11l0.03-0.12c0.04-0.21-0.04-0.39-0.23-0.51c-0.18-0.12-0.43-0.18-0.76-0.18c-0.3,0-0.55,0.04-0.74,0.12c-0.18,0.08-0.31,0.17-0.36,0.26c-0.05,0.08-0.13,0.13-0.22,0.13h-0.93c-0.14,0-0.24-0.13-0.21-0.27c0.08-0.38,0.35-0.7,0.81-0.96c0.46-0.26,1.03-0.39,1.72-0.39c0.83,0,1.47,0.16,1.89,0.47c0.44,0.32,0.59,0.78,0.45,1.39L13.89,16.53C13.86,16.75,13.67,16.94,13.44,16.94H11.97z M13.21,14.75h-0.52c-0.43,0-0.74,0.07-0.92,0.22c-0.17,0.15-0.23,0.32-0.17,0.54c0.06,0.22,0.24,0.33,0.55,0.33c0.43,0,0.78-0.15,1.06-0.47c0.05-0.06,0.12-0.05,0.17,0.01c0.05,0.07,0.02,0.19-0.05,0.25c-0.34,0.35-0.78,0.52-1.31,0.52c-0.5,0-0.87-0.16-1.07-0.47c-0.2-0.31-0.2-0.74,0-1.28c0.2-0.54,0.54-0.95,1.01-1.24c0.47-0.29,1.01-0.44,1.62-0.44c0.58,0,1.01,0.14,1.28,0.42c0.27,0.28,0.35,0.65,0.23,1.11L13.21,14.75z"/></svg>');
-}
-
 /* Credit Card Form */
+.checkout-form .card-fields {
+  margin-top: 20px;
+}
+
 .checkout-form .expiry-group {
   flex: 2;
 }
@@ -229,29 +244,18 @@
 .checkout-form .expiry-inputs {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .checkout-form .expiry-inputs select {
   flex: 1;
 }
 
-.checkout-form .expiry-separator {
-  margin: 0 10px;
-  font-weight: bold;
-}
-
 .checkout-form .cvv-group {
   flex: 1;
 }
 
-.checkout-form .paypal-instructions {
-  padding: 15px;
-  background: #f8f8f8;
-  border-radius: 4px;
-  margin: 15px 0;
-}
-
-/* Review Order Styles */
+/* Review Order */
 .checkout-form .review-sections {
   display: flex;
   flex-direction: column;
@@ -259,37 +263,38 @@
 }
 
 .checkout-form .review-section {
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .checkout-form .section-header {
-  padding: 15px;
-  background: #f5f5f5;
-  border-bottom: 1px solid #e0e0e0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 15px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #eee;
 }
 
 .checkout-form .section-header h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  color: #333;
 }
 
 .checkout-form .edit-button {
-  padding: 5px 15px;
-  background: transparent;
-  border: 1px solid #bdbdbd;
-  border-radius: 4px;
-  color: #757575;
-  font-size: 0.875rem;
+  background: none;
+  border: none;
+  color: #4caf50;
   cursor: pointer;
-  transition: all 0.3s;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0;
 }
 
 .checkout-form .edit-button:hover {
-  background: #f0f0f0;
+  text-decoration: underline;
 }
 
 .checkout-form .section-content {
@@ -307,13 +312,16 @@
 
 .checkout-form .review-order-item {
   display: flex;
+  align-items: center;
   padding: 10px 0;
-  border-bottom: 1px dashed #e0e0e0;
+  border-bottom: 1px solid #eee;
 }
 
 .checkout-form .item-image {
   width: 60px;
   height: 60px;
+  overflow: hidden;
+  border-radius: 4px;
   margin-right: 15px;
 }
 
@@ -321,32 +329,60 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 4px;
+}
+
+.checkout-form .item-details {
+  flex: 1;
+}
+
+.checkout-form .item-name {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.checkout-form .item-sku {
+  font-size: 0.75rem;
+  color: #757575;
+  margin-bottom: 5px;
+}
+
+.checkout-form .item-qty {
+  font-size: 0.875rem;
+  color: #757575;
+}
+
+.checkout-form .item-price {
+  font-weight: 500;
+  color: #333;
 }
 
 .checkout-form .review-order-totals {
-  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+  margin-top: 15px;
 }
 
 .checkout-form .review-order-totals > div {
   display: flex;
   justify-content: space-between;
-  padding: 5px 0;
+  margin-bottom: 10px;
 }
 
-.checkout-form .subtotal, .checkout-form .shipping-cost {
-  color: #757575;
+.checkout-form .subtotal, 
+.checkout-form .shipping-cost {
+  color: #666;
 }
 
 .checkout-form .total {
   font-weight: bold;
   font-size: 1.125rem;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #e0e0e0;
+  color: #333;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
 }
 
-/* Responsive adjustments */
+/* Responsive styles */
 @media (max-width: 768px) {
   .checkout-form .form-row {
     flex-direction: column;
@@ -355,5 +391,18 @@
   
   .checkout-form .payment-methods {
     flex-direction: column;
+  }
+  
+  .checkout-form .review-order-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .checkout-form .item-image {
+    margin-bottom: 10px;
+  }
+  
+  .checkout-form .item-price {
+    margin-top: 10px;
   }
 } 

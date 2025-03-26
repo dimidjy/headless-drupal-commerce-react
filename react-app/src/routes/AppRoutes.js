@@ -7,6 +7,7 @@ import NotFoundPage from '../pages/NotFoundPage';
 
 // Custom Pages
 import { CartPage, CheckoutPage, ProductsPage, ProductPage } from '../pages/custom';
+import OrderSuccessPage from '../pages/custom/Checkout/OrderSuccessPage';
 
 /**
  * AppRoutes component handles all the application routing
@@ -25,6 +26,7 @@ const AppRoutes = () => {
       {/* Custom Pages */}
       <Route path="/cart" element={<CartPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/order-success" element={<OrderSuccessPage />} />
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/product/:id" element={<ProductPage />} />
       
