@@ -20,8 +20,8 @@ parameters:
       - order_items
       - purchased_entity
   cors.config:
-    allowedHeaders: ['content-type', 'accept', 'origin', 'authorization', 'x-csrf-token', 'x-requested-with', 'commerce-cart-token']
-    allowedMethods: ['GET', 'DELETE', 'POST', 'OPTIONS']
+    allowedHeaders: ['content-type', 'accept', 'origin', 'authorization', 'x-csrf-token', 'x-requested-with', 'x-http-method-override', 'commerce-cart-token']
+    allowedMethods: ['GET', 'PATCH', 'DELETE', 'POST', 'OPTIONS']
     enabled: true
     allowedOrigins: ['http://localhost:3000']
     allowedOriginsPatterns: []
