@@ -36,6 +36,7 @@
         "drupal/paragraphs": "^1.19",
         "drupal/pathauto": "^1.11",
         "drupal/restui": "^1.22",
+        "drupal/search_api_solr": "^4.3",
         "drupal/taxonomy_machine_name": "^2.0",
         "drupal/token": "^1.11",
         "drupal/webform": "^6.2",
