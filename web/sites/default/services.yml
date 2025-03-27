@@ -223,9 +223,9 @@ parameters:
   cors.config:
     enabled: true
     # Specify allowed headers, like 'x-allowed-header'.
-    allowedHeaders: ['content-type', 'accept', 'origin', 'authorization', 'Commerce-Cart-Token']
+    allowedHeaders: ['content-type', 'accept', 'origin', 'authorization', 'x-http-method-override', 'Commerce-Cart-Token']
     # Specify allowed request methods, specify ['*'] to allow all possible ones.
-    allowedMethods: ['GET', 'DELETE', 'POST', 'OPTIONS']
+    allowedMethods: ['GET', 'DELETE', 'POST', 'OPTIONS', 'PATCH']
     # Configure requests allowed from specific origins. Do not include trailing
     # slashes with URLs.
     allowedOrigins: ['http://localhost:3000']

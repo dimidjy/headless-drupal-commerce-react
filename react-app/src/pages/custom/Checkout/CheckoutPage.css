@@ -6,7 +6,6 @@
 
 .checkout-title {
   font-size: 2rem;
-  margin-bottom: 30px;
   color: #333;
   text-align: center;
 }
@@ -30,7 +29,6 @@
 .checkout-progress {
   display: flex;
   justify-content: center;
-  margin-bottom: 40px;
   position: relative;
   max-width: 600px;
   margin-left: auto;
