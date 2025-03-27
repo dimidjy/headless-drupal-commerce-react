@@ -15,11 +15,6 @@ const Header = () => {
           <MainMenu />
           <div className="header-right">
             <div className="header-right-item">
-              <NavLink to="/wishlist" className={({ isActive }) => isActive ? 'wishlist-link active' : 'wishlist-link'}>
-                WISHLIST (0)
-              </NavLink>
-            </div>
-            <div className="header-right-item">
               <MiniCart />
             </div>
             <div className="header-right-item">

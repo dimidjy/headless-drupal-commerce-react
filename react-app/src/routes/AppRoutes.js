@@ -6,7 +6,7 @@ import Page from '../pages/Page';
 import NotFoundPage from '../pages/NotFoundPage';
 
 // Custom Pages
-import { CartPage, CheckoutPage, ProductsPage, ProductPage } from '../pages/custom';
+import { CartPage, CheckoutPage, ProductsPage, ProductPage, SearchPage } from '../pages/custom';
 import OrderSuccessPage from '../pages/custom/Checkout/OrderSuccessPage';
 
 /**
@@ -29,6 +29,7 @@ const AppRoutes = () => {
       <Route path="/order-success" element={<OrderSuccessPage />} />
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/product/:id" element={<ProductPage />} />
+      <Route path="/search" element={<SearchPage />} />
       
       {/* Dynamic routes - any path */}
       <Route 
