@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - app_commerce
+    - serialization
+id: novaposhta_warehouses
+plugin_id: 'novaposhta_warehouses'
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie 

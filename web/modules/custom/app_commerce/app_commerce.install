@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the app_commerce module.
+ */
+
+use Drupal\rest\Entity\RestResourceConfig;
+use Drupal\rest\RestResourceConfigInterface;
+
+/**
+ * Install Novaposhta REST resources.
+ */
+function app_commerce_update_9001() {
+  $resources = [
+    'novaposhta_regions' => [
+      'plugin_id' => 'novaposhta_regions',
+      'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+      'configuration' => [
+        'methods' => ['GET'],
+        'formats' => ['json'],
+        'authentication' => ['cookie'],
+      ],
+    ],
+    'novaposhta_cities' => [
+      'plugin_id' => 'novaposhta_cities',
+      'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+      'configuration' => [
+        'methods' => ['GET'],
+        'formats' => ['json'],
+        'authentication' => ['cookie'],
+      ],
+    ],
+    'novaposhta_warehouses' => [
+      'plugin_id' => 'novaposhta_warehouses',
+      'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+      'configuration' => [
+        'methods' => ['GET'],
+        'formats' => ['json'],
+        'authentication' => ['cookie'],
+      ],
+    ],
+  ];
+
+  foreach ($resources as $id => $resource_config) {
+    $resource = RestResourceConfig::load($id);
+    if (!$resource) {
+      $resource = RestResourceConfig::create([
+        'id' => $id,
+        'plugin_id' => $resource_config['plugin_id'],
+        'granularity' => $resource_config['granularity'],
+        'configuration' => $resource_config['configuration'],
+        'status' => TRUE,
+      ]);
+      $resource->save();
+    }
+  }
+
+  return t('Novaposhta REST resources have been installed.');
+} 
