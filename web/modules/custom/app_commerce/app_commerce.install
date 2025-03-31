@@ -57,4 +57,41 @@ function app_commerce_update_9001() {
   }
 
   return t('Novaposhta REST resources have been installed.');
+}
+
+/**
+ * Install the Order Shipping Info REST resource.
+ */
+function app_commerce_update_9002() {
+  \Drupal::service('plugin.manager.rest')->clearCachedDefinitions();
+  
+  // Create the REST resource configuration.
+  $config_storage = \Drupal::entityTypeManager()->getStorage('rest_resource_config');
+  
+  $rest_resource_config = $config_storage->load('commerce_order_shipping_info');
+  if (!$rest_resource_config) {
+    $rest_resource_config = $config_storage->create([
+      'id' => 'commerce_order_shipping_info',
+      'plugin_id' => 'commerce_order_shipping_info',
+      'granularity' => 'resource',
+      'configuration' => [
+        'methods' => ['POST'],
+        'formats' => ['json'],
+        'authentication' => ['cookie'],
+      ],
+      'status' => TRUE,
+      'dependencies' => [
+        'module' => [
+          'app_commerce',
+          'serialization',
+          'user',
+        ],
+      ],
+    ]);
+    $rest_resource_config->save();
+    
+    return t('The Order Shipping Info REST resource has been installed.');
+  }
+  
+  return t('The Order Shipping Info REST resource was already installed.');
 } 

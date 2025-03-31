@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './CheckoutForms.css';
 import { API_BASE_URL } from '../../../utils/config';
+import { useCart } from '../../../context/CartContext';
 
 const BASE_URL = API_BASE_URL;
 
 const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingChange }) => {
+  const { cart } = useCart();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -149,7 +151,7 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
     
     // Required fields
     const requiredFields = [
-      'firstName', 'lastName', 'email', 'phone', 
+      'firstName', 'lastName', 'phone', 
       'novaposhtaRegion', 'novaposhtaCity', 'novaposhtaWarehouse'
     ];
     
@@ -159,7 +161,7 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
       }
     });
     
-    // Email validation
+    // Email validation - only if email is provided
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
@@ -177,7 +179,37 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
     e.preventDefault();
     
     if (validateForm()) {
-      onSave(formData);
+      // First call the API to save shipping information to the order
+      fetch(`${BASE_URL}/api/commerce/order/shipping-info`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Include cookies for authentication
+        body: JSON.stringify({
+          ...formData,
+          order_id: cart?.order_id,
+        }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to save shipping information');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Shipping information saved successfully:', data);
+          // Then call the parent component's onSave method to proceed
+          onSave(formData);
+        })
+        .catch(error => {
+          console.error('Error saving shipping information:', error);
+          // Display an error message to the user
+          setErrors(prevErrors => ({
+            ...prevErrors,
+            form: 'Failed to save shipping information. Please try again.'
+          }));
+        });
     } else {
       // Scroll to the first error
       const firstErrorField = document.querySelector('.field-error');
@@ -202,6 +234,12 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
       <h2>Shipping Information</h2>
       
       <form onSubmit={handleSubmit}>
+        {errors.form && (
+          <div className="form-error-message">
+            {errors.form}
+          </div>
+        )}
+        
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="firstName">First Name*</label>
@@ -232,7 +270,7 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
         
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="email">Email Address*</label>
+            <label htmlFor="email">Email Address</label>
             <input
               type="email"
               id="email"
