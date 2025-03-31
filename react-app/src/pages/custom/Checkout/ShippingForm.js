@@ -150,15 +150,8 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
     // Required fields
     const requiredFields = [
       'firstName', 'lastName', 'email', 'phone', 
+      'novaposhtaRegion', 'novaposhtaCity', 'novaposhtaWarehouse'
     ];
-
-    // Add Novaposhta required fields if standard shipping not selected
-    if (formData.shippingMethod === 'novaposhta') {
-      requiredFields.push('novaposhtaRegion', 'novaposhtaCity', 'novaposhtaWarehouse');
-    } else {
-      // Add standard shipping address required fields
-      requiredFields.push('address1', 'city', 'state', 'postalCode', 'country');
-    }
     
     requiredFields.forEach(field => {
       if (!formData[field]) {
@@ -174,11 +167,6 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
     // Phone validation (basic format)
     if (formData.phone && !/^\+?[0-9\s\-()]{10,20}$/.test(formData.phone)) {
       newErrors.phone = 'Please enter a valid phone number';
-    }
-    
-    // Postal code validation (basic format for US) - only if standard shipping
-    if (formData.shippingMethod !== 'novaposhta' && formData.country === 'US' && formData.postalCode && !/^\d{5}(-\d{4})?$/.test(formData.postalCode)) {
-      newErrors.postalCode = 'Please enter a valid ZIP code (12345 or 12345-6789)';
     }
     
     setErrors(newErrors);
@@ -199,12 +187,15 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
     }
   };
 
-  const handleShippingMethodChange = (method) => {
-    setFormData(prevData => ({
-      ...prevData,
-      shippingMethod: method
-    }));
-  };
+  // Initialize form with novaposhta as default shipping method
+  useEffect(() => {
+    if (!formData.shippingMethod) {
+      setFormData(prevData => ({
+        ...prevData,
+        shippingMethod: 'novaposhta'
+      }));
+    }
+  }, []);
   
   return (
     <div className="checkout-form shipping-form">
@@ -274,55 +265,14 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
         <div className="form-section">
           <h3>Shipping Method</h3>
           <div className="shipping-methods">
-            <div 
-              className={`shipping-method ${formData.shippingMethod === 'standard' ? 'selected' : ''}`}
-              onClick={() => handleShippingMethodChange('standard')}
-            >
-              <input
-                type="radio"
-                id="shipping-standard"
-                name="shippingMethod"
-                value="standard"
-                checked={formData.shippingMethod === 'standard'}
-                onChange={() => handleShippingMethodChange('standard')}
-              />
-              <div className="shipping-method-label">
-                <div className="method-name">Standard Shipping</div>
-                <div className="method-description">3-5 business days</div>
-              </div>
-              <div className="shipping-method-price">$5.99</div>
-            </div>
-            
-            <div 
-              className={`shipping-method ${formData.shippingMethod === 'express' ? 'selected' : ''}`}
-              onClick={() => handleShippingMethodChange('express')}
-            >
-              <input
-                type="radio"
-                id="shipping-express"
-                name="shippingMethod"
-                value="express"
-                checked={formData.shippingMethod === 'express'}
-                onChange={() => handleShippingMethodChange('express')}
-              />
-              <div className="shipping-method-label">
-                <div className="method-name">Express Shipping</div>
-                <div className="method-description">1-2 business days</div>
-              </div>
-              <div className="shipping-method-price">$15.99</div>
-            </div>
-            
-            <div 
-              className={`shipping-method ${formData.shippingMethod === 'novaposhta' ? 'selected' : ''}`}
-              onClick={() => handleShippingMethodChange('novaposhta')}
-            >
+            <div className="shipping-method selected">
               <input
                 type="radio"
                 id="shipping-novaposhta"
                 name="shippingMethod"
                 value="novaposhta"
-                checked={formData.shippingMethod === 'novaposhta'}
-                onChange={() => handleShippingMethodChange('novaposhta')}
+                checked={true}
+                readOnly
               />
               <div className="shipping-method-label">
                 <div className="method-name">Novaposhta Delivery</div>
@@ -333,189 +283,96 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
           </div>
         </div>
         
-        {formData.shippingMethod === 'novaposhta' && (
-          <div className="form-section novaposhta-section">
-            <h3>Novaposhta Delivery Details</h3>
-            
+        <div className="form-section novaposhta-section">
+          <h3>Novaposhta Delivery Details</h3>
+          
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="novaposhtaRegion">Region*</label>
+              <select
+                id="novaposhtaRegion"
+                name="novaposhtaRegion"
+                value={formData.novaposhtaRegion}
+                onChange={handleChange}
+                className={errors.novaposhtaRegion ? 'error' : ''}
+                disabled={loading.regions}
+              >
+                <option value="">Select Region</option>
+                {regions.options && Object.entries(regions.options).map(([ref, name]) => (
+                  <option key={ref} value={ref}>{name}</option>
+                ))}
+              </select>
+              {loading.regions && <div className="loading-indicator">Loading regions...</div>}
+              {errors.novaposhtaRegion && <div className="field-error">{errors.novaposhtaRegion}</div>}
+            </div>
+          </div>
+          
+          {formData.novaposhtaRegion && (
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="novaposhtaRegion">Region*</label>
+                <label htmlFor="novaposhtaCity">City*</label>
                 <select
-                  id="novaposhtaRegion"
-                  name="novaposhtaRegion"
-                  value={formData.novaposhtaRegion}
+                  id="novaposhtaCity"
+                  name="novaposhtaCity"
+                  value={formData.novaposhtaCity}
                   onChange={handleChange}
-                  className={errors.novaposhtaRegion ? 'error' : ''}
-                  disabled={loading.regions}
+                  className={errors.novaposhtaCity ? 'error' : ''}
+                  disabled={loading.cities}
                 >
-                  <option value="">Select Region</option>
-                  {regions.options && Object.entries(regions.options).map(([ref, name]) => (
+                  <option value="">Select City</option>
+                  {cities.options && Object.entries(cities.options).map(([ref, name]) => (
                     <option key={ref} value={ref}>{name}</option>
                   ))}
                 </select>
-                {loading.regions && <div className="loading-indicator">Loading regions...</div>}
-                {errors.novaposhtaRegion && <div className="field-error">{errors.novaposhtaRegion}</div>}
+                {loading.cities && <div className="loading-indicator">Loading cities...</div>}
+                {errors.novaposhtaCity && <div className="field-error">{errors.novaposhtaCity}</div>}
               </div>
             </div>
-            
-            {formData.novaposhtaRegion && (
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="novaposhtaCity">City*</label>
-                  <select
-                    id="novaposhtaCity"
-                    name="novaposhtaCity"
-                    value={formData.novaposhtaCity}
-                    onChange={handleChange}
-                    className={errors.novaposhtaCity ? 'error' : ''}
-                    disabled={loading.cities}
-                  >
-                    <option value="">Select City</option>
-                    {cities.options && Object.entries(cities.options).map(([ref, name]) => (
-                      <option key={ref} value={ref}>{name}</option>
-                    ))}
-                  </select>
-                  {loading.cities && <div className="loading-indicator">Loading cities...</div>}
-                  {errors.novaposhtaCity && <div className="field-error">{errors.novaposhtaCity}</div>}
-                </div>
-              </div>
-            )}
-            
-            {formData.novaposhtaCity && (
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="novaposhtaWarehouse">Delivery Point*</label>
-                  <select
-                    id="novaposhtaWarehouse"
-                    name="novaposhtaWarehouse"
-                    value={formData.novaposhtaWarehouse}
-                    onChange={handleChange}
-                    className={errors.novaposhtaWarehouse ? 'error' : ''}
-                    disabled={loading.warehouses}
-                  >
-                    <option value="">Select Delivery Point</option>
-                    {warehouses.options && Object.entries(warehouses.options).map(([ref, name]) => (
-                      <option key={ref} value={ref}>{name}</option>
-                    ))}
-                  </select>
-                  {loading.warehouses && <div className="loading-indicator">Loading delivery points...</div>}
-                  {errors.novaposhtaWarehouse && <div className="field-error">{errors.novaposhtaWarehouse}</div>}
-                </div>
-              </div>
-            )}
-            
-            {selectedWarehouseInfo && (
-              <div className="warehouse-details">
-                <h4>Delivery Point Details</h4>
-                <div className="warehouse-info">
-                  <p><strong>Address:</strong> {selectedWarehouseInfo.ShortAddress}</p>
-                  <p><strong>Phone:</strong> {selectedWarehouseInfo.Phone}</p>
-                  <div className="warehouse-schedule">
-                    <p><strong>Working Hours:</strong></p>
-                    <ul>
-                      {Object.entries(selectedWarehouseInfo.Schedule).map(([day, hours]) => (
-                        <li key={day}>
-                          <span>{day}:</span> <span>{hours === "-" ? "Closed" : hours}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-        
-        {(formData.shippingMethod === 'standard' || formData.shippingMethod === 'express') && (
-          <div className="form-section standard-shipping-section">
-            <h3>Shipping Address</h3>
+          )}
+          
+          {formData.novaposhtaCity && (
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="address1">Address Line 1*</label>
-                <input 
-                  type="text"
-                  id="address1"
-                  name="address1"
-                  value={formData.address1}
-                  onChange={handleChange}
-                  className={errors.address1 ? 'error' : ''}
-                />
-                {errors.address1 && <div className="field-error">{errors.address1}</div>}
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="address2">Address Line 2</label>
-                <input 
-                  type="text"
-                  id="address2"
-                  name="address2"
-                  value={formData.address2}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="city">City*</label>
-                <input 
-                  type="text"
-                  id="city"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className={errors.city ? 'error' : ''}
-                />
-                {errors.city && <div className="field-error">{errors.city}</div>}
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="state">State/Province*</label>
-                <input 
-                  type="text"
-                  id="state"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
-                  className={errors.state ? 'error' : ''}
-                />
-                {errors.state && <div className="field-error">{errors.state}</div>}
-              </div>
-            </div>
-            
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="postalCode">Postal Code*</label>
-                <input 
-                  type="text"
-                  id="postalCode"
-                  name="postalCode"
-                  value={formData.postalCode}
-                  onChange={handleChange}
-                  className={errors.postalCode ? 'error' : ''}
-                />
-                {errors.postalCode && <div className="field-error">{errors.postalCode}</div>}
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="country">Country*</label>
+                <label htmlFor="novaposhtaWarehouse">Delivery Point*</label>
                 <select
-                  id="country"
-                  name="country"
-                  value={formData.country}
+                  id="novaposhtaWarehouse"
+                  name="novaposhtaWarehouse"
+                  value={formData.novaposhtaWarehouse}
                   onChange={handleChange}
-                  className={errors.country ? 'error' : ''}
+                  className={errors.novaposhtaWarehouse ? 'error' : ''}
+                  disabled={loading.warehouses}
                 >
-                  <option value="US">United States</option>
-                  <option value="UA">Ukraine</option>
-                  <option value="CA">Canada</option>
-                  <option value="GB">United Kingdom</option>
+                  <option value="">Select Delivery Point</option>
+                  {warehouses.options && Object.entries(warehouses.options).map(([ref, name]) => (
+                    <option key={ref} value={ref}>{name}</option>
+                  ))}
                 </select>
-                {errors.country && <div className="field-error">{errors.country}</div>}
+                {loading.warehouses && <div className="loading-indicator">Loading delivery points...</div>}
+                {errors.novaposhtaWarehouse && <div className="field-error">{errors.novaposhtaWarehouse}</div>}
               </div>
             </div>
-          </div>
-        )}
+          )}
+          
+          {selectedWarehouseInfo && (
+            <div className="warehouse-details">
+              <h4>Delivery Point Details</h4>
+              <div className="warehouse-info">
+                <p><strong>Address:</strong> {selectedWarehouseInfo.ShortAddress}</p>
+                <p><strong>Phone:</strong> {selectedWarehouseInfo.Phone}</p>
+                <div className="warehouse-schedule">
+                  <p><strong>Working Hours:</strong></p>
+                  <ul>
+                    {Object.entries(selectedWarehouseInfo.Schedule).map(([day, hours]) => (
+                      <li key={day}>
+                        <span>{day}:</span> <span>{hours === "-" ? "Closed" : hours}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
         <div className="form-actions">
           <div></div> {/* Empty div for spacing */}
