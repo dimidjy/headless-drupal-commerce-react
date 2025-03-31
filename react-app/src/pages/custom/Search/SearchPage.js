@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../../../utils/config';
 import './SearchPage.css';
 
 const SearchPage = () => {
@@ -17,11 +18,11 @@ const SearchPage = () => {
   const fetchProducts = async (term = '') => {
     setLoading(true);
     setError(null);
-    
+    console.log('fetchProducts', term);
     try {
       const url = term 
-        ? `https://chic-nest.lndo.site/api/search-products?_format=json&search=${encodeURIComponent(term)}`
-        : 'https://chic-nest.lndo.site/api/search-products?_format=json';
+        ? `${API_BASE_URL}/api/search-products?_format=json&search=${encodeURIComponent(term)}`
+        : `${API_BASE_URL}/api/search-products?_format=json`;
       
       const response = await fetch(url);
       

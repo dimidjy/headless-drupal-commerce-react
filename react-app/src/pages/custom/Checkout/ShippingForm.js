@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './CheckoutForms.css';
+import { API_BASE_URL } from '../../../utils/config';
 
-const BASE_URL = 'https://chic-nest.lndo.site';
+const BASE_URL = API_BASE_URL;
 
 const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingChange }) => {
   const [formData, setFormData] = useState({
@@ -88,7 +89,7 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
   const fetchRegions = async () => {
     try {
       setLoading(prev => ({ ...prev, regions: true }));
-      const response = await fetch(`${BASE_URL}/api/novaposhta/regions?_format=json`);
+      const response = await fetch(`${API_BASE_URL}/api/novaposhta/regions?_format=json`);
       if (!response.ok) throw new Error('Failed to fetch regions');
       const data = await response.json();
       setRegions(data);
@@ -102,7 +103,7 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
   const fetchCities = async (regionRef) => {
     try {
       setLoading(prev => ({ ...prev, cities: true }));
-      const response = await fetch(`${BASE_URL}/api/novaposhta/cities/${regionRef}?_format=json`);
+      const response = await fetch(`${API_BASE_URL}/api/novaposhta/cities/${regionRef}?_format=json`);
       if (!response.ok) throw new Error('Failed to fetch cities');
       const data = await response.json();
       setCities(data);
@@ -116,7 +117,7 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
   const fetchWarehouses = async (cityRef) => {
     try {
       setLoading(prev => ({ ...prev, warehouses: true }));
-      const response = await fetch(`${BASE_URL}/api/novaposhta/warehouses/${cityRef}?_format=json`);
+      const response = await fetch(`${API_BASE_URL}/api/novaposhta/warehouses/${cityRef}?_format=json`);
       if (!response.ok) throw new Error('Failed to fetch warehouses');
       const data = await response.json();
       setWarehouses(data);

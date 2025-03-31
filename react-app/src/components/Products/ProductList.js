@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../../context/CartContext';
+import { API_BASE_URL } from '../../utils/config';
 import './ProductList.css';
 
 const ProductList = () => {
@@ -15,7 +16,7 @@ const ProductList = () => {
     const fetchProducts = async () => {
       try {
         // Using the actual Drupal API endpoint
-        const response = await fetch('https://chic-nest.lndo.site/products?_format=json');
+        const response = await fetch(`${API_BASE_URL}/products?_format=json`);
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }
@@ -27,7 +28,7 @@ const ProductList = () => {
           id: item.variation_id,
           title: item.title,
           price: parseFloat(item.price__number) || 0,
-          image: item.field_media_image ? `https://chic-nest.lndo.site${item.field_media_image}` : null,
+          image: item.field_media_image ? `${API_BASE_URL}${item.field_media_image}` : null,
           view_url: item.view_commerce_product || '#'
         })) : [];
         
