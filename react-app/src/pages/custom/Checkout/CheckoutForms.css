@@ -202,16 +202,16 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  margin-bottom: 30px;
 }
 
 .checkout-form .payment-method {
   display: flex;
-  align-items: center;
   padding: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   cursor: pointer;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, background-color 0.3s;
 }
 
 .checkout-form .payment-method:hover {
@@ -223,28 +223,66 @@
   background-color: rgba(76, 175, 80, 0.05);
 }
 
-.checkout-form .payment-method input[type="radio"] {
-  margin-right: 15px;
+.checkout-form .payment-method-content {
+  width: 100%;
 }
 
-.checkout-form .payment-method-label {
+.checkout-form .payment-method-header {
   display: flex;
   align-items: center;
-  flex: 1;
+  margin-bottom: 15px;
 }
 
-.checkout-form .payment-logo {
-  width: 40px;
-  height: 25px;
-  margin-right: 10px;
+.checkout-form .payment-method-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.checkout-form .payment-method-description {
+  color: #555;
+}
+
+.checkout-form .payment-method-logo {
+  width: 60px;
+  height: 40px;
+  margin-right: 15px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
+.checkout-form .liqpay-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #4AB3F4;
+  border: none;
+  color: white;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.checkout-form .liqpay-btn:hover {
+  background-color: #2A9DE4;
+}
+
+.checkout-form .payment-method-logo.liqpay {
+  background-image: url('https://www.liqpay.ua/favicon.ico');
+}
+
+.checkout-form .manual-payment-instructions {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
 /* Credit Card Form */
 .checkout-form .card-fields {
   margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
 }
 
 .checkout-form .expiry-group {
@@ -415,4 +453,54 @@
   .checkout-form .item-price {
     margin-top: 10px;
   }
+}
+
+/* Payment Gateway styles */
+.checkout-form .loading-spinner {
+  text-align: center;
+  padding: 30px;
+  color: #666;
+  font-style: italic;
+}
+
+.checkout-form .error-message {
+  background-color: #ffebee;
+  color: #d32f2f;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.checkout-form .liqpay-instructions,
+.checkout-form .manual-payment-instructions,
+.checkout-form .paypal-instructions {
+  background-color: #f5f9ff;
+  border: 1px solid #d0e0fd;
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.checkout-form .manual-payment-instructions h3 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.checkout-form .liqpay-instructions {
+  background-color: #f9f6ff;
+  border-color: #e0d0fd;
+}
+
+.checkout-form .payment-method-logo {
+  width: 60px;
+  height: 40px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-bottom: 15px;
+}
+
+.checkout-form .payment-method-logo.liqpay {
+  background-image: url('https://www.liqpay.ua/1469541781938045/static/img/business/logo.svg');
 } 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './CheckoutPage.css';
 
@@ -6,6 +6,24 @@ const OrderSuccessPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { orderId, orderDate, checkoutData } = location.state || {};
+  const [paymentGateways, setPaymentGateways] = useState([]);
+  
+  // Fetch payment gateways for display info
+  useEffect(() => {
+    const fetchPaymentGateways = async () => {
+      try {
+        const response = await fetch('/commerce/payment-gateways');
+        if (response.ok) {
+          const data = await response.json();
+          setPaymentGateways(data);
+        }
+      } catch (error) {
+        console.error('Error fetching payment gateways:', error);
+      }
+    };
+    
+    fetchPaymentGateways();
+  }, []);
   
   // If there's no order data, redirect to home
   if (!orderId) {
@@ -27,6 +45,18 @@ const OrderSuccessPage = () => {
     month: 'long',
     day: 'numeric'
   });
+  
+  // Get the selected gateway details
+  const selectedGateway = paymentGateways.find(gateway => gateway.id === checkoutData?.payment?.paymentGateway);
+  
+  // Get payment method display text
+  const getPaymentMethodText = () => {
+    if (!selectedGateway) {
+      return checkoutData?.payment?.paymentMethod === 'credit_card' ? 'Credit Card' : 'Online Payment';
+    }
+    
+    return selectedGateway.configuration.display_label || selectedGateway.label;
+  };
   
   return (
     <div className="order-success-container">
@@ -74,14 +104,27 @@ const OrderSuccessPage = () => {
           <div className="order-info">
             <span className="label">Payment Method:</span>
             <span className="value">
-              {checkoutData?.payment?.paymentMethod === 'credit_card' 
-                ? 'Credit Card' 
-                : 'PayPal'}
+              {getPaymentMethodText()}
+              {selectedGateway?.plugin_id === 'liqpay_offsite_gateway' && (
+                <span className="payment-note"> - Complete your payment through LiqPay to finalize your order</span>
+              )}
             </span>
           </div>
         </div>
         
         <div className="order-actions">
+          {selectedGateway?.plugin_id === 'liqpay_offsite_gateway' && (
+            <button 
+              className="btn primary"
+              onClick={() => {
+                // In a real implementation, this would redirect to LiqPay
+                window.alert('In a production environment, this would redirect you to LiqPay to complete your payment');
+              }}
+            >
+              Complete Payment on LiqPay
+            </button>
+          )}
+          
           <button 
             className="btn secondary"
             onClick={() => navigate('/products')}

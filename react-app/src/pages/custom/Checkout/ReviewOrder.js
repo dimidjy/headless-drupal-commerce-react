@@ -1,13 +1,79 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './CheckoutForms.css';
 
 const ReviewOrder = ({ checkoutData, cart, onBack, onEditStep, onPlaceOrder }) => {
   const { shipping, billing, payment, sameAsShipping } = checkoutData;
+  const [paymentGateways, setPaymentGateways] = useState([]);
+  
+  // Fetch payment gateways for display info
+  useEffect(() => {
+    const fetchPaymentGateways = async () => {
+      try {
+        const response = await fetch('/commerce/payment-gateways');
+        if (response.ok) {
+          const data = await response.json();
+          setPaymentGateways(data);
+        }
+      } catch (error) {
+        console.error('Error fetching payment gateways:', error);
+      }
+    };
+    
+    fetchPaymentGateways();
+  }, []);
   
   const formatCardNumber = (cardNumber) => {
     if (!cardNumber) return '';
     // Keep only last 4 digits and mask the rest
     return `**** **** **** ${cardNumber.slice(-4)}`;
+  };
+  
+  // Get the selected gateway details
+  const selectedGateway = paymentGateways.find(gateway => gateway.id === payment.paymentGateway);
+  const isLiqpayOffsite = selectedGateway?.plugin_id === 'liqpay_offsite_gateway';
+  const isManualPayment = selectedGateway?.plugin_id === 'manual';
+  
+  // Function to render payment details based on gateway type
+  const renderPaymentDetails = () => {
+    if (!selectedGateway) {
+      return <p>Payment method information not available</p>;
+    }
+    
+    if (isLiqpayOffsite) {
+      return (
+        <div>
+          <p>
+            <strong>Payment Method:</strong> {selectedGateway.label}<br />
+            You will be redirected to Liqpay to complete your payment securely.
+          </p>
+        </div>
+      );
+    }
+    
+    if (isManualPayment) {
+      return (
+        <div>
+          <p>
+            <strong>Payment Method:</strong> {selectedGateway.label}<br />
+            Please follow the payment instructions provided during checkout.
+          </p>
+        </div>
+      );
+    }
+    
+    // Default credit card display
+    if (payment.paymentMethod === 'credit_card') {
+      return (
+        <p>
+          <strong>Payment Method:</strong> {selectedGateway ? selectedGateway.label : 'Credit Card'}<br />
+          <strong>Card Number:</strong> {formatCardNumber(payment.cardNumber)}<br />
+          <strong>Name on Card:</strong> {payment.cardName}<br />
+          <strong>Expiry Date:</strong> {payment.expiryMonth}/{payment.expiryYear}
+        </p>
+      );
+    }
+    
+    return <p><strong>Payment Method:</strong> {selectedGateway.label}</p>;
   };
   
   return (
@@ -93,19 +159,7 @@ const ReviewOrder = ({ checkoutData, cart, onBack, onEditStep, onPlaceOrder }) =
           </div>
           
           <div className="section-content">
-            {payment.paymentMethod === 'credit_card' ? (
-              <p>
-                <strong>Payment Method:</strong> Credit Card<br />
-                <strong>Card Number:</strong> {formatCardNumber(payment.cardNumber)}<br />
-                <strong>Name on Card:</strong> {payment.cardName}<br />
-                <strong>Expiry Date:</strong> {payment.expiryMonth}/{payment.expiryYear}
-              </p>
-            ) : (
-              <p>
-                <strong>Payment Method:</strong> PayPal<br />
-                You will be redirected to PayPal to complete your payment.
-              </p>
-            )}
+            {renderPaymentDetails()}
           </div>
         </div>
         
@@ -169,7 +223,13 @@ const ReviewOrder = ({ checkoutData, cart, onBack, onEditStep, onPlaceOrder }) =
       
       <div className="form-actions">
         <button type="button" className="btn secondary" onClick={onBack}>Back</button>
-        <button type="button" className="btn primary" onClick={onPlaceOrder}>Place Order</button>
+        <button 
+          type="button" 
+          className="btn primary" 
+          onClick={onPlaceOrder}
+        >
+          {isLiqpayOffsite ? 'Continue to Payment' : 'Place Order'}
+        </button>
       </div>
     </div>
   );

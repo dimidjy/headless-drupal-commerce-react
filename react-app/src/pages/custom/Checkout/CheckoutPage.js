@@ -159,7 +159,32 @@ const CheckoutPage = () => {
   const handlePlaceOrder = () => {
     // Show a loading state or modal if needed
     
-    // Simulate order processing delay
+    // Get the payment gateway information
+    const paymentMethod = checkoutData.payment.paymentGateway;
+    const isLiqpayOffsite = checkoutData.payment.paymentGateway === 'liqpay';
+    
+    // For Liqpay offsite gateway, we'd normally make a backend call to initiate payment
+    // and then redirect to Liqpay's payment page
+    if (isLiqpayOffsite) {
+      // Simulate API call to create order and initiate Liqpay payment
+      setTimeout(() => {
+        // In a real implementation, the backend would prepare Liqpay data
+        // and return URL or form data for redirection
+        
+        // For now, just redirect to success page with a flag to indicate offsite payment
+        navigate('/order-success', { 
+          state: { 
+            orderId: `ORD-${Math.floor(Math.random() * 10000)}`,
+            orderDate: new Date().toISOString(),
+            checkoutData,
+            requiresOffsitePayment: true
+          } 
+        });
+      }, 1500);
+      return;
+    }
+    
+    // For regular payment methods, proceed with normal order processing
     setTimeout(() => {
       // Here you would normally make an API call to submit the order
       

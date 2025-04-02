@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './CheckoutForms.css';
+import { API_BASE_URL } from '../../../utils/config';
 
 const PaymentForm = ({ initialData, onSave, onBack }) => {
   const [formData, setFormData] = useState({
-    paymentMethod: 'credit_card',
+    paymentMethod: '',
+    paymentGateway: '',
     cardNumber: '',
     cardName: '',
     expiryMonth: '',
@@ -13,6 +15,43 @@ const PaymentForm = ({ initialData, onSave, onBack }) => {
   });
   
   const [errors, setErrors] = useState({});
+  const [paymentGateways, setPaymentGateways] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
+  
+  // Fetch available payment gateways
+  useEffect(() => {
+    const fetchPaymentGateways = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${API_BASE_URL}/commerce/payment-gateways`);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch payment gateways: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        setPaymentGateways(data);
+        
+        // Set default payment method if there are gateways available and no method was previously selected
+        if (data.length > 0 && !formData.paymentGateway) {
+          setFormData(prevData => ({
+            ...prevData,
+            paymentGateway: data[0].id,
+            paymentMethod: data[0].configuration.payment_method_types[0] || 'credit_card'
+          }));
+        }
+        
+      } catch (error) {
+        console.error('Error fetching payment gateways:', error);
+        setLoadError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchPaymentGateways();
+  }, []);
   
   useEffect(() => {
     if (initialData) {
@@ -22,6 +61,25 @@ const PaymentForm = ({ initialData, onSave, onBack }) => {
       }));
     }
   }, [initialData]);
+  
+  const handlePaymentMethodSelect = (gateway) => {
+    const selectedGateway = paymentGateways.find(g => g.id === gateway.id);
+    const defaultPaymentMethod = selectedGateway?.configuration?.payment_method_types?.[0] || 'credit_card';
+    
+    setFormData(prevData => ({
+      ...prevData,
+      paymentGateway: gateway.id,
+      paymentMethod: defaultPaymentMethod
+    }));
+    
+    // Clear any related errors
+    if (errors.paymentGateway) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        paymentGateway: null
+      }));
+    }
+  };
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,7 +116,16 @@ const PaymentForm = ({ initialData, onSave, onBack }) => {
   const validateForm = () => {
     const newErrors = {};
     
-    if (formData.paymentMethod === 'credit_card') {
+    // Get selected gateway
+    const selectedGateway = paymentGateways.find(gateway => gateway.id === formData.paymentGateway);
+    
+    // Skip validation for offsite gateways like Liqpay
+    if (selectedGateway?.plugin_id === 'liqpay_offsite_gateway') {
+      return true;
+    }
+    
+    // For manual gateway with credit card payment method
+    if (formData.paymentMethod === 'credit_card' && selectedGateway?.plugin_id === 'manual') {
       // Required fields
       const requiredFields = [
         'cardNumber', 'cardName', 'expiryMonth', 'expiryYear', 'cvv'
@@ -95,6 +162,24 @@ const PaymentForm = ({ initialData, onSave, onBack }) => {
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+  
+  const handleLiqpayRedirect = () => {
+    // Set payment method to Liqpay first
+    const liqpayGateway = paymentGateways.find(gateway => gateway.plugin_id === 'liqpay_offsite_gateway');
+    if (liqpayGateway) {
+      setFormData(prevData => ({
+        ...prevData,
+        paymentGateway: liqpayGateway.id,
+        paymentMethod: liqpayGateway.configuration.payment_method_types[0] || 'credit_card'
+      }));
+      
+      // Continue with form submission
+      onSave({
+        paymentGateway: liqpayGateway.id,
+        paymentMethod: liqpayGateway.configuration.payment_method_types[0] || 'credit_card'
+      });
+    }
   };
   
   const handleSubmit = (e) => {
@@ -139,48 +224,110 @@ const PaymentForm = ({ initialData, onSave, onBack }) => {
     );
   }
   
+  // Get the selected gateway
+  const selectedGateway = paymentGateways.find(gateway => gateway.id === formData.paymentGateway);
+  
+  // Determine if we're using Manual payment
+  const isManualPayment = selectedGateway?.plugin_id === 'manual';
+  
+  // Get manual payment instructions if available
+  const manualInstructions = isManualPayment && selectedGateway?.configuration?.instructions?.value;
+  
+  if (isLoading) {
+    return (
+      <div className="checkout-form payment-form">
+        <h2>Payment Information</h2>
+        <div className="loading-spinner">Loading payment options...</div>
+      </div>
+    );
+  }
+  
+  if (loadError) {
+    return (
+      <div className="checkout-form payment-form">
+        <h2>Payment Information</h2>
+        <div className="error-message">
+          <p>Failed to load payment options. Please try again later.</p>
+          <p>{loadError}</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (paymentGateways.length === 0) {
+    return (
+      <div className="checkout-form payment-form">
+        <h2>Payment Information</h2>
+        <div className="error-message">
+          <p>No payment methods are currently available. Please contact customer support.</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Find specific gateways
+  const liqpayGateway = paymentGateways.find(gateway => gateway.plugin_id === 'liqpay_offsite_gateway');
+  const manualGateway = paymentGateways.find(gateway => gateway.plugin_id === 'manual');
+  
   return (
     <div className="checkout-form payment-form">
       <h2>Payment Information</h2>
       
       <form onSubmit={handleSubmit}>
-        <div className="form-group full-width">
-          <label>Payment Method*</label>
-          <div className="payment-methods">
-            <div className="payment-method">
-              <input
-                type="radio"
-                id="credit-card"
-                name="paymentMethod"
-                value="credit_card"
-                checked={formData.paymentMethod === 'credit_card'}
-                onChange={handleChange}
-              />
-              <label htmlFor="credit-card">
-                <div className="payment-logo credit-card"></div>
-                <span>Credit Card</span>
-              </label>
+        <h3>Choose a Payment Method</h3>
+        
+        <div className="payment-methods">
+          {/* Liqpay Payment Method */}
+          {liqpayGateway && (
+            <div 
+              className={`payment-method ${formData.paymentGateway === liqpayGateway.id ? 'selected' : ''}`}
+              onClick={() => handlePaymentMethodSelect(liqpayGateway)}
+            >
+              <div className="payment-method-content">
+                <div className="payment-method-header">
+                  <div className="payment-method-logo liqpay"></div>
+                  <h4>{liqpayGateway.configuration.display_label || liqpayGateway.label}</h4>
+                </div>
+                <div className="payment-method-description">
+                  <p>Secure online payment with LiqPay. Supports credit cards, Google Pay, Apple Pay, and Privat24.</p>
+                  <button 
+                    type="button" 
+                    className="btn primary liqpay-btn" 
+                    onClick={handleLiqpayRedirect}
+                  >
+                    Pay with LiqPay
+                  </button>
+                </div>
+              </div>
             </div>
-            
-            <div className="payment-method">
-              <input
-                type="radio"
-                id="paypal"
-                name="paymentMethod"
-                value="paypal"
-                checked={formData.paymentMethod === 'paypal'}
-                onChange={handleChange}
-              />
-              <label htmlFor="paypal">
-                <div className="payment-logo paypal"></div>
-                <span>PayPal</span>
-              </label>
+          )}
+          
+          {/* Manual Payment Method */}
+          {manualGateway && (
+            <div 
+              className={`payment-method ${formData.paymentGateway === manualGateway.id ? 'selected' : ''}`}
+              onClick={() => handlePaymentMethodSelect(manualGateway)}
+            >
+              <div className="payment-method-content">
+                <div className="payment-method-header">
+                  <h4>{manualGateway.configuration.display_label || manualGateway.label}</h4>
+                </div>
+                <div className="payment-method-description">
+                  {manualGateway.configuration.instructions?.value ? (
+                    <div className="manual-payment-instructions" dangerouslySetInnerHTML={{ __html: manualGateway.configuration.instructions.value }}></div>
+                  ) : (
+                    <p>Complete your payment manually following the provided instructions.</p>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         
-        {formData.paymentMethod === 'credit_card' && (
-          <>
+        {/* Credit Card Form for Manual Payment */}
+        {isManualPayment && formData.paymentMethod === 'credit_card' && (
+          <div className="card-fields">
+            <h3>Credit Card Details</h3>
             <div className="form-group full-width">
               <label htmlFor="cardNumber">Card Number*</label>
               <input
@@ -256,12 +403,6 @@ const PaymentForm = ({ initialData, onSave, onBack }) => {
                 {errors.cvv && <div className="field-error">{errors.cvv}</div>}
               </div>
             </div>
-          </>
-        )}
-        
-        {formData.paymentMethod === 'paypal' && (
-          <div className="paypal-instructions">
-            <p>You will be redirected to PayPal to complete your payment after reviewing your order.</p>
           </div>
         )}
         
