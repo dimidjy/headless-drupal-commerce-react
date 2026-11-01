@@ -3,18 +3,35 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCT } from '../../../graphql/queries/product';
 import { useCart } from '../../../context/CartContext';
+import { fetchPageUuidByPath } from '../../../utils/pageUtils';
 import './ProductPage.css';
 
 const ProductPage = () => {
   const { id } = useParams();
   const location = useLocation();
-  const productUuid = location.state?.productUuid || id;
+  // In-app navigation passes the UUID in router state; a direct link or a
+  // page reload only has the numeric ID, so resolve it via /path-to-uuid.
+  const [productUuid, setProductUuid] = useState(location.state?.productUuid || null);
+  const [resolving, setResolving] = useState(!location.state?.productUuid);
   const [quantity, setQuantity] = useState(1);
   const [selectedVariation, setSelectedVariation] = useState(null);
   const [addingToCart, setAddingToCart] = useState(false);
   const [cartMessage, setCartMessage] = useState(null);
   const { addToCart } = useCart();
   
+  useEffect(() => {
+    if (location.state?.productUuid) {
+      setProductUuid(location.state.productUuid);
+      setResolving(false);
+      return;
+    }
+    setResolving(true);
+    fetchPageUuidByPath(`/product/${id}`)
+      .then(result => setProductUuid(result.uuid))
+      .catch(() => setProductUuid(null))
+      .finally(() => setResolving(false));
+  }, [id, location.state]);
+
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: { id: productUuid },
     skip: !productUuid,
@@ -49,7 +66,7 @@ const ProductPage = () => {
     }
   };
 
-  if (loading) {
+  if (loading || resolving) {
     return (
       <div className="product-detail-container">
         <div className="product-loading">Loading product details...</div>
