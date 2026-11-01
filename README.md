@@ -169,6 +169,10 @@ GitHub Actions runs on every push:
 - The demo video is **Big Buck Bunny** © Blender Foundation, CC BY 3.0.
 - The demo images are generated placeholders; there are no stock photos.
 
+## Contact
+
+Questions, ideas or collaboration: Telegram [@dimidjy](https://t.me/dimidjy).
+
 ## License
 
 [GPL-2.0-or-later](LICENSE), like Drupal itself.
