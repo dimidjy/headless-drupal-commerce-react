@@ -1,0 +1,18 @@
+#!/bin/bash
+
+## Description: Install Drupal from config/sync, index Solr and generate demo content
+## Usage: setup
+## Example: "ddev setup"
+
+set -euo pipefail
+
+composer install --no-interaction
+drush site:install minimal --existing-config --account-name=admin --account-pass=admin -y
+drush --numShards=1 search-api-solr:upload-configset products || echo "Solr not reachable, search disabled"
+drush app-demo:generate
+drush search-api:index || true
+drush cr
+echo
+echo "Drupal:     ${DDEV_PRIMARY_URL}  (admin / admin)"
+echo "GraphQL:    ${DDEV_PRIMARY_URL}/graphql-default-api"
+echo "Storefront: cd react-app && cp .env.example .env.local && npm ci && npm start"
