@@ -1,0 +1,16 @@
+name: App Demo Content
+description: 'Drush command that generates demo content for the headless storefront.'
+package: App
+type: module
+core_version_requirement: ^10 || ^11
+
+dependencies:
+  - app_core:app_core
+  - commerce:commerce_product
+  - commerce_shipping:commerce_shipping
+  - commerce_novaposhta:commerce_novaposhta
+  - drupal:media
+  - drupal:menu_link_content
+  - drupal:taxonomy
+  - paragraphs:paragraphs
+  - webform:webform

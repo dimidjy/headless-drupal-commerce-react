@@ -1,0 +1,4 @@
+services:
+  app_demo.generator:
+    class: Drupal\app_demo\DemoContentGenerator
+    arguments: ['@entity_type.manager', '@config.factory', '@file_system', '@file.repository']
