@@ -34,8 +34,8 @@ const PaymentForm = ({ initialData, onSave, onBack }) => {
         setPaymentGateways(data);
         
         // Set default payment method if there are gateways available and no method was previously selected
-        if (data.length > 0 && !formData.paymentGateway) {
-          setFormData(prevData => ({
+        if (data.length > 0) {
+          setFormData(prevData => (prevData.paymentGateway ? prevData : {
             ...prevData,
             paymentGateway: data[0].id,
             paymentMethod: data[0].configuration.payment_method_types[0] || 'credit_card'
@@ -230,8 +230,6 @@ const PaymentForm = ({ initialData, onSave, onBack }) => {
   // Determine if we're using Manual payment
   const isManualPayment = selectedGateway?.plugin_id === 'manual';
   
-  // Get manual payment instructions if available
-  const manualInstructions = isManualPayment && selectedGateway?.configuration?.instructions?.value;
   
   if (isLoading) {
     return (

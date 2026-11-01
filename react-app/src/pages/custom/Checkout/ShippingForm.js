@@ -221,12 +221,10 @@ const ShippingForm = ({ initialData, onSave, sameAsShipping, onSameAsShippingCha
 
   // Initialize form with novaposhta as default shipping method
   useEffect(() => {
-    if (!formData.shippingMethod) {
-      setFormData(prevData => ({
-        ...prevData,
-        shippingMethod: 'novaposhta'
-      }));
-    }
+    setFormData(prevData => (prevData.shippingMethod ? prevData : {
+      ...prevData,
+      shippingMethod: 'novaposhta'
+    }));
   }, []);
   
   return (

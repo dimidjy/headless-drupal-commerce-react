@@ -160,7 +160,6 @@ const CheckoutPage = () => {
     // Show a loading state or modal if needed
     
     // Get the payment gateway information
-    const paymentMethod = checkoutData.payment.paymentGateway;
     const isLiqpayOffsite = checkoutData.payment.paymentGateway === 'liqpay';
     
     // For Liqpay offsite gateway, we'd normally make a backend call to initiate payment

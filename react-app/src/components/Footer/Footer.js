@@ -9,13 +9,13 @@ const Footer = () => {
         <div className="footer-content">
           <div className="footer-column brand-column">
             <h3 className="footer-title">CHICNEST</h3>
-            <p>Gravida massa volutpat aenean odio. Amet, turpis erat nullam fringilla elementum diam in. Nisi, purus vitae, ultrices nunc. Sit ac sit suscipit hendrerit.</p>
+            <p>Home goods demo store: content and catalogue are managed in Drupal Commerce and rendered by this React app.</p>
             <div className="social-icons">
-              <a href="#" aria-label="Facebook"><i className="fab fa-facebook-f"></i></a>
-              <a href="#" aria-label="Twitter"><i className="fab fa-twitter"></i></a>
-              <a href="#" aria-label="YouTube"><i className="fab fa-youtube"></i></a>
-              <a href="#" aria-label="Pinterest"><i className="fab fa-pinterest"></i></a>
-              <a href="#" aria-label="Instagram"><i className="fab fa-instagram"></i></a>
+              <a href="https://www.facebook.com/" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
+              <a href="https://x.com/" aria-label="Twitter" target="_blank" rel="noopener noreferrer"><i className="fab fa-twitter"></i></a>
+              <a href="https://www.youtube.com/" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><i className="fab fa-youtube"></i></a>
+              <a href="https://www.pinterest.com/" aria-label="Pinterest" target="_blank" rel="noopener noreferrer"><i className="fab fa-pinterest"></i></a>
+              <a href="https://www.instagram.com/" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
             </div>
           </div>
           
@@ -66,8 +66,8 @@ const Footer = () => {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; Copyright {new Date().getFullYear()} ChicNest. All rights reserved. Design by <a href="#" className="designer-link">TemplatesJungle</a></p>
-            <p>Distribution By <a href="#" className="distributor-link">ThemeWagon</a></p>
+            <p>&copy; Copyright {new Date().getFullYear()} ChicNest. All rights reserved. Design by <a href="https://templatesjungle.com/" className="designer-link" target="_blank" rel="noopener noreferrer">TemplatesJungle</a></p>
+            <p>Distribution By <a href="https://themewagon.com/" className="distributor-link" target="_blank" rel="noopener noreferrer">ThemeWagon</a></p>
           </div>
         </div>
       </div>

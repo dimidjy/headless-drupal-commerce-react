@@ -158,3 +158,6 @@ react-app/src/images/visa-card.png
 react-app/src/images/wishlist-item1.jpg
 react-app/src/images/wishlist-item2.jpg
 react-app/src/images/wishlist-item3.jpg
+
+# React production build
+/react-app/build/
