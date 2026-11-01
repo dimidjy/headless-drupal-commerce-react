@@ -1,0 +1,33 @@
+uuid: d42558a5-b033-4a58-8640-63f0d27aa837
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.shop.field_shop_image
+    - taxonomy.vocabulary.shop
+  module:
+    - text
+id: taxonomy_term.shop.default
+targetEntityType: taxonomy_term
+bundle: shop
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_shop_image:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

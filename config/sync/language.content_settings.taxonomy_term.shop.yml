@@ -1,0 +1,11 @@
+uuid: 95e4c886-4bb3-450a-b398-872c81d48840
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.shop
+id: taxonomy_term.shop
+target_entity_type_id: taxonomy_term
+target_bundle: shop
+default_langcode: site_default
+language_alterable: false

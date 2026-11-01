@@ -1,0 +1,10 @@
+uuid: 01f46cf6-da93-4253-8cb5-d13af509a8f9
+langcode: en
+status: true
+dependencies: {  }
+id: testimonials_item
+label: 'Testimonials item'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

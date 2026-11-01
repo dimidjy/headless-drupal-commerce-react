@@ -1,0 +1,20 @@
+uuid: 172392a2-872e-4adc-a253-5ea0533e7527
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_novaposhta
+    - profile
+id: profile.address_novaposhta
+field_name: address_novaposhta
+entity_type: profile
+type: novaposhta
+settings:
+  max_length: '36'
+module: commerce_novaposhta
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

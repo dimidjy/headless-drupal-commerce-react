@@ -1,0 +1,10 @@
+uuid: 7cc55839-9bd7-433b-b984-6c66ce8991d0
+langcode: en
+status: true
+dependencies: {  }
+id: billboard
+label: Billboard
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

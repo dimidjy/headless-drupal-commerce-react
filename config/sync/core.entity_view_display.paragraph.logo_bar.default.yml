@@ -1,0 +1,23 @@
+uuid: b175cd40-eab9-47c1-a1b0-5776144d1c44
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.logo_bar.field_image
+    - paragraphs.paragraphs_type.logo_bar
+id: paragraph.logo_bar.default
+targetEntityType: paragraph
+bundle: logo_bar
+mode: default
+content:
+  field_image:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  search_api_excerpt: true

@@ -1,0 +1,89 @@
+uuid: 6ff5668c-a664-4ece-81af-8df1365900f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_paragraphs
+    - node.type.page
+    - paragraphs.paragraphs_type.billboard
+    - paragraphs.paragraphs_type.blog_posts
+    - paragraphs.paragraphs_type.categories
+    - paragraphs.paragraphs_type.features
+    - paragraphs.paragraphs_type.follow_us
+    - paragraphs.paragraphs_type.logo_bar
+    - paragraphs.paragraphs_type.products_slider
+    - paragraphs.paragraphs_type.testimonials
+    - paragraphs.paragraphs_type.testimonials_item
+    - paragraphs.paragraphs_type.text_and_image
+    - paragraphs.paragraphs_type.video
+    - paragraphs.paragraphs_type.webform
+  module:
+    - entity_reference_revisions
+id: node.page.field_paragraphs
+field_name: field_paragraphs
+entity_type: node
+bundle: page
+label: Paragraphs
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      billboard: billboard
+      blog_posts: blog_posts
+      categories: categories
+      features: features
+      follow_us: follow_us
+      logo_bar: logo_bar
+      products_slider: products_slider
+      testimonials: testimonials
+      testimonials_item: testimonials_item
+      text_and_image: text_and_image
+      video: video
+      webform: webform
+    negate: 0
+    target_bundles_drag_drop:
+      billboard:
+        weight: 14
+        enabled: true
+      billboard_slide:
+        weight: 15
+        enabled: false
+      blog_posts:
+        weight: 16
+        enabled: true
+      categories:
+        weight: 17
+        enabled: true
+      features:
+        weight: 18
+        enabled: true
+      follow_us:
+        weight: 19
+        enabled: true
+      logo_bar:
+        weight: 20
+        enabled: true
+      products_slider:
+        weight: 21
+        enabled: true
+      testimonials:
+        weight: 22
+        enabled: true
+      testimonials_item:
+        weight: 23
+        enabled: true
+      text_and_image:
+        weight: 24
+        enabled: true
+      video:
+        weight: 25
+        enabled: true
+      webform:
+        weight: 26
+        enabled: true
+field_type: entity_reference_revisions

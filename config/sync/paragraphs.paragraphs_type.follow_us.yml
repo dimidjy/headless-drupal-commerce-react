@@ -1,0 +1,10 @@
+uuid: 2e15e7b0-a175-402a-98a1-a2dc6d2d8325
+langcode: en
+status: true
+dependencies: {  }
+id: follow_us
+label: 'Follow us'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

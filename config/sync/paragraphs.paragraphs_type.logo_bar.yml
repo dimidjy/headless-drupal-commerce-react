@@ -1,0 +1,10 @@
+uuid: 7a87213b-5552-4bba-8310-3ec008c6f3a8
+langcode: en
+status: true
+dependencies: {  }
+id: logo_bar
+label: 'Logo bar'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

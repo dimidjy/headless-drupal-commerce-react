@@ -1,0 +1,33 @@
+uuid: 55d9e608-8a04-4d24-9888-34317ef44e10
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.follow_us.field_image
+    - field.field.paragraph.follow_us.field_title
+    - paragraphs.paragraphs_type.follow_us
+  module:
+    - media_library
+id: paragraph.follow_us.default
+targetEntityType: paragraph
+bundle: follow_us
+mode: default
+content:
+  field_image:
+    type: media_library_widget
+    weight: 3
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

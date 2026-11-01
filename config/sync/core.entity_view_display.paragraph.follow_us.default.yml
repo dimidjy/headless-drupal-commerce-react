@@ -1,0 +1,32 @@
+uuid: 5fcda740-fa94-40a5-b7a9-5884fc45190c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.follow_us.field_image
+    - field.field.paragraph.follow_us.field_title
+    - paragraphs.paragraphs_type.follow_us
+id: paragraph.follow_us.default
+targetEntityType: paragraph
+bundle: follow_us
+mode: default
+content:
+  field_image:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_title:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

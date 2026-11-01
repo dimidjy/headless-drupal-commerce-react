@@ -4,7 +4,6 @@
 !/temp/.gitkeep
 /private/*
 !/private/.gitkeep
-*.lock
 
 /drush/contrib/
 /vendor/

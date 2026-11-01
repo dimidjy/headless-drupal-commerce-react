@@ -1,0 +1,66 @@
+styles:
+  billboard:
+    paragraph_type: billboard
+    thumbnail: null
+    medium: null
+    large: null
+  billboard_slide:
+    paragraph_type: billboard_slide
+    thumbnail: null
+    medium: null
+    large: null
+  blog_posts:
+    paragraph_type: blog_posts
+    thumbnail: null
+    medium: null
+    large: null
+  categories:
+    paragraph_type: categories
+    thumbnail: null
+    medium: null
+    large: null
+  features:
+    paragraph_type: features
+    thumbnail: null
+    medium: null
+    large: null
+  follow_us:
+    paragraph_type: follow_us
+    thumbnail: null
+    medium: null
+    large: null
+  logo_bar:
+    paragraph_type: logo_bar
+    thumbnail: null
+    medium: null
+    large: null
+  products_slider:
+    paragraph_type: products_slider
+    thumbnail: null
+    medium: null
+    large: null
+  testimonials:
+    paragraph_type: testimonials
+    thumbnail: null
+    medium: null
+    large: null
+  testimonials_item:
+    paragraph_type: testimonials_item
+    thumbnail: null
+    medium: null
+    large: null
+  text_and_image:
+    paragraph_type: text_and_image
+    thumbnail: null
+    medium: null
+    large: null
+  video:
+    paragraph_type: video
+    thumbnail: null
+    medium: null
+    large: null
+  webform:
+    paragraph_type: webform
+    thumbnail: null
+    medium: null
+    large: null

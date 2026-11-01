@@ -1,0 +1,20 @@
+uuid: 0460b758-46a4-49a3-90b1-05b34afdafc0
+langcode: en
+status: true
+dependencies:
+  module:
+    - app_commerce
+    - serialization
+    - user
+_core:
+  default_config_hash: jcr5tn9BhGwMgFqHbBMUSwqUTaTxRAp-YreBAbZM4J4
+id: novaposhta_regions
+plugin_id: novaposhta_regions
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie

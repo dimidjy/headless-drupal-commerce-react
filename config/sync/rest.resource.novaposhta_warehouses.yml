@@ -1,0 +1,20 @@
+uuid: 66da8dae-cc95-4575-b557-6e6b26a55360
+langcode: en
+status: true
+dependencies:
+  module:
+    - app_commerce
+    - serialization
+    - user
+_core:
+  default_config_hash: J6fod-2sl2BbvRO72T9tBpCigOfrZ7E6V1yPfrHwrmk
+id: novaposhta_warehouses
+plugin_id: novaposhta_warehouses
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie

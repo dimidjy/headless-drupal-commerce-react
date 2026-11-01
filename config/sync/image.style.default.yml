@@ -1,0 +1,13 @@
+uuid: a4805852-8b9c-4650-afe6-fddd8ca2f066
+langcode: en
+status: true
+dependencies: {  }
+name: default
+label: Default
+effects:
+  d1c3d681-db05-437d-b571-a524a00aa609:
+    uuid: d1c3d681-db05-437d-b571-a524a00aa609
+    id: image_convert
+    weight: 1
+    data:
+      extension: webp

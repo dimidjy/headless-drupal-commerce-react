@@ -1,0 +1,70 @@
+uuid: 6dcb4763-bb93-4cb9-8334-200fc513c047
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_items
+    - paragraphs.paragraphs_type.features
+    - paragraphs.paragraphs_type.features_item
+  module:
+    - entity_reference_revisions
+id: paragraph.features.field_items
+field_name: field_items
+entity_type: paragraph
+bundle: features
+label: items
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      features_item: features_item
+    negate: 0
+    target_bundles_drag_drop:
+      billboard:
+        weight: 15
+        enabled: false
+      billboard_slide:
+        weight: 16
+        enabled: false
+      blog_posts:
+        weight: 17
+        enabled: false
+      categories:
+        weight: 18
+        enabled: false
+      features:
+        weight: 19
+        enabled: false
+      features_item:
+        weight: 20
+        enabled: true
+      follow_us:
+        weight: 21
+        enabled: false
+      logo_bar:
+        weight: 22
+        enabled: false
+      products_slider:
+        weight: 23
+        enabled: false
+      testimonials:
+        weight: 24
+        enabled: false
+      testimonials_item:
+        weight: 25
+        enabled: false
+      text_and_image:
+        weight: 26
+        enabled: false
+      video:
+        weight: 27
+        enabled: false
+      webform:
+        weight: 28
+        enabled: false
+field_type: entity_reference_revisions

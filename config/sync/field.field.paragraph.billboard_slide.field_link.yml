@@ -1,0 +1,23 @@
+uuid: 265a3fb0-82b1-4d4d-bcdb-de093f9d68f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_link
+    - paragraphs.paragraphs_type.billboard_slide
+  module:
+    - link
+id: paragraph.billboard_slide.field_link
+field_name: field_link
+entity_type: paragraph
+bundle: billboard_slide
+label: Link
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 1
+  link_type: 17
+field_type: link

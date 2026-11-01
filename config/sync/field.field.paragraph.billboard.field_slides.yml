@@ -1,0 +1,67 @@
+uuid: 9d05af3c-68a3-4d02-a92d-0039771a9cbf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_slides
+    - paragraphs.paragraphs_type.billboard
+    - paragraphs.paragraphs_type.billboard_slide
+  module:
+    - entity_reference_revisions
+id: paragraph.billboard.field_slides
+field_name: field_slides
+entity_type: paragraph
+bundle: billboard
+label: Slides
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      billboard_slide: billboard_slide
+    negate: 0
+    target_bundles_drag_drop:
+      billboard:
+        weight: 14
+        enabled: false
+      billboard_slide:
+        weight: 15
+        enabled: true
+      blog_posts:
+        weight: 16
+        enabled: false
+      categories:
+        weight: 17
+        enabled: false
+      features:
+        weight: 18
+        enabled: false
+      follow_us:
+        weight: 19
+        enabled: false
+      logo_bar:
+        weight: 20
+        enabled: false
+      products_slider:
+        weight: 21
+        enabled: false
+      testimonials:
+        weight: 22
+        enabled: false
+      testimonials_item:
+        weight: 23
+        enabled: false
+      text_and_image:
+        weight: 24
+        enabled: false
+      video:
+        weight: 25
+        enabled: false
+      webform:
+        weight: 26
+        enabled: false
+field_type: entity_reference_revisions

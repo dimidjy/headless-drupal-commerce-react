@@ -1,0 +1,70 @@
+uuid: b9c34344-87bc-49e0-a43e-82adbef36613
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_testimonials
+    - paragraphs.paragraphs_type.testimonials
+    - paragraphs.paragraphs_type.testimonials_item
+  module:
+    - entity_reference_revisions
+id: paragraph.testimonials.field_testimonials
+field_name: field_testimonials
+entity_type: paragraph
+bundle: testimonials
+label: Testimonials
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      testimonials_item: testimonials_item
+    negate: 0
+    target_bundles_drag_drop:
+      billboard:
+        weight: 15
+        enabled: false
+      billboard_slide:
+        weight: 16
+        enabled: false
+      blog_posts:
+        weight: 17
+        enabled: false
+      categories:
+        weight: 18
+        enabled: false
+      features:
+        weight: 19
+        enabled: false
+      features_item:
+        weight: 20
+        enabled: false
+      follow_us:
+        weight: 21
+        enabled: false
+      logo_bar:
+        weight: 22
+        enabled: false
+      products_slider:
+        weight: 23
+        enabled: false
+      testimonials:
+        weight: 24
+        enabled: false
+      testimonials_item:
+        weight: 25
+        enabled: true
+      text_and_image:
+        weight: 26
+        enabled: false
+      video:
+        weight: 27
+        enabled: false
+      webform:
+        weight: 28
+        enabled: false
+field_type: entity_reference_revisions

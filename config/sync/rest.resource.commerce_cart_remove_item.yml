@@ -1,0 +1,20 @@
+uuid: 151b827e-e399-487f-9084-2a113ee5f42c
+langcode: en
+status: true
+dependencies:
+  module:
+    - app_commerce
+    - serialization
+    - user
+_core:
+  default_config_hash: Gn1fQM6Z1QZ21Ljf5EpX12sbhr1uxJhBEsA0JTiK-9M
+id: commerce_cart_remove_item
+plugin_id: commerce_cart_remove_item
+granularity: resource
+configuration:
+  methods:
+    - DELETE
+  formats:
+    - json
+  authentication:
+    - cookie

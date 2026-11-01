@@ -1,0 +1,10 @@
+uuid: 8ac57894-10a8-4215-a6c4-5f853f62ef20
+langcode: en
+status: true
+dependencies: {  }
+id: billboard_slide
+label: 'Billboard slide'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

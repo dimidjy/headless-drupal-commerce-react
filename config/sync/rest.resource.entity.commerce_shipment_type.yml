@@ -1,0 +1,18 @@
+uuid: dcfc6e2f-cb15-4cd3-823c-daf2f2849ed7
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_shipping
+    - serialization
+    - user
+id: entity.commerce_shipment_type
+plugin_id: 'entity:commerce_shipment_type'
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie

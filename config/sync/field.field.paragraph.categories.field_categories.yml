@@ -1,0 +1,29 @@
+uuid: e2ad81a3-a714-494f-a264-0703471ba398
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_categories
+    - paragraphs.paragraphs_type.categories
+    - taxonomy.vocabulary.shop
+id: paragraph.categories.field_categories
+field_name: field_categories
+entity_type: paragraph
+bundle: categories
+label: Categories
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      shop: shop
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

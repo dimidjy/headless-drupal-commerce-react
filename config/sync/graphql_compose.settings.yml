@@ -1,0 +1,236 @@
+_core:
+  default_config_hash: HjBACF5NUOUEE_nzaQUEQf3mwzx-c-cevV4NejXsv1A
+entity_config:
+  commerce_order:
+    default:
+      enabled: true
+      query_load_enabled: true
+      routes_enabled: true
+  commerce_product:
+    default:
+      enabled: true
+      query_load_enabled: true
+      routes_enabled: true
+  commerce_product_variation:
+    default:
+      enabled: true
+      query_load_enabled: true
+  image_style:
+    default:
+      enabled: true
+    large:
+      enabled: true
+    media_library:
+      enabled: true
+    medium:
+      enabled: true
+    thumbnail:
+      enabled: true
+    wide:
+      enabled: true
+  media:
+    audio:
+      enabled: false
+    document:
+      enabled: false
+    image:
+      enabled: true
+      query_load_enabled: true
+    remote_video:
+      enabled: true
+      query_load_enabled: true
+    video:
+      enabled: true
+      query_load_enabled: true
+  menu:
+    account:
+      enabled: false
+    admin:
+      enabled: false
+    footer:
+      enabled: false
+    main:
+      enabled: true
+    tools:
+      enabled: false
+  node:
+    article:
+      enabled: true
+      query_load_enabled: true
+      routes_enabled: true
+    page:
+      enabled: true
+      query_load_enabled: true
+      routes_enabled: true
+  paragraph:
+    billboard:
+      enabled: true
+      query_load_enabled: true
+    billboard_slide:
+      enabled: true
+      query_load_enabled: true
+    blog_posts:
+      enabled: true
+      query_load_enabled: true
+    categories:
+      enabled: true
+      query_load_enabled: true
+    features:
+      enabled: true
+      query_load_enabled: true
+    features_item:
+      enabled: true
+    follow_us:
+      enabled: true
+      query_load_enabled: true
+    logo_bar:
+      enabled: true
+      query_load_enabled: true
+    products_slider:
+      enabled: true
+      query_load_enabled: true
+    testimonials:
+      enabled: true
+      query_load_enabled: true
+    testimonials_item:
+      enabled: true
+      query_load_enabled: true
+    text_and_image:
+      enabled: true
+      query_load_enabled: true
+    video:
+      enabled: true
+      query_load_enabled: true
+    webform:
+      enabled: true
+      query_load_enabled: true
+  taxonomy_term:
+    shop:
+      enabled: true
+    tags:
+      enabled: true
+field_config:
+  commerce_product:
+    default:
+      body:
+        enabled: true
+      field_image:
+        enabled: true
+  commerce_product_variation:
+    default:
+      field_product_image:
+        enabled: true
+  media:
+    image:
+      field_media_image:
+        enabled: true
+    remote_video:
+      field_media_oembed_video:
+        enabled: true
+    video:
+      field_media_video_file:
+        enabled: true
+  node:
+    article:
+      body:
+        enabled: true
+      field_image:
+        enabled: true
+      field_tags:
+        enabled: true
+    page:
+      field_paragraphs:
+        enabled: true
+  paragraph:
+    billboard:
+      field_description:
+        enabled: true
+      field_slides:
+        enabled: true
+      field_title:
+        enabled: true
+    billboard_slide:
+      field_description:
+        enabled: true
+      field_image:
+        enabled: true
+      field_link:
+        enabled: true
+      field_title:
+        enabled: true
+    blog_posts:
+      field_posts:
+        enabled: true
+    categories:
+      field_categories:
+        enabled: true
+    features:
+      field_items:
+        enabled: true
+    features_item:
+      field_description:
+        enabled: true
+      field_feature_image:
+        enabled: true
+      field_title:
+        enabled: true
+    follow_us:
+      field_image:
+        enabled: true
+      field_title:
+        enabled: true
+    logo_bar:
+      field_image:
+        enabled: true
+    products_slider:
+      field_products_list:
+        enabled: true
+      field_title:
+        enabled: true
+    testimonials:
+      field_testimonials:
+        enabled: true
+      field_title:
+        enabled: true
+    testimonials_item:
+      field_author:
+        enabled: true
+      field_response:
+        enabled: true
+    text_and_image:
+      field_description:
+        enabled: true
+      field_image:
+        enabled: true
+      field_link:
+        enabled: true
+      field_title:
+        enabled: true
+    video:
+      field_video:
+        enabled: true
+    webform:
+      field_description:
+        enabled: true
+      field_title:
+        enabled: true
+  taxonomy_term:
+    shop:
+      field_shop_image:
+        enabled: true
+settings:
+  exclude_unpublished: false
+  expose_entity_ids: false
+  field_required_override: false
+  schema_description: 'GraphQL Compose'
+  schema_version: '1'
+  simple_queries: false
+  simple_unions: false
+  site_name: false
+  site_slogan: false
+  site_front: true
+  svg_image: false
+  svg_filesize: 100
+  inflector_langcode: en
+  inflector_singularize: false
+  fragments_enabled: true

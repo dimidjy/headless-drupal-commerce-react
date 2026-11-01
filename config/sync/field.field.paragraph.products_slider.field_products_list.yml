@@ -1,0 +1,29 @@
+uuid: 2f407377-e73c-4634-a1c9-562a5bf99f45
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.default
+    - field.storage.paragraph.field_products_list
+    - paragraphs.paragraphs_type.products_slider
+id: paragraph.products_slider.field_products_list
+field_name: field_products_list
+entity_type: paragraph
+bundle: products_slider
+label: Products
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:commerce_product'
+  handler_settings:
+    target_bundles:
+      default: default
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,18 @@
+uuid: 2428f899-d633-4a4c-ad30-c365c4dba43c
+langcode: en
+status: true
+dependencies:
+  module:
+    - app_commerce
+    - serialization
+    - user
+id: commerce_payment_gateways
+plugin_id: commerce_payment_gateways
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie

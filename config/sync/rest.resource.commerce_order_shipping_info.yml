@@ -1,0 +1,20 @@
+uuid: 39a2f8b6-85c5-438e-a9e8-84c0c171caf9
+langcode: en
+status: true
+dependencies:
+  module:
+    - app_commerce
+    - serialization
+    - user
+_core:
+  default_config_hash: 95fwu6FdO--L9ZQOiqICjfnxZa2pEXtQkcvrBfuDTTs
+id: commerce_order_shipping_info
+plugin_id: commerce_order_shipping_info
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - cookie

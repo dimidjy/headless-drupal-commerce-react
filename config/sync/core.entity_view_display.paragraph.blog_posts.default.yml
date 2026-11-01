@@ -1,0 +1,22 @@
+uuid: 359be640-b9f7-48de-ab98-3083326aa40f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.blog_posts.field_posts
+    - paragraphs.paragraphs_type.blog_posts
+id: paragraph.blog_posts.default
+targetEntityType: paragraph
+bundle: blog_posts
+mode: default
+content:
+  field_posts:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

@@ -1,0 +1,19 @@
+uuid: f12a7747-4b59-4929-860f-bde2cfc4d584
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_title
+    - paragraphs.paragraphs_type.billboard
+id: paragraph.billboard.field_title
+field_name: field_title
+entity_type: paragraph
+bundle: billboard
+label: Title
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

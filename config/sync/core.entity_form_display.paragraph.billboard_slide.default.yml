@@ -1,0 +1,52 @@
+uuid: 56dcd71f-0cf8-4f16-a3ef-8950d842b96c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.billboard_slide.field_description
+    - field.field.paragraph.billboard_slide.field_image
+    - field.field.paragraph.billboard_slide.field_link
+    - field.field.paragraph.billboard_slide.field_title
+    - paragraphs.paragraphs_type.billboard_slide
+  module:
+    - link
+    - media_library
+id: paragraph.billboard_slide.default
+targetEntityType: paragraph
+bundle: billboard_slide
+mode: default
+content:
+  field_description:
+    type: string_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_image:
+    type: media_library_widget
+    weight: 3
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_link:
+    type: link_default
+    weight: 2
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

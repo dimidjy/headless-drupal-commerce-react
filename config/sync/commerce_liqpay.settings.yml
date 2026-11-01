@@ -1,0 +1,7 @@
+_core:
+  default_config_hash: QIZLVJghlmB0Mb4nWnkpEM0G8loikEjCyz2QFVEbcpo
+commerce_liqpay:
+  checkout_url: 'https://www.liqpay.ua/api/3/checkout'
+  version: 3
+  action: pay
+  api_url: 'https://www.liqpay.ua/api/'

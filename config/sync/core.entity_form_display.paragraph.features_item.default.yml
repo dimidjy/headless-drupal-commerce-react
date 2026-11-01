@@ -1,0 +1,42 @@
+uuid: 1ca51f08-5349-4cbc-a299-9f3df624c0d2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.features_item.field_description
+    - field.field.paragraph.features_item.field_feature_image
+    - field.field.paragraph.features_item.field_title
+    - paragraphs.paragraphs_type.features_item
+  module:
+    - media_library
+id: paragraph.features_item.default
+targetEntityType: paragraph
+bundle: features_item
+mode: default
+content:
+  field_description:
+    type: string_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_feature_image:
+    type: media_library_widget
+    weight: 2
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

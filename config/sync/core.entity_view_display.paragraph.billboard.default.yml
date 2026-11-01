@@ -1,0 +1,42 @@
+uuid: a318dba6-e89f-4e79-a50e-515ec3c263f9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.billboard.field_description
+    - field.field.paragraph.billboard.field_slides
+    - field.field.paragraph.billboard.field_title
+    - paragraphs.paragraphs_type.billboard
+  module:
+    - entity_reference_revisions
+id: paragraph.billboard.default
+targetEntityType: paragraph
+bundle: billboard
+mode: default
+content:
+  field_description:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_slides:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_title:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

@@ -1,0 +1,31 @@
+uuid: e7a33c68-1ce3-452c-9c98-f95dbf74d86c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.products_slider.field_products_list
+    - field.field.paragraph.products_slider.field_title
+    - paragraphs.paragraphs_type.products_slider
+id: paragraph.products_slider.default
+targetEntityType: paragraph
+bundle: products_slider
+mode: default
+content:
+  field_products_list:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_title:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

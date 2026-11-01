@@ -1,0 +1,18 @@
+uuid: bd1dbbd2-f39a-4288-aabf-15a6f6b657c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.page.field_paragraphs
+    - node.type.page
+id: node.page.search_index
+targetEntityType: node
+bundle: page
+mode: search_index
+content: {  }
+hidden:
+  field_paragraphs: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

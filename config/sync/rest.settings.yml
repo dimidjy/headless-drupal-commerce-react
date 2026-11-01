@@ -1,0 +1,13 @@
+resources:
+  novaposhta_regions:
+    GET:
+      supported_formats: json
+      supported_auth: cookie
+  novaposhta_cities:
+    GET:
+      supported_formats: json
+      supported_auth: cookie
+  novaposhta_warehouses:
+    GET:
+      supported_formats: json
+      supported_auth: cookie

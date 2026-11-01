@@ -1,0 +1,10 @@
+uuid: 57fef8f2-d5b6-4831-b441-6a6d2b5e07ba
+langcode: en
+status: true
+dependencies: {  }
+id: products_slider
+label: 'Products slider'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

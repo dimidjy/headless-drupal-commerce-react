@@ -1,0 +1,55 @@
+uuid: 6b108ca2-9551-4cd2-b192-0cb8924261c6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.billboard_slide.field_description
+    - field.field.paragraph.billboard_slide.field_image
+    - field.field.paragraph.billboard_slide.field_link
+    - field.field.paragraph.billboard_slide.field_title
+    - paragraphs.paragraphs_type.billboard_slide
+  module:
+    - link
+id: paragraph.billboard_slide.default
+targetEntityType: paragraph
+bundle: billboard_slide
+mode: default
+content:
+  field_description:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_image:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_link:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_title:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

@@ -1,0 +1,10 @@
+uuid: 49e51bb0-6cab-4435-a93e-3a2bef57e2fe
+langcode: en
+status: true
+dependencies: {  }
+id: features_item
+label: 'Features item'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

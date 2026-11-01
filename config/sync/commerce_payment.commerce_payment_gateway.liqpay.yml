@@ -1,0 +1,57 @@
+uuid: 5a33f436-03cb-4415-a608-b7467945c0b2
+langcode: en
+status: false
+dependencies:
+  module:
+    - commerce_liqpay
+id: liqpay
+label: Liqpay
+weight: null
+plugin: liqpay_offsite_gateway
+configuration:
+  display_label: Liqpay
+  mode: test
+  payment_method_types:
+    - credit_card
+  collect_billing_information: false
+  message_error: 'Failed payment. Data is incorrect.'
+  message_failure: 'Failed payment.'
+  message_reversed: 'Payment amount refunded.'
+  message_subscribed: 'Subscribed successfully framed.'
+  message_unsubscribed: 'Subscribed successfully deactivated.'
+  message_success: 'Successful payment.'
+  message_3ds_verify: 'To finish the payment you will require a 3ds_verify.'
+  message_captcha_verify: 'Waiting for customer to confirm with captcha.'
+  message_cvv_verify: 'To finish the payment you will require a cvv_verify.'
+  message_ivr_verify: 'Waiting for customer to confirm with IVR.'
+  message_otp_verify: 'OTP is sent to a customer phone number. To finish the payment it is required otp_verify.'
+  message_password_verify: 'Waiting for customer to confirm with Privat24.'
+  message_phone_verify: 'Waiting for customer to enter a phone number. To finish the payment you will require a phone_verify.'
+  message_pin_verify: 'Waiting for customer to confirm with PIN-code.'
+  message_receiver_verify: 'Receiver additional data is required. To finish the payment you will require a receiver_verify.'
+  message_sender_verify: "Sender's additional data is required. To finish the payment you will require a sender_verify."
+  message_senderapp_verify: 'Waiting for customer to confirm with Privat24.'
+  message_wait_qr: 'Waiting for customer to scan QR-code.'
+  message_wait_sender: 'Waiting for customer to confirm in mob app Privat24/SENDER.'
+  message_cash_wait: 'Waiting for payment in self-service terminal.'
+  message_hold_wait: "Amount was successfully blocked on the sender's account."
+  message_invoice_wait: 'Invoice is created successfully, waiting for a payment.'
+  message_prepared: 'Payment is created, waiting for customer to finish it.'
+  message_processing: 'Payment is processing.'
+  message_wait_accept: 'Money are withdrawn from client but the store is still not verified. If the store is not activated for 60 days, payment will be automatically cancelled.'
+  message_wait_card: "Recipient didn't set the compensation method."
+  message_wait_compensation: 'Payment is successful, it will be transferred in daily settlement.'
+  message_wait_lc: 'Charging is successful, waiting for receipt of goods confirmation.'
+  message_wait_reserve: 'Funds are reserved to make a refund according to a refund request.'
+  message_wait_secure: 'Payment is verified.'
+  message_sandbox: 'Transaction marked as sandbox.'
+  version: '3'
+  public_key: ''
+  private_key: ''
+  action_url: 'https://www.liqpay.ua/api/3/checkout'
+  action: pay
+  api_url: 'https://www.liqpay.ua/api/'
+  server_notifications: 0
+  description: 'Ordered # [commerce_order:order_id] at [site:name].'
+conditions: {  }
+conditionOperator: AND
