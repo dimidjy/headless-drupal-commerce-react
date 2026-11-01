@@ -15,7 +15,8 @@ use Drupal\file\FileRepositoryInterface;
  * Creates a self-contained demo catalogue and homepage for the storefront.
  *
  * Everything is generated locally: product photos are placeholder images
- * drawn with GD, so the demo ships no third-party assets.
+ * drawn with GD, so the demo ships no third-party assets. The demo video is
+ * Big Buck Bunny (Blender Foundation, CC BY 3.0) embedded from YouTube.
  */
 final class DemoContentGenerator {
 
@@ -70,6 +71,8 @@ final class DemoContentGenerator {
       'type' => 'page',
       'title' => 'Home',
       'uuid' => $this->homepageUuid() ?: NULL,
+      // The React app resolves "/" through /path-to-uuid?path=/home.
+      'path' => ['alias' => '/home'],
       'status' => 1,
     ]);
 
@@ -288,8 +291,8 @@ final class DemoContentGenerator {
     try {
       return $this->create('media', [
         'bundle' => 'remote_video',
-        'name' => 'Demo video',
-        'field_media_oembed_video' => 'https://vimeo.com/76979871',
+        'name' => 'Big Buck Bunny (Blender Foundation, CC BY 3.0)',
+        'field_media_oembed_video' => 'https://www.youtube.com/watch?v=aqz-KE-bpKQ',
       ]);
     }
     catch (\Throwable) {
@@ -319,23 +322,20 @@ final class DemoContentGenerator {
   }
 
   /**
-   * Draws a two-tone placeholder image with the label and saves it.
+   * Draws a text-free placeholder (two-tone backdrop with a round object).
    */
   private function file(string $label, int $color, int $width = 1200, int $height = 900): EntityInterface {
     [$background, $accent] = self::PALETTE[$color % count(self::PALETTE)];
 
-    // Draw small and upscale, so the built-in bitmap font becomes readable.
-    $scale = 4;
-    $small = imagecreatetruecolor(intdiv($width, $scale), intdiv($height, $scale));
-    imagefill($small, 0, 0, $this->allocate($small, $background));
-    $accentColor = $this->allocate($small, $accent);
-    imagefilledrectangle($small, 0, intdiv(imagesy($small) * 2, 3), imagesx($small), imagesy($small), $accentColor);
-    $text = mb_strimwidth($label, 0, intdiv(imagesx($small), imagefontwidth(3)) - 2, '…');
-    $x = intdiv(imagesx($small) - imagefontwidth(3) * strlen($text), 2);
-    imagestring($small, 3, max(2, $x), intdiv(imagesy($small), 3), $text, $accentColor);
-
     $image = imagecreatetruecolor($width, $height);
-    imagecopyresampled($image, $small, 0, 0, 0, 0, $width, $height, imagesx($small), imagesy($small));
+    imagefill($image, 0, 0, $this->allocate($image, $background));
+    $accentColor = $this->allocate($image, $accent);
+    // A "table" band along the bottom and an object resting on it.
+    $horizon = intdiv($height * 2, 3);
+    imagefilledrectangle($image, 0, $horizon, $width, $height, $accentColor);
+    $diameter = (int) (min($width, $height) * 0.42);
+    imagefilledellipse($image, intdiv($width, 2), $horizon - intdiv($diameter, 3), $diameter, $diameter, $accentColor);
+
     ob_start();
     imagejpeg($image, NULL, 85);
     $data = (string) ob_get_clean();

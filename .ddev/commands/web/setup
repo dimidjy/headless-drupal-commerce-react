@@ -10,6 +10,7 @@ composer install --no-interaction
 drush site:install minimal --existing-config --account-name=admin --account-pass=admin -y
 drush --numShards=1 search-api-solr:upload-configset products || echo "Solr not reachable, search disabled"
 drush app-demo:generate
+drush image:flush --all
 drush search-api:index || true
 drush cr
 echo
