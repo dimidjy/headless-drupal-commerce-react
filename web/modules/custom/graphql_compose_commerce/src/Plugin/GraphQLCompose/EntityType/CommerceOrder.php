@@ -9,6 +9,8 @@ use Drupal\graphql_compose\Plugin\GraphQLCompose\GraphQLComposeEntityTypeBase;
  *
  * @GraphQLComposeEntityType(
  *   id = "commerce_order",
+ *   prefix = "CommerceOrder",
+ *   type_sdl = "CommerceOrder",
  *   base_fields = {
  *     "uuid" = {},
  *     "order_number" = {},
@@ -31,7 +33,10 @@ class CommerceOrder extends GraphQLComposeEntityTypeBase {
    * {@inheritdoc}
    */
   public function getInterfaces(?string $bundle_id = NULL): array {
-    return ['Entity'];
+    // There is no "Entity" interface in GraphQL Compose; returning it made the
+    // schema builder substitute an UnsupportedType object, which broke
+    // schema printing ("Default implements UnsupportedType").
+    return parent::getInterfaces($bundle_id);
   }
 
   /**
