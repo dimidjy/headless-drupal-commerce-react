@@ -161,3 +161,5 @@ react-app/src/images/wishlist-item3.jpg
 
 # React production build
 /react-app/build/
+/react-app/.env.local
+/react-app/.env.*.local
