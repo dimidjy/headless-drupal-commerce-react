@@ -250,8 +250,8 @@ final class DemoContentGenerator {
 
   private function createMenus(): void {
     $links = [
-      'main' => ['Home' => '/', 'Shop' => '/products', 'Search' => '/search', 'Cart' => '/cart'],
-      'footer' => ['Shop' => '/products', 'Search' => '/search'],
+      'main' => ['Home' => '/', 'Shop' => '/products', 'Cart' => '/cart'],
+      'footer' => ['Shop' => '/products', 'Cart' => '/cart'],
     ];
     foreach ($links as $menu => $items) {
       $weight = 0;
