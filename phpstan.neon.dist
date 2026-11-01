@@ -1,0 +1,15 @@
+parameters:
+  level: 1
+  paths:
+    - web/modules/custom
+  excludePaths:
+    - */tests/*
+  drupal:
+    drupal_root: web
+  ignoreErrors:
+    # Drupal plugins and controllers use `new static()` in create() by design.
+    - '#Unsafe usage of new static\(\)#'
+    # Known tech debt: legacy \Drupal::service() calls in the original custom
+    # modules. Tracked separately instead of failing the build.
+    - '#\\Drupal calls should be avoided in classes, use dependency injection instead#'
+    - '#Storing entity storage as a class property is not recommended#'

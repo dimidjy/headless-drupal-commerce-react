@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="headless-drupal-commerce-react">
+  <description>Drupal coding standards for the custom modules and theme.</description>
+  <file>web/modules/custom</file>
+  <file>web/themes/custom</file>
+  <arg name="extensions" value="php,module,inc,install,theme,yml"/>
+  <arg name="colors"/>
+  <arg value="sp"/>
+  <!-- Warnings are reported but do not fail the build. -->
+  <config name="ignore_warnings_on_exit" value="1"/>
+  <rule ref="Drupal"/>
+  <rule ref="DrupalPractice"/>
+</ruleset>
