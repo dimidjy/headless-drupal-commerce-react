@@ -96,16 +96,16 @@ class CommerceProductVariationType extends GraphQLComposeSchemaTypeBase {
       'description' => (string) $this->t('Union type for product variations.'),
       'types' => fn() => [
         // Instead of using schemaTypeManager directly, we'll set up a default
-        // Empty array - the types will be populated at runtime
-        []
+        // Empty array - the types will be populated at runtime.
+        [],
       ],
       'resolveType' => function ($value) {
         if ($value && method_exists($value, 'bundle')) {
           // We can't rely on schemaTypeManager here, so we'll just return the bundle
-          // and let GraphQL resolve it
+          // and let GraphQL resolve it.
           return NULL;
         }
-        
+
         return NULL;
       },
     ]);
@@ -120,4 +120,4 @@ class CommerceProductVariationType extends GraphQLComposeSchemaTypeBase {
     return [];
   }
 
-} 
+}

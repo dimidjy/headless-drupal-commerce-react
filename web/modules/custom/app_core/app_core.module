@@ -5,6 +5,7 @@
  * Contains app_core.module.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -25,9 +26,9 @@ function app_core_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_entity_presave().
  */
 function app_core_entity_presave(EntityInterface $entity) {
-  // Add custom logic for commerce entities if needed
+  // Add custom logic for commerce entities if needed.
   if ($entity->getEntityTypeId() === 'commerce_product') {
-    // Custom logic for products
+    // Custom logic for products.
   }
 }
 
@@ -35,10 +36,10 @@ function app_core_entity_presave(EntityInterface $entity) {
  * Implements hook_cors_preflight_request_alter().
  */
 function app_core_cors_preflight_request_alter(array &$response) {
-  // Get the origin from the request headers
+  // Get the origin from the request headers.
   $origin = \Drupal::request()->headers->get('Origin');
-  
-  // Allow CORS for the React frontend with specific origin
+
+  // Allow CORS for the React frontend with specific origin.
   if ($origin) {
     $response['access-control-allow-origin'] = $origin;
     $response['access-control-allow-credentials'] = 'true';
@@ -52,9 +53,9 @@ function app_core_cors_preflight_request_alter(array &$response) {
  * Implements hook_request_alter().
  */
 function app_core_request_alter(array &$response) {
-  // Get the origin from the request headers
+  // Get the origin from the request headers.
   $origin = \Drupal::request()->headers->get('Origin');
-  
+
   // Set CORS headers for actual requests (not just preflight)
   if ($origin) {
     $response['access-control-allow-origin'] = $origin;
@@ -65,7 +66,7 @@ function app_core_request_alter(array &$response) {
 /**
  * Implements hook_form_alter().
  */
-function app_core_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function app_core_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Add support for method override in forms.
   if (isset($form['#method']) && strtolower($form['#method']) == 'post') {
     $form['_method'] = [

@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * Controller for paragraph autocomplete functionality.
  */
 class ParagraphsAutoComplete extends ControllerBase {
-  
-  CONST SKIP_FIELDS = [
+
+  const SKIP_FIELDS = [
     'id',
     'parent_id',
     'parent_type',
@@ -22,23 +22,23 @@ class ParagraphsAutoComplete extends ControllerBase {
     'parent_field_settings',
     'parent_field_instance',
     'parent_field_instance_settings',
-    'behavior_settings'
+    'behavior_settings',
   ];
-  
+
   /**
    * The entity field manager.
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
-  
+
   /**
    * The entity type manager.
-   * 
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
-  
+
   /**
    * Constructs a ParagraphsAutoComplete object.
    *
@@ -51,7 +51,7 @@ class ParagraphsAutoComplete extends ControllerBase {
     $this->entityFieldManager = $entity_field_manager;
     $this->entityTypeManager = $entity_type_manager;
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -61,7 +61,7 @@ class ParagraphsAutoComplete extends ControllerBase {
       $container->get('entity_type.manager')
     );
   }
-  
+
   /**
    * Gets all text field names from paragraph bundle(s).
    *
@@ -73,22 +73,22 @@ class ParagraphsAutoComplete extends ControllerBase {
    */
   protected function getTextFields(array $paragraph_types) {
     $text_fields = [];
-    
+
     $text_fields[] = 'id';
-    
+
     foreach ($paragraph_types as $bundle) {
       $field_definitions = $this->entityFieldManager->getFieldDefinitions('paragraph', $bundle);
-      
+
       foreach ($field_definitions as $field_name => $field_definition) {
         $field_type = $field_definition->getType();
-        
-        // Include text and string fields
+
+        // Include text and string fields.
         if (in_array($field_type, ['text', 'text_long', 'text_with_summary', 'string', 'string_long'])) {
           $text_fields[] = $field_name;
         }
       }
     }
-    
+
     return array_unique($text_fields);
   }
 
@@ -110,17 +110,17 @@ class ParagraphsAutoComplete extends ControllerBase {
       ->accessCheck(FALSE)
       ->range(0, 20)
       ->condition('type', $paragraphs_array, 'IN');
-      
+
     $conditions = $query->orConditionGroup();
-    
+
     $text_fields = $this->getTextFields($paragraphs_array);
-    
+
     foreach ($text_fields as $field_name) {
       $conditions->condition($field_name, '%' . $text . '%', 'like');
     }
-      
+
     $query->condition($conditions);
-      
+
     $queryResult = $query->execute();
     $queryResult = array_unique($queryResult);
 
@@ -129,12 +129,12 @@ class ParagraphsAutoComplete extends ControllerBase {
       $paragraphs_ids = array_values($queryResult);
     }
     $results = [];
-    
+
     foreach ($paragraphs_ids as $pid) {
       $paragraph = $this->entityTypeManager->getStorage('paragraph')->load($pid);
       $label = '';
       $value = '';
-      
+
       if ($paragraph->hasField('field_title') && !empty($paragraph->field_title->value)) {
         $label = $paragraph->field_title->value . ' (' . $pid . ')';
         $value = $paragraph->field_title->value . ' (' . $pid . ')';
@@ -149,7 +149,7 @@ class ParagraphsAutoComplete extends ControllerBase {
             break;
           }
         }
-        
+
         if (!$found_value) {
           $label = str_replace('_', ' ', ucfirst($paragraph->bundle())) . ' (' . $pid . ')';
           $value = str_replace('_', ' ', ucfirst($paragraph->bundle())) . ' (' . $pid . ')';
@@ -161,8 +161,8 @@ class ParagraphsAutoComplete extends ControllerBase {
         'value' => $value,
       ];
     }
-           
+
     return new JsonResponse($results);
   }
 
-} 
+}

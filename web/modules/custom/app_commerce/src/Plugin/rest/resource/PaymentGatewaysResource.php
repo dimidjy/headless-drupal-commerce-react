@@ -72,7 +72,7 @@ class PaymentGatewaysResource extends ResourceBase {
     LoggerInterface $logger,
     EntityTypeManagerInterface $entity_type_manager,
     PaymentGatewayManager $payment_gateway_manager,
-    CurrentStoreInterface $current_store
+    CurrentStoreInterface $current_store,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->entityTypeManager = $entity_type_manager;
@@ -107,31 +107,31 @@ class PaymentGatewaysResource extends ResourceBase {
   public function get() {
     // Get the current store.
     $store = $this->currentStore->getStore();
-    
+
     // Get all payment gateways.
     $payment_gateway_storage = $this->entityTypeManager->getStorage('commerce_payment_gateway');
     $payment_gateways = $payment_gateway_storage->loadMultiple();
-    
+
     $available_gateways = [];
-    
+
     foreach ($payment_gateways as $gateway) {
       // Only include gateways that are enabled.
       // We can't use $gateway->applies() directly with a store, as it requires an order.
-      if ($gateway->status()) {       
+      if ($gateway->status()) {
         $gateway_data = [
           'id' => $gateway->id(),
           'plugin_id' => $gateway->getPluginId(),
           'label' => $gateway->label(),
-          'configuration' => $gateway->getPlugin()->getConfiguration()
+          'configuration' => $gateway->getPlugin()->getConfiguration(),
         ];
 
         $available_gateways[] = $gateway_data;
       }
     }
-    
+
     $response = new ResourceResponse($available_gateways);
     $response->getCacheableMetadata()->addCacheContexts(['store']);
-    
+
     return $response;
   }
 
@@ -152,11 +152,11 @@ class PaymentGatewaysResource extends ResourceBase {
    */
   protected function getBaseRouteRequirements($method) {
     $requirements = parent::getBaseRouteRequirements($method);
-    
+
     // Add custom access check for store API.
     $requirements['_permission'] = 'access commerce payment gateways resource';
-    
+
     return $requirements;
   }
 
-} 
+}

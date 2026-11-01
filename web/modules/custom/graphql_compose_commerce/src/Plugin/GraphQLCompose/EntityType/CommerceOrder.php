@@ -127,7 +127,7 @@ class CommerceOrder extends GraphQLComposeEntityTypeBase {
     if ($entity->hasField('shipments') && !$entity->get('shipments')->isEmpty()) {
       $shipments = $entity->get('shipments')->referencedEntities();
       if (!empty($shipments)) {
-        // For simplicity, just return the first shipment
+        // For simplicity, just return the first shipment.
         return $shipments[0];
       }
     }
@@ -141,4 +141,4 @@ class CommerceOrder extends GraphQLComposeEntityTypeBase {
     return $entity->getState()->getId();
   }
 
-} 
+}

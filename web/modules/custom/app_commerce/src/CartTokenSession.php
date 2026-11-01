@@ -147,14 +147,14 @@ final class CartTokenSession implements CartSessionInterface {
       $maxRetries = 3;
       $retryCount = 0;
       $success = FALSE;
-      
+
       while (!$success && $retryCount < $maxRetries) {
         try {
           $this->tempStore->set($token, $data);
           $success = TRUE;
         }
         catch (\Exception $e) {
-          // Log the error
+          // Log the error.
           \Drupal::logger('app_commerce')->warning('Failed to set cart token data (attempt @count): @message', [
             '@count' => $retryCount + 1,
             '@message' => $e->getMessage(),
@@ -162,13 +162,14 @@ final class CartTokenSession implements CartSessionInterface {
           $retryCount++;
           if ($retryCount < $maxRetries) {
             // Wait a bit before retrying (increasing backoff)
-            usleep(100000 * $retryCount); // 100ms, 200ms, 300ms
+            // 100ms, 200ms, 300ms.
+            usleep(100000 * $retryCount);
           }
         }
       }
-      
+
       if (!$success) {
-        // Log the final failure but don't throw an exception to allow the operation to continue
+        // Log the final failure but don't throw an exception to allow the operation to continue.
         \Drupal::logger('app_commerce')->error('Failed to set cart token data after @max_retries retries', [
           '@max_retries' => $maxRetries,
         ]);

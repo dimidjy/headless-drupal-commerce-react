@@ -36,7 +36,7 @@ class CommerceProductVariation extends GraphQLComposeEntityTypeBase {
    * {@inheritdoc}
    */
   public function getInterfaces(?string $bundle_id = NULL): array {
-    // Return only valid interface types
+    // Return only valid interface types.
     return parent::getInterfaces($bundle_id);
   }
 
@@ -48,8 +48,7 @@ class CommerceProductVariation extends GraphQLComposeEntityTypeBase {
 
     // Add custom resolvers for specific fields if needed.
     // For example, you might want to customize how price is resolved.
-    
-    // Add product field to access the parent product
+    // Add product field to access the parent product.
     $fields['product'] = [
       'type' => 'CommerceProduct',
       'description' => (string) $this->t('The parent product of this variation.'),
@@ -60,8 +59,8 @@ class CommerceProductVariation extends GraphQLComposeEntityTypeBase {
         return NULL;
       },
     ];
-    
-    // Add formatted price field
+
+    // Add formatted price field.
     $fields['formatted_price'] = [
       'type' => 'String',
       'description' => (string) $this->t('The formatted price of the variation.'),
@@ -79,8 +78,8 @@ class CommerceProductVariation extends GraphQLComposeEntityTypeBase {
         return NULL;
       },
     ];
-    
-    // Add formatted list price field
+
+    // Add formatted list price field.
     $fields['formatted_list_price'] = [
       'type' => 'String',
       'description' => (string) $this->t('The formatted list price of the variation.'),
@@ -98,8 +97,8 @@ class CommerceProductVariation extends GraphQLComposeEntityTypeBase {
         return NULL;
       },
     ];
-    
-    // Add discount percentage field
+
+    // Add discount percentage field.
     $fields['discount_percentage'] = [
       'type' => 'Float',
       'description' => (string) $this->t('The discount percentage if list price is available.'),
@@ -108,7 +107,7 @@ class CommerceProductVariation extends GraphQLComposeEntityTypeBase {
             $entity->hasField('list_price') && !$entity->get('list_price')->isEmpty()) {
           $price = $entity->get('price')->first()->toPrice();
           $list_price = $entity->get('list_price')->first()->toPrice();
-          
+
           if ($price && $list_price && $list_price->getNumber() > 0) {
             $discount = ($list_price->getNumber() - $price->getNumber()) / $list_price->getNumber() * 100;
             return round($discount, 2);
@@ -117,38 +116,38 @@ class CommerceProductVariation extends GraphQLComposeEntityTypeBase {
         return NULL;
       },
     ];
-    
-    // Add images field
+
+    // Add images field.
     $fields['images'] = [
       'type' => '[String]',
       'description' => (string) $this->t('The product variation images.'),
       'resolve' => function ($entity) {
         $image_urls = [];
-        
-        // Check if the variation has an image field
+
+        // Check if the variation has an image field.
         if ($entity->hasField('field_image') && !$entity->get('field_image')->isEmpty()) {
           foreach ($entity->get('field_image') as $image) {
             if ($image->entity) {
-              // Return the URL instead of the entity
+              // Return the URL instead of the entity.
               $file_uri = $image->entity->getFileUri();
               $image_urls[] = \Drupal::service('file_url_generator')->generateAbsoluteString($file_uri);
             }
           }
         }
-        // If no images on variation, try to get images from the parent product
-        elseif (empty($image_urls) && $entity->getProduct() && $entity->getProduct()->hasField('field_images')) {
+        // If no images on variation, try to get images from the parent product.
+        elseif ($entity->getProduct() && $entity->getProduct()->hasField('field_images')) {
           $product = $entity->getProduct();
           if (!$product->get('field_images')->isEmpty()) {
             foreach ($product->get('field_images') as $image) {
               if ($image->entity) {
-                // Return the URL instead of the entity
+                // Return the URL instead of the entity.
                 $file_uri = $image->entity->getFileUri();
                 $image_urls[] = \Drupal::service('file_url_generator')->generateAbsoluteString($file_uri);
               }
             }
           }
         }
-        
+
         return $image_urls;
       },
     ];
@@ -156,4 +155,4 @@ class CommerceProductVariation extends GraphQLComposeEntityTypeBase {
     return $fields;
   }
 
-} 
+}

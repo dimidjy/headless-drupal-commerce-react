@@ -47,13 +47,13 @@ class PageUuidController extends ControllerBase {
   public function getPageUuids() {
     // Get the configuration.
     $config = $this->configFactory->get('app_core.page_uuids');
-    
+
     // Prepare the response data.
     $response_data = [
       'required_pages' => [],
       'other_pages' => [],
     ];
-    
+
     // Add required pages.
     $required_pages = $config->get('required_pages') ?: [];
     foreach ($required_pages as $key => $uuid) {
@@ -61,7 +61,7 @@ class PageUuidController extends ControllerBase {
         $response_data['required_pages'][$key] = $uuid;
       }
     }
-    
+
     // Add additional pages.
     $additional_pages = $config->get('additional_pages') ?: [];
     foreach ($additional_pages as $page) {
@@ -69,8 +69,8 @@ class PageUuidController extends ControllerBase {
         $response_data['other_pages'][$page['machine_name']] = $page['uuid'];
       }
     }
-    
+
     return new JsonResponse($response_data);
   }
 
-} 
+}

@@ -1,5 +1,11 @@
 <?php
-// Start Generation Here
+
+/**
+ * @file
+ * Start Generation Here.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_theme().
@@ -31,8 +37,8 @@ function app_theme_theme($existing, $type, $theme, $path) {
 function app_theme_preprocess_page(array &$variables) {
   // Add a custom variable to the page template.
   $variables['custom_variable'] = 'This is a custom variable';
-  
-  // Add commerce-specific variables if needed
+
+  // Add commerce-specific variables if needed.
   if (\Drupal::moduleHandler()->moduleExists('commerce')) {
     $variables['commerce_enabled'] = TRUE;
   }
@@ -51,7 +57,7 @@ function app_theme_preprocess_commerce_product(array &$variables) {
 /**
  * Implements hook_form_FORM_ID_alter() for a specific form.
  */
-function app_theme_form_node_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function app_theme_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Change the title of the submit button.
   $form['actions']['submit']['#value'] = t('Save My Custom Title');
 }
@@ -59,7 +65,7 @@ function app_theme_form_node_form_alter(&$form, \Drupal\Core\Form\FormStateInter
 /**
  * Implements hook_form_commerce_checkout_flow_alter().
  */
-function app_theme_form_commerce_checkout_flow_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  // Add custom classes to checkout form elements
+function app_theme_form_commerce_checkout_flow_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add custom classes to checkout form elements.
   $form['#attributes']['class'][] = 'commerce-checkout-flow';
 }

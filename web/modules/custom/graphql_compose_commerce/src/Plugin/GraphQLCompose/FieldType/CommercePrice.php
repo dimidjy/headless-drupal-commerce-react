@@ -6,7 +6,6 @@ use Drupal\graphql\GraphQL\Execution\FieldContext;
 use Drupal\graphql\GraphQL\Resolver\Composite;
 use Drupal\graphql\GraphQL\ResolverBuilder;
 use Drupal\graphql_compose\Plugin\GraphQLCompose\GraphQLComposeFieldTypeBase;
-use GraphQL\Type\Definition\Type;
 
 /**
  * {@inheritdoc}
@@ -34,8 +33,8 @@ class CommercePrice extends GraphQLComposeFieldTypeBase {
         ->map('entity', $builder->fromParent())
         ->map('field', $builder->fromValue($this->getFieldName())),
       $builder->callback(function ($value, $context) {
-        // Handle both FieldContext and array as the context parameter
-        return $this->resolveFieldItem($value, $context instanceof FieldContext ? $context : null);
+        // Handle both FieldContext and array as the context parameter.
+        return $this->resolveFieldItem($value, $context instanceof FieldContext ? $context : NULL);
       })
     );
   }
@@ -52,21 +51,21 @@ class CommercePrice extends GraphQLComposeFieldTypeBase {
    *   The formatted price string.
    */
   protected function resolveFieldItem($value, ?FieldContext $context) {
-    // Default values to ensure we always return something valid
+    // Default values to ensure we always return something valid.
     $number = '0.00';
     $currency_code = 'USD';
-    
+
     if ($value) {
-      // Handle different ways the price data might be structured
+      // Handle different ways the price data might be structured.
       if (is_object($value) && method_exists($value, 'getValue')) {
-        // If it's a field item, get its values
+        // If it's a field item, get its values.
         $price_data = $value->getValue();
-        
+
         if (is_array($price_data) && !empty($price_data[0])) {
           $price_data = $price_data[0];
         }
-        
-        // Try to get price data using toPrice() method if available
+
+        // Try to get price data using toPrice() method if available.
         if (method_exists($value, 'toPrice')) {
           try {
             $price_object = $value->toPrice();
@@ -81,8 +80,8 @@ class CommercePrice extends GraphQLComposeFieldTypeBase {
             ]);
           }
         }
-        
-        // Fallback to array access if toPrice() didn't work
+
+        // Fallback to array access if toPrice() didn't work.
         if (!empty($price_data['number'])) {
           $number = $price_data['number'];
         }
@@ -91,15 +90,15 @@ class CommercePrice extends GraphQLComposeFieldTypeBase {
         }
       }
       elseif (is_object($value)) {
-        // Direct object properties
+        // Direct object properties.
         if (!empty($value->number)) {
           $number = $value->number;
         }
         if (!empty($value->currency_code)) {
           $currency_code = $value->currency_code;
         }
-        
-        // Try to access price data through methods if they exist
+
+        // Try to access price data through methods if they exist.
         if (method_exists($value, 'getNumber') && method_exists($value, 'getCurrencyCode')) {
           try {
             $number = $value->getNumber();
@@ -113,7 +112,7 @@ class CommercePrice extends GraphQLComposeFieldTypeBase {
         }
       }
       elseif (is_array($value)) {
-        // Array structure
+        // Array structure.
         if (!empty($value['number'])) {
           $number = $value['number'];
         }
@@ -122,8 +121,8 @@ class CommercePrice extends GraphQLComposeFieldTypeBase {
         }
       }
     }
-    
-    // Return only the formatted price string
+
+    // Return only the formatted price string.
     return $this->formatPrice($number, $currency_code);
   }
 
@@ -148,4 +147,5 @@ class CommercePrice extends GraphQLComposeFieldTypeBase {
     // Fallback to basic formatting.
     return $number . ' ' . $currency_code;
   }
-} 
+
+}

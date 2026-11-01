@@ -20,7 +20,7 @@ class CommerceShippingInformationType extends GraphQLComposeSchemaTypeBase {
    */
   public function getTypes(): array {
     $types = [];
-    
+
     $types[] = new ObjectType([
       'name' => $this->getPluginId(),
       'description' => (string) $this->t('Shipping information.'),
@@ -80,4 +80,4 @@ class CommerceShippingInformationType extends GraphQLComposeSchemaTypeBase {
     return $types;
   }
 
-} 
+}

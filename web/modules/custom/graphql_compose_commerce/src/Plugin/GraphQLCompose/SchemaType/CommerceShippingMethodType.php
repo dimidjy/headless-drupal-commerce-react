@@ -20,7 +20,7 @@ class CommerceShippingMethodType extends GraphQLComposeSchemaTypeBase {
    */
   public function getTypes(): array {
     $types = [];
-    
+
     $types[] = new ObjectType([
       'name' => $this->getPluginId(),
       'description' => (string) $this->t('A commerce shipping method.'),
@@ -43,4 +43,4 @@ class CommerceShippingMethodType extends GraphQLComposeSchemaTypeBase {
     return $types;
   }
 
-} 
+}

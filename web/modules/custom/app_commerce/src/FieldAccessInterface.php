@@ -6,6 +6,9 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 
+/**
+ * Decides field access for entities normalized by the cart REST API.
+ */
 interface FieldAccessInterface {
 
   /**

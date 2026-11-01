@@ -20,6 +20,9 @@ final class AppDemoCommands extends DrushCommands {
     parent::__construct();
   }
 
+  /**
+   * Instantiates the command with the demo content generator.
+   */
   public static function create(ContainerInterface $container): self {
     return new self($container->get('app_demo.generator'));
   }

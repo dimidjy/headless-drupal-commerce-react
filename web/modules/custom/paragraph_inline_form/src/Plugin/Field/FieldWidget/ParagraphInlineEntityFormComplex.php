@@ -314,9 +314,9 @@ class ParagraphInlineEntityFormComplex extends InlineEntityFormBase implements C
 
     $selection_settings = $this->getFieldSetting('handler_settings') ? $this->getFieldSetting('handler_settings') : [];
     $options = [
-        'target_type' => $this->getFieldSetting('target_type'),
-        'handler' => $this->getFieldSetting('handler'),
-      ] + $selection_settings;
+      'target_type' => $this->getFieldSetting('target_type'),
+      'handler' => $this->getFieldSetting('handler'),
+    ] + $selection_settings;
 
     $settings = $this->getSettings();
     $allow_existing = $settings['allow_existing'];
@@ -326,7 +326,8 @@ class ParagraphInlineEntityFormComplex extends InlineEntityFormBase implements C
     if (!$allow_new && $allow_existing) {
       $handler = $this->selectionManager->getInstance($options);
       $have_multiple_existing_entities = count($handler->getReferenceableEntities(NULL, 'CONTAINS', 2)) > 1;
-    } else {
+    }
+    else {
       $have_multiple_existing_entities = FALSE;
     }
 
@@ -628,7 +629,7 @@ class ParagraphInlineEntityFormComplex extends InlineEntityFormBase implements C
         }
 
         $element['form']['#bundles'] = $bundles;
-        $element['form'] += paragraph_inline_entity_form_reference_form($element['form'], $form_state);
+        $element['form'] += paragraph_inline_form_reference_form($element['form'], $form_state);
       }
 
       if ($hide_cancel) {
@@ -646,7 +647,6 @@ class ParagraphInlineEntityFormComplex extends InlineEntityFormBase implements C
     return $element;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -655,13 +655,13 @@ class ParagraphInlineEntityFormComplex extends InlineEntityFormBase implements C
     $values = [];
     $field_value = $form_state->getValue($field_name);
 
-    if (isset($field_value['form'][0]['entity_id'])){
-      $entity_id = get_reference_id_from_label($field_value['form'][0]['entity_id']);
+    if (isset($field_value['form'][0]['entity_id'])) {
+      $entity_id = paragraph_inline_form_reference_id_from_label($field_value['form'][0]['entity_id']);
     }
     else {
       $entity_id = '';
     }
-    
+
     if (empty($entity_id)) {
       if ($this->isDefaultValueWidget($form_state)) {
         $items->filterEmptyItems();
@@ -1071,30 +1071,33 @@ class ParagraphInlineEntityFormComplex extends InlineEntityFormBase implements C
     inline_entity_form_close_all_forms($element, $form_state);
   }
 
+  /**
+   * Returns a human-readable label for a paragraph in the entity table.
+   */
   public function getParagraphLabel($paragraph) {
     if (!$paragraph) {
       return '';
     }
-    
+
     $label = '';
-    
+
     if ($paragraph->hasField('field_title') && !empty($paragraph->field_title->value)) {
       $label = $paragraph->field_title->value . ' (' . $paragraph->id() . ')';
     }
     else {
       $found_value = FALSE;
       $text_fields = $this->getTextFields([$paragraph->bundle()]);
-      
+
       foreach ($text_fields as $field_name) {
-        if (!in_array($field_name, ParagraphsAutoComplete::SKIP_FIELDS) && 
-            $paragraph->hasField($field_name) && 
+        if (!in_array($field_name, ParagraphsAutoComplete::SKIP_FIELDS) &&
+            $paragraph->hasField($field_name) &&
             !empty($paragraph->get($field_name)->value)) {
           $label = $paragraph->get($field_name)->value . ' (' . $paragraph->id() . ')';
           $found_value = TRUE;
           break;
         }
       }
-      
+
       if (!$found_value) {
         $label = str_replace('_', ' ', ucfirst($paragraph->bundle())) . ' (' . $paragraph->id() . ')';
       }
@@ -1102,7 +1105,7 @@ class ParagraphInlineEntityFormComplex extends InlineEntityFormBase implements C
 
     return $label;
   }
-  
+
   /**
    * Gets all text field names from paragraph bundle(s).
    *
@@ -1114,21 +1117,22 @@ class ParagraphInlineEntityFormComplex extends InlineEntityFormBase implements C
    */
   protected function getTextFields(array $paragraph_types) {
     $text_fields = [];
-    
+
     $text_fields[] = 'id';
-    
+
     foreach ($paragraph_types as $bundle) {
       $field_definitions = $this->entityFieldManager->getFieldDefinitions('paragraph', $bundle);
-      
+
       foreach ($field_definitions as $field_name => $field_definition) {
         $field_type = $field_definition->getType();
-        
+
         if (in_array($field_type, ['text', 'text_long', 'text_with_summary', 'string', 'string_long'])) {
           $text_fields[] = $field_name;
         }
       }
     }
-    
+
     return array_unique($text_fields);
   }
+
 }

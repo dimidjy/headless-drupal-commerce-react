@@ -41,8 +41,8 @@ class ImageType extends GraphQLComposeSchemaTypeBase {
    * {@inheritdoc}
    */
   public function getExtensions(): array {
-    // No extensions for this type
+    // No extensions for this type.
     return [];
   }
 
-} 
+}

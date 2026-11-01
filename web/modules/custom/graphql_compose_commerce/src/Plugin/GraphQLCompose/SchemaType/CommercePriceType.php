@@ -20,7 +20,7 @@ class CommercePriceType extends GraphQLComposeSchemaTypeBase {
    */
   public function getTypes(): array {
     $types = [];
-    
+
     $types[] = new ObjectType([
       'name' => $this->getPluginId(),
       'description' => (string) $this->t('A commerce price.'),
@@ -37,7 +37,7 @@ class CommercePriceType extends GraphQLComposeSchemaTypeBase {
           'type' => Type::string(),
           'description' => (string) $this->t('The currency code (alias for currency_code).'),
           'resolve' => function ($value) {
-            return isset($value['currency_code']) ? $value['currency_code'] : null;
+            return $value['currency_code'] ?? NULL;
           },
         ],
         'formatted' => [
@@ -50,4 +50,4 @@ class CommercePriceType extends GraphQLComposeSchemaTypeBase {
     return $types;
   }
 
-} 
+}

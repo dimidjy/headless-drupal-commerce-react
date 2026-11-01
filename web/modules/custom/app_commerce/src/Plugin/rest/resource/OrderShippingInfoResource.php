@@ -73,7 +73,7 @@ class OrderShippingInfoResource extends CartResourceBase {
     EntityTypeManagerInterface $entity_type_manager,
     AccountInterface $current_user,
     CartProviderInterface $cart_provider,
-    $cart_manager
+    $cart_manager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger, $cart_provider, $cart_manager);
     $this->entityTypeManager = $entity_type_manager;
@@ -140,13 +140,14 @@ class OrderShippingInfoResource extends CartResourceBase {
       throw new NotFoundHttpException('Order not found.');
     }
 
-    // Only save email to order, other customer information will be in profile
+    // Only save email to order, other customer information will be in profile.
     if (!empty($data['email'])) {
       $order->setEmail($data['email']);
     }
 
     $address_data = [
-      'country_code' => 'UA', // Ukraine
+    // Ukraine.
+      'country_code' => 'UA',
       'given_name' => !empty($data['firstName']) ? $data['firstName'] : '',
       'additional_name' => !empty($data['lastName']) ? $data['lastName'] : '',
       'family_name' => !empty($data['lastName']) ? $data['lastName'] : '',
@@ -155,7 +156,7 @@ class OrderShippingInfoResource extends CartResourceBase {
       'administrative_area' => !empty($data['novaposhtaRegion']) ? $data['novaposhtaRegion'] : '',
     ];
 
-    // Prepare Novaposhta field data
+    // Prepare Novaposhta field data.
     $novaposhta_data = [
       'region' => !empty($data['novaposhtaRegion']) ? $data['novaposhtaRegion'] : '',
       'city' => !empty($data['novaposhtaCity']) ? $data['novaposhtaCity'] : '',
@@ -165,7 +166,7 @@ class OrderShippingInfoResource extends CartResourceBase {
       'warehouse_data' => !empty($data['novaposhtaWarehouseData']) ? $data['novaposhtaWarehouseData'] : [],
     ];
 
-    // Create a shipping profile
+    // Create a shipping profile.
     $shipping_profile = Profile::create([
       'type' => 'customer',
       'uid' => $order->getCustomerId(),
@@ -175,20 +176,21 @@ class OrderShippingInfoResource extends CartResourceBase {
 
     $shipping_profile->save();
 
-    // Create a shipment for the order
+    // Create a shipment for the order.
     $shipment = Shipment::create([
       'type' => 'default',
       'order_id' => $order->id(),
       'shipping_profile' => $shipping_profile,
       'shipping_method' => '1',
       'shipping_service' => 'default',
-      'amount' => ['number' => '0', 'currency_code' => 'USD'], // This should be dynamic based on the chosen shipping method
+    // This should be dynamic based on the chosen shipping method.
+      'amount' => ['number' => '0', 'currency_code' => 'USD'],
     ]);
     $shipment->save();
 
     // Mark checkout step as complete.
     $order->set('checkout_step', 'shipping');
-    
+
     // Save the order.
     $order->save();
 
@@ -202,4 +204,4 @@ class OrderShippingInfoResource extends CartResourceBase {
     return new ModifiedResourceResponse($response_data, 200);
   }
 
-} 
+}

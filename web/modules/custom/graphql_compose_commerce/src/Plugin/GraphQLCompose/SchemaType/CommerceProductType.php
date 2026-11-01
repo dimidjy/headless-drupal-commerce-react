@@ -99,4 +99,4 @@ class CommerceProductType extends GraphQLComposeSchemaTypeBase {
     return [];
   }
 
-} 
+}

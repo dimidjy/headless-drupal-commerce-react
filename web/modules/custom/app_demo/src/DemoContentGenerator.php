@@ -7,6 +7,7 @@ namespace Drupal\app_demo;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\FileRepositoryInterface;
 
@@ -158,7 +159,12 @@ final class DemoContentGenerator {
     }
 
     $testimonials = [];
-    foreach ([['Olena', 'Fast delivery to my Nova Poshta branch.'], ['Max', 'The lamp looks even better at home.'], ['Iryna', 'Simple checkout, great quality.']] as [$author, $quote]) {
+    $quotes = [
+      ['Olena', 'Fast delivery to my Nova Poshta branch.'],
+      ['Max', 'The lamp looks even better at home.'],
+      ['Iryna', 'Simple checkout, great quality.'],
+    ];
+    foreach ($quotes as [$author, $quote]) {
       $testimonials[] = $this->paragraph('testimonials_item', [
         'field_author' => $author,
         'field_response' => $quote,
@@ -208,6 +214,9 @@ final class DemoContentGenerator {
     return $paragraphs;
   }
 
+  /**
+   * Creates the default online store.
+   */
   private function createStore(): EntityInterface {
     $store = $this->create('commerce_store', [
       'type' => 'online',
@@ -226,6 +235,9 @@ final class DemoContentGenerator {
     return $store;
   }
 
+  /**
+   * Creates the Nova Poshta shipping method used by checkout.
+   */
   private function createShippingMethod(EntityInterface $store): void {
     $rate = ['number' => '1', 'currency_code' => 'UAH'];
     $this->create('commerce_shipping_method', [
@@ -248,6 +260,9 @@ final class DemoContentGenerator {
     ]);
   }
 
+  /**
+   * Adds storefront links to the main and footer menus.
+   */
   private function createMenus(): void {
     $links = [
       'main' => ['Home' => '/', 'Shop' => '/products', 'Cart' => '/cart'],
@@ -282,10 +297,16 @@ final class DemoContentGenerator {
     }
   }
 
+  /**
+   * Creates a paragraph of the given type.
+   */
   private function paragraph(string $type, array $values): EntityInterface {
     return $this->create('paragraph', ['type' => $type] + $values);
   }
 
+  /**
+   * Creates an image media entity with a generated placeholder.
+   */
   private function media(string $label, int $color, int $width = 1200, int $height = 900): EntityInterface {
     return $this->create('media', [
       'bundle' => 'image',
@@ -322,23 +343,34 @@ final class DemoContentGenerator {
     $directory = self::IMAGE_DIR;
     $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
     $name = preg_replace('/[^a-z0-9]+/', '-', strtolower($label)) . "-{$width}x{$height}.jpg";
-    return $this->fileRepository->writeData($data, "{$directory}/{$name}", FileSystemInterface::EXISTS_REPLACE);
+    return $this->fileRepository->writeData($data, "{$directory}/{$name}", FileExists::Replace);
   }
 
   /**
+   * Allocates a colour from a hex string such as #e9d8c4.
+   *
    * @param \GdImage $image
+   *   The image to allocate the colour in.
+   * @param string $hex
+   *   The colour in #rrggbb notation.
    */
   private function allocate($image, string $hex): int {
     [$r, $g, $b] = sscanf($hex, '#%02x%02x%02x');
     return (int) imagecolorallocate($image, $r, $g, $b);
   }
 
+  /**
+   * Creates and saves an entity.
+   */
   private function create(string $entityType, array $values): EntityInterface {
     $entity = $this->entityTypeManager->getStorage($entityType)->create($values);
     $entity->save();
     return $entity;
   }
 
+  /**
+   * Returns the homepage UUID configured in app_core.page_uuids.
+   */
   private function homepageUuid(): string {
     return (string) $this->configFactory->get('app_core.page_uuids')->get('required_pages.homepage');
   }

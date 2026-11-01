@@ -20,7 +20,7 @@ class CommerceAddressType extends GraphQLComposeSchemaTypeBase {
    */
   public function getTypes(): array {
     $types = [];
-    
+
     $types[] = new ObjectType([
       'name' => $this->getPluginId(),
       'description' => (string) $this->t('A commerce address.'),
@@ -63,4 +63,4 @@ class CommerceAddressType extends GraphQLComposeSchemaTypeBase {
     return $types;
   }
 
-} 
+}

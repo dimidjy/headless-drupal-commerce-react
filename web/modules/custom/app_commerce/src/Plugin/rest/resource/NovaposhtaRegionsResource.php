@@ -45,8 +45,12 @@ class NovaposhtaRegionsResource extends ResourceBase {
    *   The Novaposhta manager.
    */
   public function __construct(
-    array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger,
-    NovaposhtaManagerInterface $novaposhta_manager
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    array $serializer_formats,
+    LoggerInterface $logger,
+    NovaposhtaManagerInterface $novaposhta_manager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->novaposhtaManager = $novaposhta_manager;
@@ -88,11 +92,11 @@ class NovaposhtaRegionsResource extends ResourceBase {
   public function get() {
     $regions = $this->novaposhtaManager->getRegions();
     $options = $this->novaposhtaManager->extractRegionOptions($regions);
-    
+
     return $this->createResponse([
       'regions' => $regions,
       'options' => $options,
     ]);
   }
 
-} 
+}

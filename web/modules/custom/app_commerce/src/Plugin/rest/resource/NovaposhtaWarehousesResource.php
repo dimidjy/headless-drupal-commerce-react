@@ -3,7 +3,6 @@
 namespace Drupal\app_commerce\Plugin\rest\resource;
 
 use Drupal\commerce_novaposhta\Service\NovaposhtaManagerInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Psr\Log\LoggerInterface;
@@ -47,8 +46,12 @@ class NovaposhtaWarehousesResource extends ResourceBase {
    *   The Novaposhta manager.
    */
   public function __construct(
-    array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger,
-    NovaposhtaManagerInterface $novaposhta_manager
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    array $serializer_formats,
+    LoggerInterface $logger,
+    NovaposhtaManagerInterface $novaposhta_manager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->novaposhtaManager = $novaposhta_manager;
@@ -94,14 +97,14 @@ class NovaposhtaWarehousesResource extends ResourceBase {
     if (empty($city)) {
       throw new BadRequestHttpException('City parameter is required.');
     }
-    
+
     $warehouses = $this->novaposhtaManager->getWarehouses($city);
     $options = $this->novaposhtaManager->extractWarehouseOptions($warehouses);
-    
+
     return $this->createResponse([
       'warehouses' => $warehouses,
       'options' => $options,
     ]);
   }
 
-} 
+}

@@ -8,6 +8,9 @@ use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
+/**
+ * Validates that a coupon code can be applied to the order.
+ */
 class CouponValidConstraintValidator extends ConstraintValidator {
 
   /**

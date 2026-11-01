@@ -2,8 +2,9 @@
 
 namespace Drupal\app_commerce\Plugin\rest\resource;
 
+use Drupal\file\FileInterface;
+use Drupal\media\MediaInterface;
 use Drupal\rest\ResourceResponse;
-use Drupal\file\Entity\File;
 
 /**
  * Provides a cart collection resource for current session.
@@ -26,44 +27,44 @@ class CartCollectionResource extends CartResourceBase {
    */
   public function get() {
     $carts = $this->cartProvider->getCarts();
-    
-    // Convert carts to array format and process them
+
+    // Convert carts to array format and process them.
     $serializer = \Drupal::service('serializer');
     $processed_carts = [];
-    
+
     foreach ($carts as $cart) {
-      // Get the normalized cart data
+      // Get the normalized cart data.
       $normalized_cart = $serializer->normalize($cart, 'json');
-      
-      // Process order items to add image URLs
+
+      // Process order items to add image URLs.
       if (isset($normalized_cart['order_items']) && is_array($normalized_cart['order_items'])) {
         foreach ($normalized_cart['order_items'] as $key => $order_item) {
           if (isset($order_item['purchased_entity'])) {
-            // Get the product variation entity
+            // Get the product variation entity.
             $variation = \Drupal::entityTypeManager()
               ->getStorage('commerce_product_variation')
               ->load($order_item['purchased_entity']['variation_id']);
-            
+
             if ($variation) {
-              // Try to get image from field_product_image
+              // Try to get image from field_product_image.
               $image_url = $this->getImageUrl($variation, 'field_product_image');
-              
-              // If no image found, try to get from product's field_image
+
+              // If no image found, try to get from product's field_image.
               if (empty($image_url) && $variation->getProduct()) {
                 $product = $variation->getProduct();
                 $image_url = $this->getImageUrl($product, 'field_image');
               }
-              
-              // Add the image URL to the purchased entity
+
+              // Add the image URL to the purchased entity.
               $normalized_cart['order_items'][$key]['purchased_entity']['image_url'] = $image_url;
             }
           }
         }
       }
-      
+
       $processed_carts[] = $normalized_cart;
     }
-    
+
     $response = new ResourceResponse(array_values($processed_carts), 200);
     /** @var \Drupal\commerce_order\Entity\OrderInterface $cart */
     foreach ($carts as $cart) {
@@ -76,7 +77,7 @@ class CartCollectionResource extends CartResourceBase {
 
     return $response;
   }
-  
+
   /**
    * Gets the image URL from an entity and field.
    *
@@ -93,10 +94,10 @@ class CartCollectionResource extends CartResourceBase {
       $image_reference = $entity->get($field_name)->first();
       if ($image_reference && $image_reference->entity) {
         $referenced_entity = $image_reference->entity;
-        
-        // Handle Media entities
-        if ($referenced_entity instanceof \Drupal\media\MediaInterface) {
-          // For media entities, get the file from the source field
+
+        // Handle Media entities.
+        if ($referenced_entity instanceof MediaInterface) {
+          // For media entities, get the file from the source field.
           $source_field = $referenced_entity->getSource()->getConfiguration()['source_field'];
           if ($referenced_entity->hasField($source_field) && !$referenced_entity->get($source_field)->isEmpty()) {
             $file = $referenced_entity->get($source_field)->entity;
@@ -105,8 +106,8 @@ class CartCollectionResource extends CartResourceBase {
             }
           }
         }
-        // Handle File entities directly
-        elseif ($referenced_entity instanceof \Drupal\file\FileInterface) {
+        // Handle File entities directly.
+        elseif ($referenced_entity instanceof FileInterface) {
           return \Drupal::service('file_url_generator')->generateAbsoluteString($referenced_entity->getFileUri());
         }
       }

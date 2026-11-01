@@ -161,7 +161,7 @@ class CartAddResource extends CartResourceBase {
   public function post(array $data, Request $request) {
     $order_items = [];
     $cart = NULL;
-    
+
     // Do an initial validation of the payload before any processing.
     foreach ($data as $key => $order_item_data) {
       if (!isset($order_item_data['purchased_entity_type'])) {
@@ -199,13 +199,13 @@ class CartAddResource extends CartResourceBase {
       $order_items[] = $this->cartManager->addOrderItem($cart, $order_item, $order_item_data['combine']);
     }
 
-    // Create response data with both order items and cart information
+    // Create response data with both order items and cart information.
     $response_data = [
       'order_items' => array_values($order_items),
       'cart' => NULL,
     ];
-    
-    // Include cart information if available
+
+    // Include cart information if available.
     if ($cart) {
       $response_data['cart'] = [
         'order_id' => $cart->id(),

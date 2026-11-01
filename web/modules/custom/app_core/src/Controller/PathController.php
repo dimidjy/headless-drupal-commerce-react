@@ -49,7 +49,7 @@ class PathController extends ControllerBase {
   public function __construct(
     AliasManagerInterface $alias_manager,
     PathMatcherInterface $path_matcher,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
   ) {
     $this->aliasManager = $alias_manager;
     $this->pathMatcher = $path_matcher;
@@ -77,42 +77,42 @@ class PathController extends ControllerBase {
    *   A JSON response containing the UUID of the node.
    */
   public function resolvePathToUuid(Request $request) {
-    // Get the path from the query parameter
+    // Get the path from the query parameter.
     $path = $request->query->get('path');
-    
+
     if (empty($path)) {
       return new JsonResponse(['error' => 'No path provided'], 400);
     }
-    
+
     // Normalize the path (ensure it starts with a slash)
     if ($path[0] !== '/') {
       $path = '/' . $path;
     }
-    
+
     // Remove trailing slash if present (except for the root path)
     if (strlen($path) > 1 && substr($path, -1) === '/') {
       $path = rtrim($path, '/');
     }
-    
-    // Get the internal path from the alias
+
+    // Get the internal path from the alias.
     $internal_path = $this->aliasManager->getPathByAlias($path);
-    
-    // Log for debugging
+
+    // Log for debugging.
     \Drupal::logger('app_core')->notice('Resolving path: @path to internal path: @internal_path', [
       '@path' => $path,
       '@internal_path' => $internal_path,
     ]);
-    
-    // Check if this is a node path
+
+    // Check if this is a node path.
     if (preg_match('/^\/node\/(\d+)$/', $internal_path, $matches)) {
       $nid = $matches[1];
-      
+
       try {
-        // Load the node
+        // Load the node.
         $node = $this->entityTypeManager->getStorage('node')->load($nid);
-        
+
         if ($node) {
-          // Return the UUID
+          // Return the UUID.
           return new JsonResponse([
             'uuid' => $node->uuid(),
             'nid' => $nid,
@@ -127,17 +127,17 @@ class PathController extends ControllerBase {
         ]);
       }
     }
-    
-    // Check if this is a commerce product path
+
+    // Check if this is a commerce product path.
     if (preg_match('/^\/product\/(\d+)$/', $internal_path, $matches)) {
       $product_id = $matches[1];
-      
+
       try {
-        // Load the product
+        // Load the product.
         $product = $this->entityTypeManager->getStorage('commerce_product')->load($product_id);
-        
+
         if ($product) {
-          // Return the UUID and additional product info
+          // Return the UUID and additional product info.
           return new JsonResponse([
             'uuid' => $product->uuid(),
             'product_id' => $product_id,
@@ -153,8 +153,9 @@ class PathController extends ControllerBase {
         ]);
       }
     }
-    
-    // If we get here, no node or product was found
+
+    // If we get here, no node or product was found.
     return new JsonResponse(['error' => 'Page not found'], 404);
   }
-} 
+
+}

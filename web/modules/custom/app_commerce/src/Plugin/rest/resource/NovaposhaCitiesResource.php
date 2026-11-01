@@ -46,8 +46,12 @@ class NovaposhaCitiesResource extends ResourceBase {
    *   The Novaposhta manager.
    */
   public function __construct(
-    array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger,
-    NovaposhtaManagerInterface $novaposhta_manager
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    array $serializer_formats,
+    LoggerInterface $logger,
+    NovaposhtaManagerInterface $novaposhta_manager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->novaposhtaManager = $novaposhta_manager;
@@ -93,14 +97,14 @@ class NovaposhaCitiesResource extends ResourceBase {
     if (empty($region)) {
       throw new BadRequestHttpException('Region parameter is required.');
     }
-    
+
     $cities = $this->novaposhtaManager->getCities($region);
     $options = $this->novaposhtaManager->extractCityOptions($cities);
-    
+
     return $this->createResponse([
       'cities' => $cities,
       'options' => $options,
     ]);
   }
 
-} 
+}

@@ -5,7 +5,6 @@
  * GraphQL Compose Commerce module file.
  */
 
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\graphql_compose\Plugin\GraphQLComposeSchemaTypeManager;
 
 /**
@@ -17,25 +16,25 @@ function graphql_compose_commerce_entity_type_alter(array &$entity_types) {
     $entity_types['commerce_product']->set('graphql_compose_enabled', TRUE);
     $entity_types['commerce_product']->set('graphql_compose_type_name', 'CommerceProduct');
   }
-  
+
   if (isset($entity_types['commerce_product_variation'])) {
     $entity_types['commerce_product_variation']->set('graphql_compose_enabled', TRUE);
     $entity_types['commerce_product_variation']->set('graphql_compose_type_name', 'CommerceProductVariation');
   }
 
-  // Enable GraphQL for commerce_order
+  // Enable GraphQL for commerce_order.
   if (isset($entity_types['commerce_order'])) {
     $entity_types['commerce_order']->set('graphql_compose_enabled', TRUE);
     $entity_types['commerce_order']->set('graphql_compose_type_name', 'CommerceOrder');
   }
-  
-  // Enable GraphQL for commerce_order_item
+
+  // Enable GraphQL for commerce_order_item.
   if (isset($entity_types['commerce_order_item'])) {
     $entity_types['commerce_order_item']->set('graphql_compose_enabled', TRUE);
     $entity_types['commerce_order_item']->set('graphql_compose_type_name', 'CommerceOrderItem');
   }
-  
-  // Enable GraphQL for commerce_store
+
+  // Enable GraphQL for commerce_store.
   if (isset($entity_types['commerce_store'])) {
     $entity_types['commerce_store']->set('graphql_compose_enabled', TRUE);
     $entity_types['commerce_store']->set('graphql_compose_type_name', 'CommerceStore');
@@ -56,4 +55,4 @@ function graphql_compose_commerce_graphql_compose_print_types(GraphQLComposeSche
 function graphql_compose_commerce_graphql_compose_print_extensions(GraphQLComposeSchemaTypeManager $manager): void {
   // Use our schema extension service to register extensions.
   \Drupal::service('graphql_compose_commerce.schema_extension')->registerExtensions($manager);
-} 
+}

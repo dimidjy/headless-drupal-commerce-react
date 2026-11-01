@@ -9,6 +9,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\Container;
 
+/**
+ * Restricts which entity fields the cart REST API exposes.
+ */
 class FieldAccess implements FieldAccessInterface {
 
   /**

@@ -2,4 +2,5 @@
 
 /**
  * @file
+ * Install, update and uninstall functions for the App Core module.
  */
