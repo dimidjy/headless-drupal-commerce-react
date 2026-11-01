@@ -16,7 +16,7 @@ export const PARAGRAPH_BILLBOARD_FRAGMENT = gql`
             title
             height
             alt
-            variations(styles: MEDIUM) {
+            variations(styles: WIDE) {
               url
             }
           }

@@ -10,7 +10,7 @@ export const PARAGRAPH_TEXT_AND_IMAGE_FRAGMENT = gql`
         title
         height
         alt
-        variations(styles: LARGE) {
+        variations(styles: WIDE) {
           url
         }
       }
