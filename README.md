@@ -29,7 +29,9 @@ Drupal Commerce projects.
   payment gateways.
 - **Integrations.**
   - Nova Poshta: regions, cities and warehouses resolve from the Nova Poshta
-    API, and the shipping step saves them on the order.
+    API, and the shipping step saves them on the order. A slow or unreachable
+    API is logged and skipped after a short timeout, so checkout never fails
+    because of it.
   - LiqPay: the payment gateway is wired into checkout.
   - Solr: product search through Search API.
 - **GraphQL for Commerce.** `graphql_compose_commerce` adds Commerce
@@ -117,6 +119,7 @@ web/modules/custom/
 web/themes/custom/app_theme/  minimal Drupal theme for server-rendered pages
 react-app/              React storefront (pages, paragraph components, cart context)
 scripts/smoke_test.py   end-to-end API checks
+scripts/novaposhta_*    stand-in Nova Poshta API and the dead-API check used in CI
 .ddev/                  local environment and the `ddev setup` command
 ```
 
@@ -143,7 +146,9 @@ GitHub Actions runs on every push:
    on the custom code, PHPStan level 1.
 2. **React:** production build with `CI=true` (lint warnings fail the build).
 3. **End-to-end:** DDEV inside the runner, `ddev setup` from an empty
-   database, then `scripts/smoke_test.py`. Every push proves the site
+   database, a check that an unreachable Nova Poshta API fails fast, then
+   `scripts/smoke_test.py` against a stand-in Nova Poshta API (the real one
+   is sometimes too slow from GitHub's servers). Every push proves the site
    installs from a fresh clone and that the storefront APIs answer.
 
 ## Known limitations

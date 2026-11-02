@@ -52,4 +52,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ddev/github-action-setup-ddev@v1
       - run: ddev setup
+      - name: Nova Poshta API errors must not break checkout
+        run: ddev drush php:script scripts/novaposhta_timeout_check.php
+      - name: Use a stand-in Nova Poshta API (the real one is too slow from CI)
+        run: |
+          ddev exec "nohup php -S 127.0.0.1:8099 scripts/novaposhta_stub.php > /tmp/novaposhta-stub.log 2>&1 &"
+          ddev drush config:set commerce_novaposhta.novaposhta api_url http://127.0.0.1:8099/ -y
+          ddev drush cache:rebuild
       - run: python3 scripts/smoke_test.py https://hdcr.ddev.site

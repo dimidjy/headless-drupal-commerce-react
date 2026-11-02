@@ -3,6 +3,7 @@
 namespace Drupal\app_commerce;
 
 use Drupal\app_commerce\EventSubscriber\CartTokenSubscriber;
+use Drupal\app_commerce\Novaposhta\ResilientNovaposhtaManager;
 use Drupal\app_commerce\Session\CartTokenSessionConfiguration;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
@@ -41,6 +42,13 @@ class AppCommerceServiceProvider extends ServiceProviderBase {
     $container->register('app_commerce.token_cart_convert_subscriber', CartTokenSubscriber::class)
       ->setArguments([new Reference('commerce_cart.cart_session'), new Reference('tempstore.shared')])
       ->addTag('event_subscriber');
+
+    // Nova Poshta is optional: swap in the timeout-safe manager only when the
+    // module is enabled.
+    if ($container->hasDefinition('commerce.novaposhta.manager')) {
+      $container->getDefinition('commerce.novaposhta.manager')
+        ->setClass(ResilientNovaposhtaManager::class);
+    }
   }
 
 }
